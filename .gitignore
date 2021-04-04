@@ -1,0 +1,16 @@
+/*.log
+/.rpt2_cache
+/.nyc_output
+/.project
+/.idea
+/.c9
+/.codio
+/.settings
+/.grunt
+/.vscode
+/nbproject
+/node_modules
+/build/*
+/dist/*
+/report.*.json
+/coverage
