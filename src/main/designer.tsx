@@ -1,20 +1,15 @@
-import { define, createEvent, h, Listener, TypedEvent } from 'js-element'
-import { useEmitter, useState, useStyles } from 'js-element/hooks'
+import { define, createRef, createEvent, h } from 'js-element'
+import { Listener, TypedEvent } from 'js-element'
+import { createStoreHooks, useActions, useEffect } from 'js-element/hooks'
+import { useEmitter, useOnMount, useState, useStyles } from 'js-element/hooks'
+import * as Shoelace from '@shoelace-style/shoelace'
 
-import {
-  SlAlert,
-  SlAvatar,
-  SlBadge,
-  SlButton,
-  SlColorPicker,
-  SlIcon,
-  SlInput,
-  SlMenu,
-  SlMenuItem
-} from '@shoelace-style/shoelace'
+import { defineMessages } from 'js-messages'
+import { createReducer, on } from 'js-reducers'
 
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities'
 import { defaultTheme } from './default-theme'
+import { Theme } from './types'
 import { loadTheme } from './theme-utils'
 
 // === exports =======================================================
@@ -30,7 +25,70 @@ registerIconLibrary('default', {
   mutator: (svg) => svg.setAttribute('fill', 'currentColor')
 })
 
-// === components ====================================================
+// === types ==========================================================
+
+type Customizing = {
+  readonly colorPrimary: string
+  readonly colorInfo: string
+  readonly colorSuccess: string
+  readonly colorWarning: string
+  readonly colorDanger: string
+  readonly darkMode: boolean
+}
+
+type State = {
+  customizing: Customizing
+  showExportDrawer: boolean
+}
+
+// === messages =======================================================
+
+const Actions = defineMessages('designer', {
+  customize: (customizing: Customizing) => ({ customizing }),
+  showExportDrawer: null,
+  hideExportDrawer: null
+})
+
+// === initialState ==================================================
+
+function getBaseCustomizing(theme: Theme): Customizing {
+  return {
+    colorPrimary: theme['color-primary-500'],
+    colorInfo: theme['color-info-500'],
+    colorSuccess: theme['color-success-500'],
+    colorWarning: theme['color-warning-500'],
+    colorDanger: theme['color-danger-500'],
+    darkMode: false
+  }
+}
+
+const initialState: State = {
+  customizing: getBaseCustomizing(defaultTheme),
+  showExportDrawer: false
+}
+
+// === reducer =======================================================
+
+const reducer = createReducer(initialState, [
+  on(Actions.customize, (state, { customizing }) => {
+    state.customizing = customizing
+  }),
+
+  on(Actions.showExportDrawer, (state) => {
+    state.showExportDrawer = true
+  }),
+
+  on(Actions.hideExportDrawer, (state) => {
+    state.showExportDrawer = false
+  })
+])
+
+// === store hooks ====================================================
+
+// useActions
+const [useStore, useSelectors] = createStoreHooks()
+
+// === components =====================================================
 
 const Designer = define({
   name: 'sx-designer'
@@ -114,12 +172,17 @@ const Designer = define({
 
   return () => (
     <div class="base sl-theme-designer">
+      <ThemeExportDrawer />
       <table style="width: 100%; height: calc(100% - 53px); position: absolute;">
         <thead style="height: 30px">
           <tr>
             <th colSpan={2} style="text-align: left">
               <div class="header">
-                <DesignerHeader onExport={() => alert('juhuuuu')} />
+                <DesignerHeader
+                  onExport={() =>
+                    (document.getElementById('drawer') as any).open()
+                  }
+                />
               </div>
             </th>
             <th></th>
@@ -173,7 +236,7 @@ const Designer = define({
 
 const DesignerHeader = define({
   name: 'sx-designer-header',
-  uses: [SlIcon, SlButton],
+  uses: [Shoelace.SlIcon, Shoelace.SlButton],
   props: class {
     onExport?: Listener<TypedEvent<'sx-export'>>
   }
@@ -283,7 +346,7 @@ const VLayout = define({
 
 const ColorField = define({
   name: 'sx-color-field',
-  uses: [SlColorPicker, SlInput],
+  uses: [Shoelace.SlColorPicker, Shoelace.SlInput],
   props: class {
     label?: string
     value?: string
@@ -319,11 +382,167 @@ const ColorField = define({
   )
 })
 
+const ThemeExportDrawer = define({
+  name: 'sx-theme-export-drawer',
+  uses: [Shoelace.SlTab, Shoelace.SlTabGroup, Shoelace.SlTabPanel],
+  props: class {
+    open = true
+  }
+})((p) => {
+  useStyles(`
+    pre {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right 0;
+      height: 500px;
+      width: 100%;
+      overflow: auto; 
+      border: 1px solid var(--sl-color-gray-400);
+    }
+  `)
+
+  const drawerRef = createRef<any>()
+
+  const closeDrawer = () => drawerRef.current!.hide()
+
+  useEffect(
+    () => drawerRef.current[p.open ? 'show' : 'hide'](),
+    () => [p.open]
+  )
+
+  return () => (
+    <sl-drawer
+      id="drawer"
+      ref={drawerRef}
+      label="Export theme"
+      class="drawer-overview"
+      style="height: 100%; border: 1px solid red;"
+    >
+      <sl-tab-group>
+        <sl-tab slot="nav" panel="code">
+          Code
+        </sl-tab>
+        <sl-tab slot="nav" panel="json">
+          JSON
+        </sl-tab>
+        <sl-tab-panel name="code">
+          <pre>
+            blalb bla bla
+            <br />
+            blablaxxx
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blalb bla bla
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+            blablaxxx
+            <br />
+          </pre>
+        </sl-tab-panel>
+        <sl-tab-panel name="json">
+          <pre></pre>
+        </sl-tab-panel>
+      </sl-tab-group>
+      <sl-button slot="footer" type="primary" onclick={closeDrawer}>
+        Close
+      </sl-button>
+    </sl-drawer>
+  )
+})
+
 // === showcases =====================================================
 
 const AlertShowcase = define({
   name: 'sx-alerts-showcase',
-  uses: [SlAlert, SlIcon]
+  uses: [Shoelace.SlAlert, Shoelace.SlIcon]
 })(() => {
   return () => (
     <Showcase title="Alerts">
@@ -367,7 +586,7 @@ const AlertShowcase = define({
 
 const AvatarShowcase = define({
   name: 'sx-avatar-showcase',
-  uses: [SlAvatar]
+  uses: [Shoelace.SlAvatar]
 })(() => {
   return () => (
     <Showcase title="Avatar">
@@ -382,7 +601,7 @@ const AvatarShowcase = define({
 
 const BadgeShowcase = define({
   name: 'sx-badge-showcase',
-  uses: [SlBadge]
+  uses: [Shoelace.SlBadge]
 })(() => {
   return () => (
     <Showcase title="Badge">
@@ -399,7 +618,7 @@ const BadgeShowcase = define({
 
 const ButtonShowcase = define({
   name: 'sx-button-showcase',
-  uses: [SlButton]
+  uses: [Shoelace.SlButton]
 })(() => {
   return () => (
     <Showcase title="Button">
@@ -417,7 +636,7 @@ const ButtonShowcase = define({
 
 const IconShowcase = define({
   name: 'sx-icon-showcase',
-  uses: [SlIcon]
+  uses: [Shoelace.SlIcon]
 })(() => {
   return () => (
     <Showcase title="Icon">

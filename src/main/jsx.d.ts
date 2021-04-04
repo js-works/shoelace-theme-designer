@@ -8,6 +8,7 @@ declare global {
       'sl-badge': any
       'sl-button': any
       'sl-color-picker': any
+      'sl-drawer': any
       'sl-dropdown': any
       'sl-icon': any
       'sl-input': any
@@ -15,6 +16,9 @@ declare global {
       'sl-menu-divider': any
       'sl-menu-item': any
       'sl-switch': any
+      'sl-tab': any
+      'sl-tab-group': any
+      'sl-tab-panel': any
     }
   }
 }

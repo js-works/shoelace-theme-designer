@@ -1061,6 +1061,16 @@ js-element@^0.0.60:
     lit-html "^1.3.0"
     uhtml "^2.7.1"
 
+js-messages@^0.1.37:
+  version "0.1.37"
+  resolved "https://registry.yarnpkg.com/js-messages/-/js-messages-0.1.37.tgz#7631af1df5e70bf2d9334f948396bebc0070a957"
+  integrity sha512-ptwOmrYBCze+0rjPRaGQgapjCzqPrTx6UeUtuklbj1aUAP+k1lGbY6LS3HZg3F6QOgYM3ANUgP0hEBZ6N7/fqA==
+
+js-reducers@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/js-reducers/-/js-reducers-0.0.8.tgz#64927582c1c1876964ede69c9dc61792652f68ee"
+  integrity sha512-m+bgNPa89Bs8J0pcezZKPh+71ajXvAjuK2c3n8Sd7HZ70E7vzEPGNraky6RbpLPK05aL3W4N4GcYE3P1muKNlA==
+
 json-parse-better-errors@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
