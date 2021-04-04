@@ -6,11 +6,12 @@ import * as Shoelace from '@shoelace-style/shoelace'
 
 import { defineMessages } from 'js-messages'
 import { createReducer, on } from 'js-reducers'
+import { createStore } from 'js-stores'
 
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities'
-import { defaultTheme } from './default-theme'
-import { Theme } from './types'
-import { loadTheme } from './theme-utils'
+import { defaultTheme } from '../default-theme'
+import { Theme } from '../types'
+import { loadTheme } from '../theme-utils'
 
 // === exports =======================================================
 
@@ -83,24 +84,32 @@ const reducer = createReducer(initialState, [
   })
 ])
 
+// === selectors ======================================================
+
+const Selectors = {
+  customizing(state: State) {
+    return state.customizing
+  }
+}
+
 // === store hooks ====================================================
 
 // useActions
-const [useStore, useSelectors] = createStoreHooks()
+const [useStore, useSelectors] = createStoreHooks<State>()
 
 // === components =====================================================
 
 const Designer = define({
   name: 'sx-designer'
 })(() => {
-  const state = useState({
-    colorPrimary: defaultTheme['color-primary-500'],
-    colorInfo: defaultTheme['color-info-500'],
-    colorSuccess: defaultTheme['color-success-500'],
-    colorWarning: defaultTheme['color-warning-500'],
-    colorDanger: defaultTheme['color-danger-500']
-  })
+  useStore(createStore(reducer))
 
+  return () => <DesignerInner />
+})
+
+const DesignerInner = define({
+  name: 'sx-designer-inner'
+})(() => {
   loadTheme('designer', defaultTheme)
 
   useStyles(`
@@ -170,68 +179,93 @@ const Designer = define({
     }
   `)
 
-  return () => (
-    <div class="base sl-theme-designer">
-      <ThemeExportDrawer />
-      <table style="width: 100%; height: calc(100% - 53px); position: absolute;">
-        <thead style="height: 30px">
-          <tr>
-            <th colSpan={2} style="text-align: left">
-              <div class="header">
-                <DesignerHeader
-                  onExport={() =>
-                    (document.getElementById('drawer') as any).open()
-                  }
-                />
-              </div>
-            </th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="height: 100%">
-              <div class="sidebar">
-                <VLayout>
-                  <h3 class="headline">Basic theme colors</h3>
-                  <ColorField
-                    label="Primary color"
-                    value={state.colorPrimary}
+  const actions = useActions(Actions)
+  const selectors = useSelectors(Selectors)
+
+  return () => {
+    const customizing = selectors.customizing
+
+    const createColorListener = (type: string) => {
+      return (ev: any) => {
+        const newCustomizing: any = { ...customizing }
+        newCustomizing[type] = ev.detail.value
+        actions.customize(newCustomizing)
+      }
+    }
+    return (
+      <div class="base sl-theme-designer">
+        <ThemeExportDrawer />
+        <table style="width: 100%; height: calc(100% - 53px); position: absolute;">
+          <thead style="height: 30px">
+            <tr>
+              <th colSpan={2} style="text-align: left">
+                <div class="header">
+                  <DesignerHeader
+                    onExport={() =>
+                      (document.getElementById('drawer') as any).open()
+                    }
                   />
-                  <ColorField label="Info color" value={state.colorInfo} />
-                  <ColorField
-                    label="Success color"
-                    value={state.colorSuccess}
-                  />
-                  <ColorField
-                    label="Warning color"
-                    value={state.colorWarning}
-                  />
-                  <ColorField label="Danger color" value={state.colorDanger} />
-                  <h3 class="headline">Dark mode</h3>
-                  <HLayout class="dark-mode">
-                    <sl-switch />
-                    <label>Enable dark mode</label>
-                  </HLayout>
-                </VLayout>
-              </div>
-            </td>
-            <td>
-              <div class="showcases-container">
-                <div class="showcases">
-                  <AlertShowcase />
-                  <AvatarShowcase />
-                  <BadgeShowcase />
-                  <ButtonShowcase />
-                  <IconShowcase />
                 </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  )
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="height: 100%">
+                <div class="sidebar">
+                  <VLayout>
+                    <h3 class="headline">Basic theme colors</h3>
+                    <ColorField
+                      label="Primary color"
+                      value={customizing.colorPrimary}
+                      onColorChange={createColorListener('colorPrimary')}
+                    />
+                    <ColorField
+                      label="Info color"
+                      value={customizing.colorInfo}
+                      onColorChange={createColorListener('colorInfo')}
+                    />
+                    <ColorField
+                      label="Success color"
+                      value={customizing.colorSuccess}
+                      onColorChange={createColorListener('colorSuccess')}
+                    />
+                    <ColorField
+                      label="Warning color"
+                      value={customizing.colorWarning}
+                      onColorChange={createColorListener('colorWarning')}
+                    />
+                    <ColorField
+                      label="Danger color"
+                      value={customizing.colorDanger}
+                      onColorChange={createColorListener('colorDanger')}
+                    />
+                    <h3 class="headline">Dark mode</h3>
+                    <HLayout class="dark-mode">
+                      <sl-switch value={customizing.darkMode} />
+                      <label>Enable dark mode</label>
+                    </HLayout>
+                  </VLayout>
+                </div>
+              </td>
+              <td>
+                <div class="showcases-container">
+                  <div class="showcases">
+                    <AlertShowcase />
+                    <AvatarShowcase />
+                    <BadgeShowcase />
+                    <ButtonShowcase />
+                    <IconShowcase />
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    )
+  }
 })
 
 const DesignerHeader = define({
@@ -350,7 +384,7 @@ const ColorField = define({
   props: class {
     label?: string
     value?: string
-    onColorChange?: Listener<TypedEvent<'sx-color-change'>>
+    onColorChange?: Listener<TypedEvent<'sx-color-change', { value: string }>>
   }
 })((p) => {
   useStyles(`
@@ -369,6 +403,15 @@ const ColorField = define({
     }
   `)
 
+  const emit = useEmitter()
+
+  const onChange = (ev: any) => {
+    emit(
+      createEvent('sx-color-change', { value: ev.target.value }),
+      p.onColorChange
+    )
+  }
+
   return () => (
     <HLayout>
       <label>{p.label}:</label>
@@ -377,6 +420,7 @@ const ColorField = define({
         format="hex"
         size="small"
         value={p.value}
+        onsl-change={onChange}
       ></sl-color-picker>
     </HLayout>
   )

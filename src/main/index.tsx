@@ -1,9 +1,10 @@
 import { h, render } from 'js-element'
-import { Designer } from './designer'
+import { App } from './components/app'
 
 render(
+  // TODO
   <div class="sl-theme-designer">
-    <Designer />
+    <App />
   </div>,
   '#app'
 )
