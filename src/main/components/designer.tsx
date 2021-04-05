@@ -2,7 +2,7 @@ import { define, createRef, createEvent, h } from 'js-element'
 import { Listener, TypedEvent } from 'js-element'
 import { useEffect } from 'js-element/hooks'
 import { microstore } from 'js-element/utils'
-import { useEmitter, useStyles } from 'js-element/hooks'
+import { useEmitter } from 'js-element/hooks'
 import { HLayout, VLayout } from './layouts'
 import { defaultTheme } from '../theming/default-theme'
 import { Theme } from '../theming/types'
@@ -52,10 +52,9 @@ const [useStoreProvider, useStore] = microstore(() => ({
 
 const Designer = define({
   name: 'sx-designer',
-  slots: ['showcases']
+  slots: ['showcases'],
+  styles: () => styles.designer
 })(() => {
-  useStyles(styles.designer)
-
   const store = useStoreProvider()
 
   return () => (
@@ -100,6 +99,7 @@ const Designer = define({
 const Header = define({
   name: 'sx-designer--header',
   uses: [SlIcon, SlButton],
+  styles: () => styles.header,
 
   props: class {
     onExport?: Listener<TypedEvent<'sx-export'>>
@@ -110,8 +110,6 @@ const Header = define({
   const onExportClick = () => {
     emit(createEvent('sx-export'), p.onExport)
   }
-
-  useStyles(styles.header)
 
   return () => (
     <div class="base">
@@ -182,6 +180,7 @@ const Sidebar = define({
 const ColorField = define({
   name: 'sx-designer--color-field',
   uses: [SlColorPicker, SlInput],
+  styles: () => styles.colorField,
 
   props: class {
     label?: string
@@ -197,8 +196,6 @@ const ColorField = define({
       p.onColorChange
     )
   }
-
-  useStyles(styles.colorField)
 
   return () => (
     <HLayout>
@@ -217,6 +214,7 @@ const ColorField = define({
 const ThemeExportDrawer = define({
   name: 'sx-designer--theme-export-drawer',
   uses: [SlTab, SlTabGroup, SlTabPanel],
+  styles: () => styles.themeExportDrawer,
 
   props: class {
     open = false
@@ -224,8 +222,6 @@ const ThemeExportDrawer = define({
 })((p) => {
   const drawerRef = createRef<any>()
   const closeDrawer = () => drawerRef.current!.hide()
-
-  useStyles(styles.themeExportDrawer)
 
   useEffect(
     () => drawerRef.current[p.open ? 'show' : 'hide'](),

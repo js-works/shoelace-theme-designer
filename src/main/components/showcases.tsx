@@ -1,5 +1,4 @@
 import { define, h } from 'js-element'
-import { useStyles } from 'js-element/hooks'
 import { HLayout, VLayout } from './layouts'
 import * as Shoelace from '@shoelace-style/shoelace'
 
@@ -12,13 +11,12 @@ export { Showcases }
 const Showcase = define({
   name: 'sx-showcase',
   slots: ['default'],
+  styles: () => styles.showcase,
 
   props: class {
     title = ''
   }
 })((p) => {
-  useStyles(styles.showcase)
-
   return () => (
     <div class="base">
       <h3>{p.title}</h3>

@@ -1,18 +1,16 @@
 import { define, h } from 'js-element'
-import { useStyles } from 'js-element/hooks'
 
 // === exports =======================================================
 
-export { HLayout, VLayout }
+export { AppLayout, HLayout, VLayout }
 
 // === components ====================================================
 
 const HLayout = define({
   name: 'sx-horizontal-layout',
-  slots: ['default']
+  slots: ['default'],
+  styles: () => styles.hLayout
 })(() => {
-  useStyles(styles.hlayout)
-
   return () => (
     <div>
       <slot />
@@ -22,10 +20,9 @@ const HLayout = define({
 
 const VLayout = define({
   name: 'sx-vertical-layout',
-  slots: ['default']
+  slots: ['default'],
+  styles: () => styles.vLayout
 })(() => {
-  useStyles(styles.vlayout)
-
   return () => (
     <div>
       <slot />
@@ -33,10 +30,28 @@ const VLayout = define({
   )
 })
 
+const AppLayout = define({
+  name: 'sx-app-layout',
+  slots: ['top', 'sidebar', 'main']
+})(() => {
+  return () => (
+    <div>
+      <div>header</div>
+      <div>
+        <div>sidebar</div>
+        <div>main</div>
+      </div>
+    </div>
+  )
+})
+
 // === styles ========================================================
 
 const styles = {
-  hlayout: `
+  appLayout: `
+  `,
+
+  hLayout: `
     div {
       display: flex;
       gap: 6px;
@@ -45,7 +60,7 @@ const styles = {
     }
   `,
 
-  vlayout: `
+  vLayout: `
     div {
       display: flex;
       flex-direction: column;
