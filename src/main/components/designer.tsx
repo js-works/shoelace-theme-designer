@@ -1,30 +1,17 @@
 import { define, createRef, createEvent, h } from 'js-element'
 import { Listener, TypedEvent } from 'js-element'
-import { createStoreHooks, useActions, useEffect } from 'js-element/hooks'
-import { useEmitter, useOnMount, useState, useStyles } from 'js-element/hooks'
+import { useEffect } from 'js-element/hooks'
+import { microstore } from 'js-element/utils'
+import { useEmitter, useStyles } from 'js-element/hooks'
 import * as Shoelace from '@shoelace-style/shoelace'
 
-import { defineMessages } from 'js-messages'
-import { createReducer, on } from 'js-reducers'
-import { createStore } from 'js-stores'
-
-import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities'
+import { HLayout, VLayout } from './layouts'
 import { defaultTheme } from '../default-theme'
 import { Theme } from '../types'
-import { loadTheme } from '../theme-utils'
 
 // === exports =======================================================
 
 export { Designer }
-
-// === ugly stuff ====================================================
-
-registerIconLibrary('default', {
-  resolver: (name) =>
-    `https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.36/dist/assets/icons/${name}.svg`,
-
-  mutator: (svg) => svg.setAttribute('fill', 'currentColor')
-})
 
 // === types ==========================================================
 
@@ -37,80 +24,32 @@ type Customizing = {
   readonly darkMode: boolean
 }
 
-type State = {
-  customizing: Customizing
-  showExportDrawer: boolean
-}
+// === store ==========================================================
 
-// === messages =======================================================
-
-const Actions = defineMessages('designer', {
-  customize: (customizing: Customizing) => ({ customizing }),
-  showExportDrawer: null,
-  hideExportDrawer: null
-})
-
-// === initialState ==================================================
-
-function getBaseCustomizing(theme: Theme): Customizing {
-  return {
-    colorPrimary: theme['color-primary-500'],
-    colorInfo: theme['color-info-500'],
-    colorSuccess: theme['color-success-500'],
-    colorWarning: theme['color-warning-500'],
-    colorDanger: theme['color-danger-500'],
+const [useStoreProvider, useStore] = microstore(() => ({
+  customizing: {
+    colorPrimary: defaultTheme['color-primary-500'],
+    colorSuccess: defaultTheme['color-success-500'],
+    colorInfo: defaultTheme['color-info-500'],
+    colorWarning: defaultTheme['color-warning-500'],
+    colorDanger: defaultTheme['color-danger-500'],
     darkMode: false
+  },
+
+  showExportDrawer: false,
+
+  customize(values: Partial<Customizing>) {
+    Object.assign(this.customizing, values)
   }
-}
-
-const initialState: State = {
-  customizing: getBaseCustomizing(defaultTheme),
-  showExportDrawer: false
-}
-
-// === reducer =======================================================
-
-const reducer = createReducer(initialState, [
-  on(Actions.customize, (state, { customizing }) => {
-    state.customizing = customizing
-  }),
-
-  on(Actions.showExportDrawer, (state) => {
-    state.showExportDrawer = true
-  }),
-
-  on(Actions.hideExportDrawer, (state) => {
-    state.showExportDrawer = false
-  })
-])
-
-// === selectors ======================================================
-
-const Selectors = {
-  customizing(state: State) {
-    return state.customizing
-  }
-}
-
-// === store hooks ====================================================
-
-// useActions
-const [useStore, useSelectors] = createStoreHooks<State>()
+}))
 
 // === components =====================================================
 
 const Designer = define({
-  name: 'sx-designer'
+  name: 'sx-designer',
+  slots: ['showcases']
 })(() => {
-  useStore(createStore(reducer))
-
-  return () => <DesignerInner />
-})
-
-const DesignerInner = define({
-  name: 'sx-designer-inner'
-})(() => {
-  loadTheme('designer', defaultTheme)
+  useStoreProvider()
 
   useStyles(`
     :host {
@@ -179,17 +118,16 @@ const DesignerInner = define({
     }
   `)
 
-  const actions = useActions(Actions)
-  const selectors = useSelectors(Selectors)
+  const store = useStore()
 
   return () => {
-    const customizing = selectors.customizing
+    const customizing = store.customizing
 
     const createColorListener = (type: string) => {
       return (ev: any) => {
         const newCustomizing: any = { ...customizing }
         newCustomizing[type] = ev.detail.value
-        actions.customize(newCustomizing)
+        store.customize(newCustomizing)
       }
     }
     return (
@@ -252,11 +190,7 @@ const DesignerInner = define({
               <td>
                 <div class="showcases-container">
                   <div class="showcases">
-                    <AlertShowcase />
-                    <AvatarShowcase />
-                    <BadgeShowcase />
-                    <ButtonShowcase />
-                    <IconShowcase />
+                    <slot name="showcases" />
                   </div>
                 </div>
               </td>
@@ -269,7 +203,7 @@ const DesignerInner = define({
 })
 
 const DesignerHeader = define({
-  name: 'sx-designer-header',
+  name: 'sx-designer--header',
   uses: [Shoelace.SlIcon, Shoelace.SlButton],
   props: class {
     onExport?: Listener<TypedEvent<'sx-export'>>
@@ -310,76 +244,8 @@ const DesignerHeader = define({
   )
 })
 
-const Showcase = define({
-  name: 'sx-showcase',
-  slots: ['default'],
-  props: class {
-    title = ''
-  }
-})((p) => {
-  useStyles(`
-    .base {
-      margin: 10px 0 75px 0;
-    }
-
-    h3 {
-      font-weight: 600;
-      font-family: var(--sl-font-sans);
-      font-size: var(--sl-font-size-large);
-    } 
-  `)
-
-  return () => (
-    <div class="base">
-      <h3>{p.title}</h3>
-      <slot />
-    </div>
-  )
-})
-
-const HLayout = define({
-  name: 'sx-hlayout',
-  slots: ['deault']
-})(() => {
-  useStyles(`
-    div {
-      display: flex;
-      gap: 6px;
-      font-size: var(--sl-font-size-medium);
-      font-family: var(--sl-font-sans);
-    }
-  `)
-
-  return () => (
-    <div>
-      <slot />
-    </div>
-  )
-})
-
-const VLayout = define({
-  name: 'sx-vlayout',
-  slots: ['default']
-})(() => {
-  useStyles(`
-    div {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: var(--sl-font-size-medium);
-      font-family: var(--sl-font-sans);
-    }
-  `)
-
-  return () => (
-    <div>
-      <slot />
-    </div>
-  )
-})
-
 const ColorField = define({
-  name: 'sx-color-field',
+  name: 'sx-designer--color-field',
   uses: [Shoelace.SlColorPicker, Shoelace.SlInput],
   props: class {
     label?: string
@@ -427,10 +293,10 @@ const ColorField = define({
 })
 
 const ThemeExportDrawer = define({
-  name: 'sx-theme-export-drawer',
+  name: 'sx-designer--theme-export-drawer',
   uses: [Shoelace.SlTab, Shoelace.SlTabGroup, Shoelace.SlTabPanel],
   props: class {
-    open = true
+    open = false
   }
 })((p) => {
   useStyles(`
@@ -579,129 +445,5 @@ const ThemeExportDrawer = define({
         Close
       </sl-button>
     </sl-drawer>
-  )
-})
-
-// === showcases =====================================================
-
-const AlertShowcase = define({
-  name: 'sx-alerts-showcase',
-  uses: [Shoelace.SlAlert, Shoelace.SlIcon]
-})(() => {
-  return () => (
-    <Showcase title="Alerts">
-      <sl-alert type="primary" open>
-        <sl-icon slot="icon" name="info-circle"></sl-icon>
-        <strong>This is super informative</strong>
-        <br />
-        You can tell by how pretty the alert is.
-      </sl-alert>
-      <br />
-      <sl-alert type="success" open>
-        <sl-icon slot="icon" name="check2-circle"></sl-icon>
-        <strong>Your changes have been saved</strong>
-        <br />
-        You can safely exit the app now.
-      </sl-alert>
-      <br />
-      <sl-alert type="info" open>
-        <sl-icon slot="icon" name="gear"></sl-icon>
-        <strong>Your settings have been updated</strong>
-        <br />
-        Some settings will take affect the next time you log in.
-      </sl-alert>
-      <br />
-      <sl-alert type="warning" open>
-        <sl-icon slot="icon" name="exclamation-triangle"></sl-icon>
-        <strong>This will end your session</strong>
-        <br />
-        You will be logged out until you log in again.
-      </sl-alert>
-      <br />
-      <sl-alert type="danger" open>
-        <sl-icon slot="icon" name="exclamation-octagon"></sl-icon>
-        <strong>Delete this file?</strong>
-        <br />
-        This is permanent, which means forever!
-      </sl-alert>
-    </Showcase>
-  )
-})
-
-const AvatarShowcase = define({
-  name: 'sx-avatar-showcase',
-  uses: [Shoelace.SlAvatar]
-})(() => {
-  return () => (
-    <Showcase title="Avatar">
-      <HLayout>
-        <sl-avatar shape="square"></sl-avatar>
-        <sl-avatar shape="rounded"></sl-avatar>
-        <sl-avatar shape="circle"></sl-avatar>
-      </HLayout>
-    </Showcase>
-  )
-})
-
-const BadgeShowcase = define({
-  name: 'sx-badge-showcase',
-  uses: [Shoelace.SlBadge]
-})(() => {
-  return () => (
-    <Showcase title="Badge">
-      <HLayout>
-        <sl-badge type="primary">Primary</sl-badge>
-        <sl-badge type="success">Success</sl-badge>
-        <sl-badge type="info">Info</sl-badge>
-        <sl-badge type="warning">Warning</sl-badge>
-        <sl-badge type="danger">Danger</sl-badge>
-      </HLayout>
-    </Showcase>
-  )
-})
-
-const ButtonShowcase = define({
-  name: 'sx-button-showcase',
-  uses: [Shoelace.SlButton]
-})(() => {
-  return () => (
-    <Showcase title="Button">
-      <HLayout>
-        <sl-button type="default">Default</sl-button>
-        <sl-button type="primary">Primary</sl-button>
-        <sl-button type="success">Success</sl-button>
-        <sl-button type="info">Info</sl-button>
-        <sl-button type="warning">Warning</sl-button>
-        <sl-button type="danger">Danger</sl-button>
-      </HLayout>
-    </Showcase>
-  )
-})
-
-const IconShowcase = define({
-  name: 'sx-icon-showcase',
-  uses: [Shoelace.SlIcon]
-})(() => {
-  return () => (
-    <Showcase title="Icon">
-      <HLayout style="font-size: 32px">
-        <sl-icon name="exclamation-triangle"></sl-icon>
-        <sl-icon name="archive"></sl-icon>
-        <sl-icon name="battery-charging"></sl-icon>
-        <sl-icon name="bell"></sl-icon>
-        <sl-icon name="clock"></sl-icon>
-        <sl-icon name="download"></sl-icon>
-        <sl-icon name="file-earmark"></sl-icon>
-        <sl-icon name="flag"></sl-icon>
-        <sl-icon name="heart"></sl-icon>
-        <sl-icon name="image"></sl-icon>
-        <sl-icon name="lightning"></sl-icon>
-        <sl-icon name="mic"></sl-icon>
-        <sl-icon name="search"></sl-icon>
-        <sl-icon name="star"></sl-icon>
-        <sl-icon name="trash"></sl-icon>
-        <sl-icon name="x-circle"></sl-icon>
-      </HLayout>
-    </Showcase>
   )
 })
