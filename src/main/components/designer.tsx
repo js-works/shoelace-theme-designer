@@ -4,10 +4,9 @@ import { useEffect } from 'js-element/hooks'
 import { microstore } from 'js-element/utils'
 import { useEmitter, useStyles } from 'js-element/hooks'
 import * as Shoelace from '@shoelace-style/shoelace'
-
 import { HLayout, VLayout } from './layouts'
-import { defaultTheme } from '../default-theme'
-import { Theme } from '../types'
+import { defaultTheme } from '../theming/default-theme'
+import { Theme } from '../theming/types'
 
 // === exports =======================================================
 
@@ -49,76 +48,9 @@ const Designer = define({
   name: 'sx-designer',
   slots: ['showcases']
 })(() => {
-  useStoreProvider()
+  useStyles(styles.designer)
 
-  useStyles(`
-    :host {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      max-width: 100%;
-      max-height: 100%;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      margin: 0;
-      overflow: hidden;
-    }
-
-    .header {
-      padding: 3px 10px;
-      height: 50px;
-      width: 100%;
-      box-sizing: border-box;
-      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    }
-
-    .content {
-      position: relative;
-      display: flex;
-    }
-    
-    .sidebar {
-      width: 300px;
-      height: 100%;
-      border-width: 0 1px 0 0;
-      border-style: solid;
-      border-color: var(--sl-color-gray-200);
-      padding: 12px 20px;
-      box-sizing: border-box;
-    }
-
-    .showcases-container {
-      position: absolute;
-      bottom: 0;
-      display: flex;
-      bottom: 0;
-      top: 53px;
-      left: 300px;
-      right: 0;
-      overflow: hidden;
-    }
-
-    .showcases {
-      padding: 10px 30px;
-      height: 100%;
-      width: 100%;
-      overflow: scroll;
-      align-self: stretch;
-    }
-
-    .headline {
-      font-weight: 600;
-      font-size: var(--sl-font-size-medium);
-    }
-
-    .dark-mode {
-      padding-left: 0.5em;
-    }
-  `)
-
-  const store = useStore()
+  const store = useStoreProvider()
 
   return () => {
     const customizing = store.customizing
@@ -130,8 +62,9 @@ const Designer = define({
         store.customize(newCustomizing)
       }
     }
+
     return (
-      <div class="base sl-theme-designer">
+      <div class="base">
         <ThemeExportDrawer />
         <table style="width: 100%; height: calc(100% - 53px); position: absolute;">
           <thead style="height: 30px">
@@ -209,28 +142,13 @@ const DesignerHeader = define({
     onExport?: Listener<TypedEvent<'sx-export'>>
   }
 })((p) => {
-  useStyles(`
-    .base {
-      display: flex;
-      align-items: center;
-      font-family: var(--sl-font-sans);
-    }
-
-    .brand {
-      font-weight: normal;
-      font-size: var(--sl-font-size-large);
-      background-image: url('https://www.svgrepo.com/show/34997/palette.svg');
-      background-repeat: no-repeat;
-      padding: 0 0 0 40px;
-      flex-grow: 1;
-    }
-  `)
-
   const emit = useEmitter()
 
   const onExportClick = () => {
     emit(createEvent('sx-export'), p.onExport)
   }
+
+  useStyles(styles.designerHeader)
 
   return () => (
     <div class="base">
@@ -253,22 +171,6 @@ const ColorField = define({
     onColorChange?: Listener<TypedEvent<'sx-color-change', { value: string }>>
   }
 })((p) => {
-  useStyles(`
-    label {
-      width: 7em;
-      height: 2.3em;
-      padding: 0 0 0 0.5em;
-    }
-
-    span {
-      width: 4.5em;
-    }
-
-    sl-color-picker {
-      margin-top: -4px;
-    }
-  `)
-
   const emit = useEmitter()
 
   const onChange = (ev: any) => {
@@ -277,6 +179,8 @@ const ColorField = define({
       p.onColorChange
     )
   }
+
+  useStyles(styles.colorField)
 
   return () => (
     <HLayout>
@@ -299,23 +203,10 @@ const ThemeExportDrawer = define({
     open = false
   }
 })((p) => {
-  useStyles(`
-    pre {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      right 0;
-      height: 500px;
-      width: 100%;
-      overflow: auto; 
-      border: 1px solid var(--sl-color-gray-400);
-    }
-  `)
-
   const drawerRef = createRef<any>()
-
   const closeDrawer = () => drawerRef.current!.hide()
+
+  useStyles(styles.themeExportDrawer)
 
   useEffect(
     () => drawerRef.current[p.open ? 'show' : 'hide'](),
@@ -447,3 +338,121 @@ const ThemeExportDrawer = define({
     </sl-drawer>
   )
 })
+
+// === styles ========================================================
+
+const styles = {
+  designer: `
+    :host {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .header {
+      padding: 3px 10px;
+      height: 50px;
+      width: 100%;
+      box-sizing: border-box;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    }
+
+    .content {
+      position: relative;
+      display: flex;
+    }
+    
+    .sidebar {
+      width: 300px;
+      height: 100%;
+      border-width: 0 1px 0 0;
+      border-style: solid;
+      border-color: var(--sl-color-gray-200);
+      padding: 12px 20px;
+      box-sizing: border-box;
+    }
+
+    .showcases-container {
+      position: absolute;
+      bottom: 0;
+      display: flex;
+      bottom: 0;
+      top: 53px;
+      left: 300px;
+      right: 0;
+      overflow: hidden;
+    }
+
+    .showcases {
+      padding: 10px 30px;
+      height: 100%;
+      width: 100%;
+      overflow: scroll;
+      align-self: stretch;
+    }
+
+    .headline {
+      font-weight: 600;
+      font-size: var(--sl-font-size-medium);
+    }
+
+    .dark-mode {
+      padding-left: 0.5em;
+    }
+  `,
+
+  designerHeader: `
+    .base {
+      display: flex;
+      align-items: center;
+      font-family: var(--sl-font-sans);
+    }
+
+    .brand {
+      font-weight: normal;
+      font-size: var(--sl-font-size-large);
+      background-image: url('https://www.svgrepo.com/show/34997/palette.svg');
+      background-repeat: no-repeat;
+      padding: 0 0 0 40px;
+      flex-grow: 1;
+    }
+  `,
+
+  colorField: `
+    label {
+      width: 7em;
+      height: 2.3em;
+      padding: 0 0 0 0.5em;
+    }
+
+    span {
+      width: 4.5em;
+    }
+
+    sl-color-picker {
+      margin-top: -4px;
+    }
+  `,
+
+  themeExportDrawer: `
+    pre {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right 0;
+      height: 500px;
+      width: 100%;
+      overflow: auto; 
+      border: 1px solid var(--sl-color-gray-400);
+    }
+  `
+}

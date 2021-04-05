@@ -30,10 +30,10 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js']
   },
   output: {
-    filename: 'shoelace-theme-editor.js',
+    filename: 'shoelace-theme-designer.js',
     path: path.resolve(__dirname, 'dist')
   },
-  mode: 'development',
+  mode: 'production',
   plugins: [new Serve(serveOptions)],
   watch: true // ← important: webpack and the server will continue to run in watch mode
 }

@@ -8,17 +8,10 @@ export { HLayout, VLayout }
 // === components ====================================================
 
 const HLayout = define({
-  name: 'sx-hlayout',
-  slots: ['deault']
+  name: 'sx-horizontal-layout',
+  slots: ['default']
 })(() => {
-  useStyles(`
-    div {
-      display: flex;
-      gap: 6px;
-      font-size: var(--sl-font-size-medium);
-      font-family: var(--sl-font-sans);
-    }
-  `)
+  useStyles(styles.hlayout)
 
   return () => (
     <div>
@@ -28,18 +21,10 @@ const HLayout = define({
 })
 
 const VLayout = define({
-  name: 'sx-vlayout',
+  name: 'sx-vertical-layout',
   slots: ['default']
 })(() => {
-  useStyles(`
-    div {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: var(--sl-font-size-medium);
-      font-family: var(--sl-font-sans);
-    }
-  `)
+  useStyles(styles.vlayout)
 
   return () => (
     <div>
@@ -47,3 +32,26 @@ const VLayout = define({
     </div>
   )
 })
+
+// === styles ========================================================
+
+const styles = {
+  hlayout: `
+    div {
+      display: flex;
+      gap: 6px;
+      font-size: var(--sl-font-size-medium);
+      font-family: var(--sl-font-sans);
+    }
+  `,
+
+  vlayout: `
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: var(--sl-font-size-medium);
+      font-family: var(--sl-font-sans);
+    }
+  `
+}

@@ -12,21 +12,12 @@ export { Showcases }
 const Showcase = define({
   name: 'sx-showcase',
   slots: ['default'],
+
   props: class {
     title = ''
   }
 })((p) => {
-  useStyles(`
-    .base {
-      margin: 10px 0 75px 0;
-    }
-
-    h3 {
-      font-weight: 600;
-      font-family: var(--sl-font-sans);
-      font-size: var(--sl-font-size-large);
-    } 
-  `)
+  useStyles(styles.showcase)
 
   return () => (
     <div class="base">
@@ -173,3 +164,19 @@ const IconShowcase = define({
     </Showcase>
   )
 })
+
+// === styles ========================================================
+
+const styles = {
+  showcase: `
+    .base {
+      margin: 10px 0 75px 0;
+    }
+
+    h3 {
+      font-weight: 600;
+      font-family: var(--sl-font-sans);
+      font-size: var(--sl-font-size-large);
+    } 
+  `
+}
