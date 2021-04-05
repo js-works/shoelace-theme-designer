@@ -124,7 +124,8 @@ const Header = define({
 })
 
 const Sidebar = define({
-  name: 'sx-designer--sidebar'
+  name: 'sx-designer--sidebar',
+  styles: () => styles.sidebar
 })(() => {
   const store = useStore()
 
@@ -414,11 +415,6 @@ const styles = {
       align-self: stretch;
     }
 
-    .headline {
-      font-weight: 600;
-      font-size: var(--sl-font-size-medium);
-    }
-
     .dark-mode {
       padding-left: 0.5em;
     }
@@ -438,6 +434,13 @@ const styles = {
       background-repeat: no-repeat;
       padding: 0 0 0 40px;
       flex-grow: 1;
+    }
+  `,
+
+  sidebar: `
+    .headline {
+      font-weight: 600;
+      font-size: var(--sl-font-size-medium);
     }
   `,
 
