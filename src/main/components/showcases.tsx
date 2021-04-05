@@ -1,7 +1,7 @@
-import * as Shoelace from '@shoelace-style/shoelace'
 import { define, h } from 'js-element'
 import { useStyles } from 'js-element/hooks'
 import { HLayout, VLayout } from './layouts'
+import * as Shoelace from '@shoelace-style/shoelace'
 
 // === exports =======================================================
 

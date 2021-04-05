@@ -33,7 +33,7 @@ module.exports = {
     filename: 'shoelace-theme-designer.js',
     path: path.resolve(__dirname, 'dist')
   },
-  mode: 'production',
+  mode: 'development',
   plugins: [new Serve(serveOptions)],
   watch: true // ← important: webpack and the server will continue to run in watch mode
 }
