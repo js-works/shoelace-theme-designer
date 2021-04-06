@@ -3,8 +3,9 @@ import { Listener, TypedEvent } from 'js-element'
 import { useEffect } from 'js-element/hooks'
 import { microstore } from 'js-element/utils'
 import { useEmitter } from 'js-element/hooks'
-import { HLayout, VLayout } from './layouts'
+import { AppLayout, HLayout, VLayout } from './layouts'
 import { defaultTheme } from '../theming/default-theme'
+import { createTheme, fromThemeToCss } from '../theming/theme-utils'
 import { Theme } from '../theming/types'
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon.js'
@@ -31,24 +32,41 @@ type Customizing = {
 
 // === store ==========================================================
 
-const [useStoreProvider, useStore] = microstore(() => ({
-  customizing: {
-    colorPrimary: defaultTheme['color-primary-500'],
-    colorSuccess: defaultTheme['color-success-500'],
-    colorInfo: defaultTheme['color-info-500'],
-    colorWarning: defaultTheme['color-warning-500'],
-    colorDanger: defaultTheme['color-danger-500'],
-    darkMode: false
-  },
+const [useStoreProvider, useStore] = microstore(() => {
+  return {
+    customizing: {
+      colorPrimary: defaultTheme['color-primary-500'],
+      colorSuccess: defaultTheme['color-success-500'],
+      colorInfo: defaultTheme['color-info-500'],
+      colorWarning: defaultTheme['color-warning-500'],
+      colorDanger: defaultTheme['color-danger-500'],
+      darkMode: false
+    },
 
-  showExportDrawer: false,
+    theme: defaultTheme,
+    themeCss: fromThemeToCss(defaultTheme),
 
-  customize(values: Partial<Customizing>) {
-    Object.assign(this.customizing, values)
+    showExportDrawer: false,
+
+    customize(values: Partial<Customizing>) {
+      Object.assign(this.customizing, values)
+      this.theme = getCustomizedTheme(this.customizing)
+      this.themeCss = fromThemeToCss(this.theme)
+    },
+
+    resetColors() {
+      this.customizing.colorPrimary = defaultTheme['color-primary-500']
+      this.customizing.colorSuccess = defaultTheme['color-success-500']
+      this.customizing.colorInfo = defaultTheme['color-info-500']
+      this.customizing.colorWarning = defaultTheme['color-warning-500']
+      this.customizing.colorDanger = defaultTheme['color-danger-500']
+    }
   }
-}))
+})
 
 // === components =====================================================
+
+let nextDesignerId = 1
 
 const Designer = define({
   name: 'sx-designer',
@@ -56,42 +74,29 @@ const Designer = define({
   styles: () => styles.designer
 })(() => {
   const store = useStoreProvider()
+  const designerId = nextDesignerId + 1
 
   return () => (
-    <div class="base">
+    <div class={`base sl-theme--designer-${designerId}`}>
+      <style>
+        {`.sl-theme--designer-${designerId} {`}
+        {store.themeCss}
+        {'}'}
+      </style>
       <ThemeExportDrawer />
-      <table style="width: 100%; height: calc(100% - 53px); position: absolute;">
-        <thead style="height: 30px">
-          <tr>
-            <th colSpan={2} style="text-align: left">
-              <div class="header">
-                <Header
-                  onExport={() =>
-                    (document.getElementById('drawer') as any).open()
-                  }
-                />
-              </div>
-            </th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="height: 100%">
-              <div class="sidebar">
-                <Sidebar />
-              </div>
-            </td>
-            <td>
-              <div class="showcases-container">
-                <div class="showcases">
-                  <slot name="showcases" />
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <AppLayout>
+        <div slot="header" class="header">
+          <Header
+            onExport={() => (document.getElementById('drawer') as any).open()}
+          />
+        </div>
+        <div slot="sidebar" class="sidebar">
+          <Sidebar />
+        </div>
+        <div slot="main" class="showcases">
+          <slot name="showcases" />
+        </div>
+      </AppLayout>
     </div>
   )
 })
@@ -128,6 +133,7 @@ const Sidebar = define({
   styles: () => styles.sidebar
 })(() => {
   const store = useStore()
+  const resetColors = () => store.resetColors()
 
   return () => {
     const customizing = store.customizing
@@ -168,6 +174,11 @@ const Sidebar = define({
           value={customizing.colorDanger}
           onColorChange={createColorListener('colorDanger')}
         />
+        <div class="color-actions">
+          <sl-button size="small" onclick={resetColors}>
+            Reset colors
+          </sl-button>
+        </div>
         <h3 class="headline">Dark mode</h3>
         <HLayout class="dark-mode">
           <sl-switch value={customizing.darkMode} />
@@ -204,6 +215,7 @@ const ColorField = define({
       <span>{p.value}</span>
       <sl-color-picker
         format="hex"
+        no-format-toggle
         size="small"
         value={p.value}
         onsl-change={onChange}
@@ -355,6 +367,20 @@ const ThemeExportDrawer = define({
   )
 })
 
+// === helpers =======================================================
+
+function getCustomizedTheme(customizing: Customizing): Theme {
+  const newTheme = createTheme({
+    'color-primary-500': customizing.colorPrimary,
+    'color-success-500': customizing.colorSuccess,
+    'color-info-500': customizing.colorInfo,
+    'color-warning-500': customizing.colorWarning,
+    'color-danger-500': customizing.colorDanger
+  })
+
+  return newTheme
+}
+
 // === styles ========================================================
 
 const styles = {
@@ -374,45 +400,26 @@ const styles = {
     }
 
     .header {
-      padding: 3px 10px;
-      height: 50px;
+      padding: 5px 10px 6px 10px;
+      height: 51px;
       width: 100%;
       box-sizing: border-box;
-      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    }
-
-    .content {
-      position: relative;
-      display: flex;
-    }
-    
-    .sidebar {
-      width: 300px;
-      height: 100%;
-      border-width: 0 1px 0 0;
+      box-shadow: rgba(149, 157, 165, 0.3) 0px 8px 24px;
+      border-width: 0 0 1px 0;
       border-style: solid;
-      border-color: var(--sl-color-gray-200);
-      padding: 12px 20px;
-      box-sizing: border-box;
+      border-color: var(--sl-color-gray-200)
     }
 
-    .showcases-container {
-      position: absolute;
-      bottom: 0;
-      display: flex;
-      bottom: 0;
-      top: 53px;
-      left: 300px;
-      right: 0;
-      overflow: hidden;
+    .sidebar {
+      height: 100%;
+      padding: 10px 30px 10px 20px;
+      box-sizing: border-box;
+      border: 1px solid var(--sl-color-gray-200);
+      border-width: 0 1px 0 0;
     }
 
     .showcases {
       padding: 10px 30px;
-      height: 100%;
-      width: 100%;
-      overflow: scroll;
-      align-self: stretch;
     }
 
     .dark-mode {
@@ -430,9 +437,9 @@ const styles = {
     .brand {
       font-weight: normal;
       font-size: var(--sl-font-size-large);
-      background-image: url('https://www.svgrepo.com/show/34997/palette.svg');
+      background-image: url('https://www.svgrepo.com/show/221575/pantone-color-palette.svg');
       background-repeat: no-repeat;
-      padding: 0 0 0 40px;
+      padding: 0 0 0 38px;
       flex-grow: 1;
     }
   `,
@@ -441,6 +448,11 @@ const styles = {
     .headline {
       font-weight: 600;
       font-size: var(--sl-font-size-medium);
+    }
+
+    .color-actions {
+      margin: 12px 0 0 0;
+      text-align: right;
     }
   `,
 

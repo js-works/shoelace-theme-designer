@@ -32,15 +32,20 @@ const VLayout = define({
 
 const AppLayout = define({
   name: 'sx-app-layout',
-  slots: ['top', 'sidebar', 'main']
+  slots: ['header', 'sidebar', 'main'],
+  styles: () => styles.appLayout
 })(() => {
   return () => (
-    <div>
-      <div>header</div>
-      <div>
-        <div>sidebar</div>
-        <div>main</div>
-      </div>
+    <div class="base">
+      <header class="header">
+        <slot name="header" />
+      </header>
+      <aside class="sidebar">
+        <slot name="sidebar" />
+      </aside>
+      <main class="main">
+        <slot name="main" />
+      </main>
     </div>
   )
 })
@@ -49,6 +54,26 @@ const AppLayout = define({
 
 const styles = {
   appLayout: `
+    .base {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      grid-template-columns: auto 1fr;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+
+    .header {
+      grid-column: 1/-1;
+    }
+
+    .sidebar {
+      overflow-vertical: auto; /* // TODO - should be same for horizontal */
+    }
+
+    .main {
+      overflow: auto;
+    }
   `,
 
   hLayout: `

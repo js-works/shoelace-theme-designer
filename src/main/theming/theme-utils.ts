@@ -3,12 +3,22 @@ import { Theme } from './types'
 
 // === exports =======================================================
 
-export { createTheme, loadTheme }
+export { createTheme, fromThemeToCss, loadTheme }
 
 // === utils =========================================================
 
 function createTheme(tokens: Partial<Theme>, baseTheme = defaultTheme) {
   return Object.freeze({ ...baseTheme, ...tokens })
+}
+
+function fromThemeToCss(theme: Theme): string {
+  const lines = []
+
+  for (const key of Object.keys(theme)) {
+    lines.push(`  --sl-${key}: ${(theme as any)[key]};`)
+  }
+
+  return lines.join('\n')
 }
 
 function loadTheme(name: string, theme: Theme) {
