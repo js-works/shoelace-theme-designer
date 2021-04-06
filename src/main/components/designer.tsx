@@ -1,12 +1,14 @@
 import { define, createRef, createEvent, h } from 'js-element'
 import { Listener, TypedEvent } from 'js-element'
 import { useEffect } from 'js-element/hooks'
-import { microstore } from 'js-element/utils'
+import { createMobxHooks } from 'js-element/utils'
 import { useEmitter } from 'js-element/hooks'
 import { AppLayout, HLayout, VLayout } from './layouts'
+import { H4, Text } from './typography'
 import { Theme } from '../theming/types'
 import { defaultTheme } from '../theming/default-theme'
 import Color from 'color'
+import { makeAutoObservable } from 'mobx'
 
 import {
   createTheme,
@@ -42,46 +44,50 @@ type Customizing = {
 
 // === store ==========================================================
 
-const [useStoreProvider, useStore] = microstore(() => {
-  return {
-    customizing: {
-      colorPrimary: defaultTheme['color-primary-500'],
-      colorSuccess: defaultTheme['color-success-500'],
-      colorInfo: defaultTheme['color-info-500'],
-      colorWarning: defaultTheme['color-warning-500'],
-      colorDanger: defaultTheme['color-danger-500'],
-      colorFront: defaultTheme['color-black'],
-      colorBack: defaultTheme['color-white']
-    },
-
-    theme: defaultTheme,
-    themeCss: fromThemeToCss(defaultTheme),
-
-    showExportDrawer: false,
-
-    customize(values: Partial<Customizing>) {
-      Object.assign(this.customizing, values)
-      this.theme = getCustomizedTheme(this.customizing, defaultTheme)
-      this.themeCss = fromThemeToCss(this.theme)
-    },
-
-    resetColors() {
-      this.customizing.colorPrimary = defaultTheme['color-primary-500']
-      this.customizing.colorSuccess = defaultTheme['color-success-500']
-      this.customizing.colorInfo = defaultTheme['color-info-500']
-      this.customizing.colorWarning = defaultTheme['color-warning-500']
-      this.customizing.colorDanger = defaultTheme['color-danger-500']
-      this.customizing.colorFront = defaultTheme['color-black']
-      this.customizing.colorBack = defaultTheme['color-white']
-    },
-
-    swapFrontBackColors() {
-      const newBackColor = this.customizing.colorFront
-      this.customizing.colorFront = this.customizing.colorBack
-      this.customizing.colorBack = newBackColor
-    }
+class Store {
+  customizing = {
+    baseTheme: 'light' as 'light' | 'dark',
+    colorPrimary: defaultTheme['color-primary-500'],
+    colorSuccess: defaultTheme['color-success-500'],
+    colorInfo: defaultTheme['color-info-500'],
+    colorWarning: defaultTheme['color-warning-500'],
+    colorDanger: defaultTheme['color-danger-500'],
+    colorFront: defaultTheme['color-black'],
+    colorBack: defaultTheme['color-white']
   }
-})
+
+  theme = defaultTheme
+  themeCss = fromThemeToCss(defaultTheme)
+  showExportDrawer = false
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+
+  customize(values: Partial<Customizing>) {
+    Object.assign(this.customizing, values)
+    this.theme = getCustomizedTheme(this.customizing, defaultTheme)
+    this.themeCss = fromThemeToCss(this.theme)
+  }
+
+  resetColors() {
+    this.customizing.colorPrimary = defaultTheme['color-primary-500']
+    this.customizing.colorSuccess = defaultTheme['color-success-500']
+    this.customizing.colorInfo = defaultTheme['color-info-500']
+    this.customizing.colorWarning = defaultTheme['color-warning-500']
+    this.customizing.colorDanger = defaultTheme['color-danger-500']
+    this.customizing.colorFront = defaultTheme['color-black']
+    this.customizing.colorBack = defaultTheme['color-white']
+  }
+
+  swapFrontBackColors() {
+    const newBackColor = this.customizing.colorFront
+    this.customizing.colorFront = this.customizing.colorBack
+    this.customizing.colorBack = newBackColor
+  }
+}
+
+const [useStoreProvider, useStore] = createMobxHooks<Store>()
 
 // === components =====================================================
 
@@ -92,7 +98,7 @@ const Designer = define({
   slots: ['showcases'],
   styles: () => styles.designer
 })(() => {
-  const store = useStoreProvider()
+  const store = useStoreProvider(new Store())
   const designerId = nextDesignerId + 1
 
   return () => (
@@ -175,7 +181,22 @@ const Sidebar = define({
 
     return (
       <VLayout class="base">
-        <h3 class="headline">Basic theme colors</h3>
+        <H4>Base theme</H4>
+        <HLayout gap="small">
+          <Text>Foundation:</Text>
+          <sl-dropdown value="light">
+            <sl-button slot="trigger" caret>
+              Light theme
+            </sl-button>
+            <sl-menu>
+              <sl-menu-item selected value="light">
+                Light theme
+              </sl-menu-item>
+              <sl-menu-item value="dark">Dark theme</sl-menu-item>
+            </sl-menu>
+          </sl-dropdown>
+        </HLayout>
+        <H4>Theme colors</H4>
         <ColorField
           label="Primary color"
           value={customizing.colorPrimary}
@@ -446,7 +467,7 @@ function getCustomizedTheme(
   }
 
   if (isDark) {
-    for (const color of SEMANTIC_COLORS) {
+    for (const color of SEMANTIC_COLORS_PLUS_GRAY) {
       for (const shade of COLOR_SHADES) {
         const shade2 = 1000 - shade
         const key1 = `color-${color}-${shade}`
@@ -543,11 +564,6 @@ const styles = {
   sidebar: `
     .base {
       color: var(--sl-color-black)
-    }
-
-    .headline {
-      font-weight: 600;
-      font-size: var(--sl-font-size-medium);
     }
 
     .color-actions {

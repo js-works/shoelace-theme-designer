@@ -7,6 +7,7 @@ declare global {
       'sl-avatar': any
       'sl-badge': any
       'sl-button': any
+      'sl-checkbox': any
       'sl-color-picker': any
       'sl-dialog': any
       'sl-drawer': any
@@ -17,6 +18,9 @@ declare global {
       'sl-menu-divider': any
       'sl-menu-item': any
       'sl-range': any
+      'sl-radio': any
+      'sl-rating': any
+      'sl-spinner': any
       'sl-switch': any
       'sl-tab': any
       'sl-tab-group': any

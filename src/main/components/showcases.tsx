@@ -1,6 +1,7 @@
 import { createRef, define, h } from 'js-element'
 import { HLayout, VLayout } from './layouts'
 import * as Shoelace from '@shoelace-style/shoelace'
+import { H3 } from '../components/typography'
 import { COLOR_SHADES, SEMANTIC_COLORS_PLUS_GRAY } from '../theming/theme-utils'
 
 // === exports =======================================================
@@ -12,7 +13,6 @@ export { Showcases }
 const Showcase = define({
   name: 'sx-showcase',
   slots: ['default'],
-  styles: () => styles.showcase,
 
   props: class {
     title = ''
@@ -20,7 +20,7 @@ const Showcase = define({
 })((p) => {
   return () => (
     <div class="base">
-      <h3>{p.title}</h3>
+      <H3>{p.title}</H3>
       <slot />
     </div>
   )
@@ -50,11 +50,11 @@ const PaletteShowcase = define({
   const dialogRef = createRef<any>()
 
   return () => (
-    <HLayout gap={40}>
+    <HLayout gap="huge">
       <Showcase title="Palette" class="showcase-palette">
         <table class="palette-table" cellPadding={0} cellSpacing={0}>
           <thead>
-            <th />
+            <td />
             {SEMANTIC_COLORS_PLUS_GRAY.map((color) => (
               <th>{color}</th>
             ))}
@@ -75,7 +75,7 @@ const PaletteShowcase = define({
         </table>
       </Showcase>
       <Showcase title="Assorted components">
-        <VLayout gap={20}>
+        <VLayout gap="medium">
           <HLayout>
             <sl-button size="small">Default</sl-button>
             <sl-button type="primary" size="small">
@@ -94,7 +94,7 @@ const PaletteShowcase = define({
               Danger
             </sl-button>
           </HLayout>
-          <HLayout gap={20}>
+          <HLayout gap="medium">
             <sl-dropdown>
               <sl-button slot="trigger" caret>
                 Dropdown
@@ -119,7 +119,7 @@ const PaletteShowcase = define({
             </sl-dropdown>
             <sl-range min="0" max="100" step="1"></sl-range>
           </HLayout>
-          <HLayout gap={20}>
+          <HLayout gap="medium">
             <sl-switch>Enable some feature</sl-switch>
             <sl-button onclick={(ev: any) => dialogRef.current!.show()}>
               Press to open dialog
@@ -136,26 +136,39 @@ const PaletteShowcase = define({
             </sl-dialog>
           </HLayout>
           <sl-tab-group>
-            <sl-tab slot="nav" panel="general">
-              General
+            <sl-tab slot="nav" panel="checkbox-radio">
+              Checkbox/Radio
             </sl-tab>
-            <sl-tab slot="nav" panel="custom">
-              Custom
+            <sl-tab slot="nav" panel="rating">
+              Rating
             </sl-tab>
-            <sl-tab slot="nav" panel="advanced">
-              Advanced
+            <sl-tab slot="nav" panel="spinner">
+              Spinner
             </sl-tab>
             <sl-tab slot="nav" panel="disabled" disabled>
               Disabled
             </sl-tab>
-            <sl-tab-panel name="general">
-              This is the general tab panel.
+            <sl-tab-panel name="checkbox-radio">
+              <HLayout gap="huge">
+                <VLayout>
+                  <sl-checkbox checked>Some checkbox</sl-checkbox>
+                  <sl-checkbox>Another checkbox</sl-checkbox>
+                </VLayout>
+                <VLayout>
+                  <sl-radio name="option">Option 1</sl-radio>
+                  <sl-radio name="option" checked>
+                    Option 2
+                  </sl-radio>
+                </VLayout>
+              </HLayout>
             </sl-tab-panel>
-            <sl-tab-panel name="custom">
-              This is the custom tab panel.
+            <sl-tab-panel name="rating">
+              <sl-rating precision=".5" value="2.5"></sl-rating>
             </sl-tab-panel>
-            <sl-tab-panel name="advanced">
-              This is the advanced tab panel.
+            <sl-tab-panel name="spinner">
+              <sl-spinner></sl-spinner>
+              <sl-spinner style="font-size: 2rem;"></sl-spinner>
+              <sl-spinner style="font-size: 3rem;"></sl-spinner>
             </sl-tab-panel>
             <sl-tab-panel name="disabled">
               This is a disabled tab panel.
@@ -299,16 +312,12 @@ const styles = {
       font-family: var(--sl-font-sans);
       font-size: var(--sl-font-size-medium);
     }
-
-    h3 {
-      font-weight: 400;
-      font-size: var(--sl-font-size-large);
-    } 
   `,
 
   showcasePalette: `
     th {
-      padding: 2px 4px 8px 4px;
+      padding: 2px 4px 4px 8px;
+      width: 3.5em;
       font-weight: var(--sl-font-weight-normal);
       font-size: var(--sl-font-size-small);
     }

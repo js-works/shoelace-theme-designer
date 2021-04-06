@@ -4,6 +4,16 @@ import { define, h } from 'js-element'
 
 export { AppLayout, HLayout, VLayout }
 
+// === constants =====================================================
+
+const gaps = {
+  tiny: '4px',
+  small: '8px',
+  medium: '20px',
+  large: '40px',
+  huge: '60px'
+}
+
 // === components ====================================================
 
 const HLayout = define({
@@ -12,11 +22,11 @@ const HLayout = define({
   styles: () => styles.hLayout,
 
   props: class {
-    gap = 6
+    gap = 'tiny' as 'tiny' | 'small' | 'medium' | 'large' | 'huge'
   }
 })((p) => {
   return () => (
-    <div style={`gap: ${p.gap}px`}>
+    <div style={`gap: ${gaps[p.gap]}`}>
       <slot />
     </div>
   )
@@ -28,11 +38,11 @@ const VLayout = define({
   styles: () => styles.vLayout,
 
   props: class {
-    gap = 6
+    gap = 'tiny' as 'tiny' | 'small' | 'medium' | 'large' | 'huge'
   }
 })((p) => {
   return () => (
-    <div style={`gap: ${p.gap}px`}>
+    <div style={`gap: ${gaps[p.gap]}`}>
       <slot />
     </div>
   )
@@ -73,7 +83,6 @@ const styles = {
 
     .header {
       grid-column: 1/-1;
-      /* box-shadow: rgba(149, 157, 165, 0.05) 0px 8px 24px; */
       z-index: 100;
     }
 
