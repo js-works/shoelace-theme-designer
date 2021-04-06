@@ -168,7 +168,8 @@ const IconShowcase = define({
 const styles = {
   showcase: `
     .base {
-      margin: 10px 0 75px 0;
+      color: var(--sl-color-black);
+      margin: 10px 0 75px 0; 
     }
 
     h3 {

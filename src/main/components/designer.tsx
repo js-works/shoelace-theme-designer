@@ -5,7 +5,13 @@ import { microstore } from 'js-element/utils'
 import { useEmitter } from 'js-element/hooks'
 import { AppLayout, HLayout, VLayout } from './layouts'
 import { defaultTheme } from '../theming/default-theme'
-import { createTheme, fromThemeToCss } from '../theming/theme-utils'
+
+import {
+  createTheme,
+  fromThemeToCss,
+  invertTheme
+} from '../theming/theme-utils'
+
 import { Theme } from '../theming/types'
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon.js'
@@ -50,6 +56,7 @@ const [useStoreProvider, useStore] = microstore(() => {
 
     setDarkMode(value: boolean) {
       this.customizing.darkMode = value
+      this.customize(this.customizing)
     },
 
     customize(values: Partial<Customizing>) {
@@ -98,7 +105,7 @@ const Designer = define({
           <Sidebar />
         </div>
         <div slot="main" class="showcases">
-          <slot name="showcases" />
+          <slot name="showcases" class="showcases" />
         </div>
       </AppLayout>
     </div>
@@ -156,7 +163,7 @@ const Sidebar = define({
     }
 
     return (
-      <VLayout>
+      <VLayout class="base">
         <h3 class="headline">Basic theme colors</h3>
         <ColorField
           label="Primary color"
@@ -392,7 +399,7 @@ function getCustomizedTheme(customizing: Customizing): Theme {
     'color-danger-500': customizing.colorDanger
   })
 
-  return newTheme
+  return customizing.darkMode ? invertTheme(newTheme) : newTheme
 }
 
 // === styles ========================================================
@@ -413,15 +420,21 @@ const styles = {
       overflow: hidden;
     }
 
+    .base {
+      background-color: var(--sl-color-white);
+    }
+
     .header {
       padding: 5px 10px 6px 10px;
       height: 51px;
       width: 100%;
       box-sizing: border-box;
-      box-shadow: rgba(149, 157, 165, 0.3) 0px 8px 24px;
       border-width: 0 0 1px 0;
       border-style: solid;
-      border-color: var(--sl-color-gray-200)
+      border-color: var(--sl-color-gray-200);
+      background-color: var(--sl-color-white);
+      xbox-shadow: rgba(149, 157, 165, 0.3) 0px 8px 24px;
+      box-shadow: rgba(149, 157, 165, 0.8) 0px 8px 24px;
     }
 
     .sidebar {
@@ -430,10 +443,12 @@ const styles = {
       box-sizing: border-box;
       border: 1px solid var(--sl-color-gray-200);
       border-width: 0 1px 0 0;
+      background-color: var(--sl-color-white);
     }
 
     .showcases {
       padding: 10px 30px;
+      background-color: var(--sl-color-white);
     }
 
     .dark-mode {
@@ -459,6 +474,10 @@ const styles = {
   `,
 
   sidebar: `
+    .base {
+      color: var(--sl-color-black)
+    }
+
     .headline {
       font-weight: 600;
       font-size: var(--sl-font-size-medium);
@@ -484,6 +503,10 @@ const styles = {
     sl-color-picker {
       margin-top: -4px;
     }
+  `,
+
+  showcases: `
+    color: var(--sl-color-black)
   `,
 
   themeExportDrawer: `

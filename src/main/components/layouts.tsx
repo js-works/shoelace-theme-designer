@@ -65,6 +65,8 @@ const styles = {
 
     .header {
       grid-column: 1/-1;
+      box-shadow: rgba(149, 157, 165, 0.05) 0px 8px 24px;
+      z-index: 10000;
     }
 
     .sidebar {
