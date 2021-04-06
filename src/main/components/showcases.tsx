@@ -173,7 +173,7 @@ const styles = {
     }
 
     h3 {
-      font-weight: 600;
+      font-weight: 400;
       font-family: var(--sl-font-sans);
       font-size: var(--sl-font-size-large);
     } 
