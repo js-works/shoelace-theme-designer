@@ -169,7 +169,7 @@ const styles = {
   showcase: `
     .base {
       color: var(--sl-color-black);
-      margin: 10px 0 75px 0; 
+      margin: 10px 0 65px 0; 
     }
 
     h3 {

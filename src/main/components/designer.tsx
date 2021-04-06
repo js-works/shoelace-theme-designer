@@ -1,18 +1,20 @@
 import { define, createRef, createEvent, h } from 'js-element'
 import { Listener, TypedEvent } from 'js-element'
-import { useEffect, useHost } from 'js-element/hooks'
+import { useEffect } from 'js-element/hooks'
 import { microstore } from 'js-element/utils'
 import { useEmitter } from 'js-element/hooks'
 import { AppLayout, HLayout, VLayout } from './layouts'
+import { Theme } from '../theming/types'
 import { defaultTheme } from '../theming/default-theme'
+import Color from 'color'
 
 import {
   createTheme,
   fromThemeToCss,
-  invertTheme
+  COLOR_SHADES,
+  SEMANTIC_COLORS
 } from '../theming/theme-utils'
 
-import { Theme } from '../theming/types'
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon.js'
 import SlColorPicker from '@shoelace-style/shoelace/dist/components/color-picker/color-picker.js'
@@ -33,7 +35,8 @@ type Customizing = {
   readonly colorSuccess: string
   readonly colorWarning: string
   readonly colorDanger: string
-  readonly darkMode: boolean
+  readonly colorFront: string
+  readonly colorBack: string
 }
 
 // === store ==========================================================
@@ -46,18 +49,14 @@ const [useStoreProvider, useStore] = microstore(() => {
       colorInfo: defaultTheme['color-info-500'],
       colorWarning: defaultTheme['color-warning-500'],
       colorDanger: defaultTheme['color-danger-500'],
-      darkMode: false
+      colorFront: defaultTheme['color-black'],
+      colorBack: defaultTheme['color-white']
     },
 
     theme: defaultTheme,
     themeCss: fromThemeToCss(defaultTheme),
 
     showExportDrawer: false,
-
-    setDarkMode(value: boolean) {
-      this.customizing.darkMode = value
-      this.customize(this.customizing)
-    },
 
     customize(values: Partial<Customizing>) {
       Object.assign(this.customizing, values)
@@ -71,6 +70,14 @@ const [useStoreProvider, useStore] = microstore(() => {
       this.customizing.colorInfo = defaultTheme['color-info-500']
       this.customizing.colorWarning = defaultTheme['color-warning-500']
       this.customizing.colorDanger = defaultTheme['color-danger-500']
+      this.customizing.colorFront = defaultTheme['color-black']
+      this.customizing.colorBack = defaultTheme['color-white']
+    },
+
+    swapFrontBackColors() {
+      const newBackColor = this.customizing.colorFront
+      this.customizing.colorFront = this.customizing.colorBack
+      this.customizing.colorBack = newBackColor
     }
   }
 })
@@ -131,7 +138,7 @@ const Header = define({
     <div class="base">
       <div class="brand">Shoelace Theme Designer</div>
       <div class="actions">
-        <sl-button type="primary" onclick={onExportClick}>
+        <sl-button type="primary" size="medium" onclick={onExportClick}>
           Export Theme
         </sl-button>
       </div>
@@ -143,16 +150,12 @@ const Sidebar = define({
   name: 'sx-designer--sidebar',
   styles: () => styles.sidebar
 })(() => {
-  const host = useHost()
   const store = useStore()
   const resetColors = () => store.resetColors()
+  const swapFrontBackColors = () => store.swapFrontBackColors()
 
   return () => {
     const customizing = store.customizing
-
-    const onDarkModeChange = (ev: any) => {
-      store.setDarkMode(ev.target.checked)
-    }
 
     const createColorListener = (type: string) => {
       return (ev: any) => {
@@ -190,19 +193,23 @@ const Sidebar = define({
           value={customizing.colorDanger}
           onColorChange={createColorListener('colorDanger')}
         />
-        <div class="color-actions">
+        <ColorField
+          label="Front color"
+          value={customizing.colorFront}
+          onColorChange={createColorListener('colorFront')}
+        />
+        <ColorField
+          label="Back color"
+          value={customizing.colorBack}
+          onColorChange={createColorListener('colorBack')}
+        />
+        <HLayout class="color-actions">
+          <sl-button size="small" onclick={swapFrontBackColors}>
+            Swap front/back colors
+          </sl-button>
           <sl-button size="small" onclick={resetColors}>
             Reset colors
           </sl-button>
-        </div>
-        <h3 class="headline">Dark mode</h3>
-        <HLayout class="dark-mode">
-          <sl-switch
-            checked={store.customizing.darkMode}
-            onsl-change={onDarkModeChange}
-          >
-            Enable dark mode
-          </sl-switch>
         </HLayout>
       </VLayout>
     )
@@ -268,7 +275,6 @@ const ThemeExportDrawer = define({
       ref={drawerRef}
       label="Export theme"
       class="drawer-overview"
-      style="height: 100%; border: 1px solid red;"
     >
       <sl-tab-group>
         <sl-tab slot="nav" panel="code">
@@ -391,15 +397,37 @@ const ThemeExportDrawer = define({
 // === helpers =======================================================
 
 function getCustomizedTheme(customizing: Customizing): Theme {
-  const newTheme = createTheme({
+  const newTokens: Partial<Theme> = {
     'color-primary-500': customizing.colorPrimary,
     'color-success-500': customizing.colorSuccess,
     'color-info-500': customizing.colorInfo,
     'color-warning-500': customizing.colorWarning,
-    'color-danger-500': customizing.colorDanger
-  })
+    'color-danger-500': customizing.colorDanger,
+    'color-black': customizing.colorFront,
+    'color-white': customizing.colorBack
+  }
 
-  return customizing.darkMode ? invertTheme(newTheme) : newTheme
+  if (Color(customizing.colorBack).isDark()) {
+    for (const color of SEMANTIC_COLORS) {
+      for (const shade of COLOR_SHADES) {
+        const shade2 = 1000 - shade
+        const key1 = `color-${color}-${shade}`
+        const key2 = `color-${color}-${shade2}`
+
+        setProp(newTokens, key1, getProp(defaultTheme, key2))
+      }
+    }
+  }
+
+  return createTheme(newTokens)
+}
+
+function getProp(obj: object, name: string) {
+  return (obj as any)[name]
+}
+
+function setProp(obj: object, name: string, value: any) {
+  ;(obj as any)[name] = value
 }
 
 // === styles ========================================================
@@ -421,7 +449,9 @@ const styles = {
     }
 
     .base {
+      color: var(--sl-color-black);
       background-color: var(--sl-color-white);
+
     }
 
     .header {
@@ -433,8 +463,7 @@ const styles = {
       border-style: solid;
       border-color: var(--sl-color-gray-200);
       background-color: var(--sl-color-white);
-      xbox-shadow: rgba(149, 157, 165, 0.3) 0px 8px 24px;
-      box-shadow: rgba(149, 157, 165, 0.8) 0px 8px 24px;
+      /* box-shadow: var(--sl-color-gray-300) 0px 8px 24px; */
     }
 
     .sidebar {
@@ -449,10 +478,6 @@ const styles = {
     .showcases {
       padding: 10px 30px;
       background-color: var(--sl-color-white);
-    }
-
-    .dark-mode {
-      padding-left: 0.5em;
     }
   `,
 
@@ -485,13 +510,13 @@ const styles = {
 
     .color-actions {
       margin: 12px 0 0 0;
-      text-align: right;
+      text-align: center;
     }
   `,
 
   colorField: `
     label {
-      width: 7em;
+      width: 9em;
       height: 2.3em;
       padding: 0 0 0 0.5em;
     }

@@ -2,7 +2,7 @@ import { define, h } from 'js-element'
 import { Designer } from './designer'
 import { Showcases } from './showcases'
 
-// === App ===========================================================
+// === components ====================================================
 
 export const App = define({
   name: 'sx-app'

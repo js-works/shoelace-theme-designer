@@ -65,8 +65,8 @@ const styles = {
 
     .header {
       grid-column: 1/-1;
-      box-shadow: rgba(149, 157, 165, 0.05) 0px 8px 24px;
-      z-index: 10000;
+      /* box-shadow: rgba(149, 157, 165, 0.05) 0px 8px 24px; */
+      z-index: 100;
     }
 
     .sidebar {
@@ -80,7 +80,7 @@ const styles = {
 
   hLayout: `
     div {
-      display: flex;
+      display: inline-flex;
       gap: 6px;
       font-size: var(--sl-font-size-medium);
       font-family: var(--sl-font-sans);
@@ -89,7 +89,7 @@ const styles = {
 
   vLayout: `
     div {
-      display: flex;
+      display: inline-flex;
       flex-direction: column;
       gap: 6px;
       font-size: var(--sl-font-size-medium);

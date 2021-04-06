@@ -2,7 +2,20 @@ import { Theme } from './types'
 
 // === exports =======================================================
 
-export const defaultTheme: Theme = Object.freeze({
+export { defaultTheme }
+
+// === default theme =================================================
+
+function patch(theme: Theme): Theme {
+  const ret: Theme = { ...theme }
+
+  ret['color-black'] = '#000000'
+  ret['color-white'] = '#ffffff'
+
+  return Object.freeze(ret)
+}
+
+const defaultTheme = patch({
   'color-black': '#000',
   'color-white': '#fff',
   'color-gray-50': '#f9fafb',

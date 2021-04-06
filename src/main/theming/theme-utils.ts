@@ -3,46 +3,25 @@ import { Theme } from './types'
 
 // === exports =======================================================
 
-export { createTheme, fromThemeToCss, invertTheme, loadTheme }
+export { createTheme, fromThemeToCss, loadTheme, COLOR_SHADES, SEMANTIC_COLORS }
+
+// === constants =====================================================
+
+const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
+
+const SEMANTIC_COLORS = [
+  'primary',
+  'info',
+  'success',
+  'warning',
+  'danger',
+  'gray'
+]
 
 // === utils =========================================================
 
 function createTheme(tokens: Partial<Theme>, baseTheme = defaultTheme) {
   return Object.freeze({ ...baseTheme, ...tokens })
-}
-
-function invertTheme(theme: Theme) {
-  const ret: Theme = { ...theme }
-
-  const newBlack = theme['color-white']
-  const newWhite = theme['color-black']
-
-  ret['color-black'] = newBlack
-  ret['color-white'] = newWhite
-
-  for (const color of ['primary', 'info', 'success', 'warning', 'danger']) {
-    for (const shade of [
-      50,
-      100,
-      200,
-      300,
-      400,
-      500,
-      600,
-      700,
-      800,
-      900,
-      950
-    ]) {
-      const shade2 = 1000 - shade
-      const key1 = `color-${color}-${shade}`
-      const key2 = `color-${color}-${shade2}`
-      console.log(key1, key2)
-      ;(ret as any)[key1] = (theme as any)[key2]
-    }
-  }
-
-  return ret
 }
 
 function fromThemeToCss(theme: Theme): string {
