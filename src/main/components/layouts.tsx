@@ -9,10 +9,14 @@ export { AppLayout, HLayout, VLayout }
 const HLayout = define({
   name: 'sx-horizontal-layout',
   slots: ['default'],
-  styles: () => styles.hLayout
-})(() => {
+  styles: () => styles.hLayout,
+
+  props: class {
+    gap = 6
+  }
+})((p) => {
   return () => (
-    <div>
+    <div style={`gap: ${p.gap}px`}>
       <slot />
     </div>
   )
@@ -21,10 +25,14 @@ const HLayout = define({
 const VLayout = define({
   name: 'sx-vertical-layout',
   slots: ['default'],
-  styles: () => styles.vLayout
-})(() => {
+  styles: () => styles.vLayout,
+
+  props: class {
+    gap = 6
+  }
+})((p) => {
   return () => (
-    <div>
+    <div style={`gap: ${p.gap}px`}>
       <slot />
     </div>
   )
@@ -81,7 +89,7 @@ const styles = {
   hLayout: `
     div {
       display: inline-flex;
-      gap: 6px;
+      align-items: center;
       font-size: var(--sl-font-size-medium);
       font-family: var(--sl-font-sans);
     }
@@ -91,7 +99,6 @@ const styles = {
     div {
       display: inline-flex;
       flex-direction: column;
-      gap: 6px;
       font-size: var(--sl-font-size-medium);
       font-family: var(--sl-font-sans);
     }

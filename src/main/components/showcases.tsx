@@ -1,7 +1,7 @@
-import { define, h } from 'js-element'
+import { createRef, define, h } from 'js-element'
 import { HLayout, VLayout } from './layouts'
 import * as Shoelace from '@shoelace-style/shoelace'
-import { COLOR_SHADES, SEMANTIC_COLORS } from '../theming/theme-utils'
+import { COLOR_SHADES, SEMANTIC_COLORS_PLUS_GRAY } from '../theming/theme-utils'
 
 // === exports =======================================================
 
@@ -47,31 +47,123 @@ const PaletteShowcase = define({
   name: 'sx-palette-showcase',
   styles: () => styles.showcasePalette
 })(() => {
+  const dialogRef = createRef<any>()
+
   return () => (
-    <Showcase title="Palette" class="showcase-palette">
-      <table class="palette-table" cellPadding={0} cellSpacing={0}>
-        <thead>
-          <th />
-          {SEMANTIC_COLORS.map((color) => (
-            <th>{color}</th>
-          ))}
-        </thead>
-        <tbody>
-          {COLOR_SHADES.map((shade) => (
-            <tr>
-              <td>{shade}</td>
-              {SEMANTIC_COLORS.map((color) => {
-                const style = `
+    <HLayout gap={40}>
+      <Showcase title="Palette" class="showcase-palette">
+        <table class="palette-table" cellPadding={0} cellSpacing={0}>
+          <thead>
+            <th />
+            {SEMANTIC_COLORS_PLUS_GRAY.map((color) => (
+              <th>{color}</th>
+            ))}
+          </thead>
+          <tbody>
+            {COLOR_SHADES.map((shade) => (
+              <tr>
+                <td>{shade}</td>
+                {SEMANTIC_COLORS_PLUS_GRAY.map((color) => {
+                  const style = `
                   background-color: var(--sl-color-${color}-${shade});
                 `
-
-                return <td style={style}></td>
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </Showcase>
+                  return <td style={style}></td>
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Showcase>
+      <Showcase title="Assorted components">
+        <VLayout gap={20}>
+          <HLayout>
+            <sl-button size="small">Default</sl-button>
+            <sl-button type="primary" size="small">
+              Primary
+            </sl-button>
+            <sl-button type="success" size="small">
+              Success
+            </sl-button>
+            <sl-button type="info" size="small">
+              Info
+            </sl-button>
+            <sl-button type="warning" size="small">
+              Warning
+            </sl-button>
+            <sl-button type="danger" size="small">
+              Danger
+            </sl-button>
+          </HLayout>
+          <HLayout gap={20}>
+            <sl-dropdown>
+              <sl-button slot="trigger" caret>
+                Dropdown
+              </sl-button>
+              <sl-menu>
+                <sl-menu-item>Dropdown Item 1</sl-menu-item>
+                <sl-menu-item>Dropdown Item 2</sl-menu-item>
+                <sl-menu-item>Dropdown Item 3</sl-menu-item>
+                <sl-menu-divider></sl-menu-divider>
+                <sl-menu-item checked>Checked</sl-menu-item>
+                <sl-menu-item disabled>Disabled</sl-menu-item>
+                <sl-menu-divider></sl-menu-divider>
+                <sl-menu-item>
+                  Prefix
+                  <sl-icon slot="prefix" name="gift"></sl-icon>
+                </sl-menu-item>
+                <sl-menu-item>
+                  Suffix Icon
+                  <sl-icon slot="suffix" name="heart"></sl-icon>
+                </sl-menu-item>
+              </sl-menu>
+            </sl-dropdown>
+            <sl-range min="0" max="100" step="1"></sl-range>
+          </HLayout>
+          <HLayout gap={20}>
+            <sl-switch>Enable some feature</sl-switch>
+            <sl-button onclick={(ev: any) => dialogRef.current!.show()}>
+              Press to open dialog
+            </sl-button>
+            <sl-dialog ref={dialogRef} label="Dialog" class="dialog-overview">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              <sl-button
+                slot="footer"
+                type="primary"
+                onclick={() => dialogRef.current!.hide()}
+              >
+                Close
+              </sl-button>
+            </sl-dialog>
+          </HLayout>
+          <sl-tab-group>
+            <sl-tab slot="nav" panel="general">
+              General
+            </sl-tab>
+            <sl-tab slot="nav" panel="custom">
+              Custom
+            </sl-tab>
+            <sl-tab slot="nav" panel="advanced">
+              Advanced
+            </sl-tab>
+            <sl-tab slot="nav" panel="disabled" disabled>
+              Disabled
+            </sl-tab>
+            <sl-tab-panel name="general">
+              This is the general tab panel.
+            </sl-tab-panel>
+            <sl-tab-panel name="custom">
+              This is the custom tab panel.
+            </sl-tab-panel>
+            <sl-tab-panel name="advanced">
+              This is the advanced tab panel.
+            </sl-tab-panel>
+            <sl-tab-panel name="disabled">
+              This is a disabled tab panel.
+            </sl-tab-panel>
+          </sl-tab-group>
+        </VLayout>
+      </Showcase>
+    </HLayout>
   )
 })
 
@@ -218,12 +310,14 @@ const styles = {
     th {
       padding: 2px 4px 8px 4px;
       font-weight: var(--sl-font-weight-normal);
+      font-size: var(--sl-font-size-small);
     }
 
     td {
       width: 3em;
       height: calc(1em + 6px);
       text-align: center;
+      font-size: var(--sl-font-size-small);
     }
   `
 }

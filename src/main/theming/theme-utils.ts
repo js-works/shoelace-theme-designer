@@ -3,20 +3,20 @@ import { Theme } from './types'
 
 // === exports =======================================================
 
-export { createTheme, fromThemeToCss, loadTheme, COLOR_SHADES, SEMANTIC_COLORS }
+export {
+  createTheme,
+  fromThemeToCss,
+  loadTheme,
+  COLOR_SHADES,
+  SEMANTIC_COLORS,
+  SEMANTIC_COLORS_PLUS_GRAY
+}
 
 // === constants =====================================================
 
 const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
-
-const SEMANTIC_COLORS = [
-  'primary',
-  'info',
-  'success',
-  'warning',
-  'danger',
-  'gray'
-]
+const SEMANTIC_COLORS = ['primary', 'info', 'success', 'warning', 'danger']
+const SEMANTIC_COLORS_PLUS_GRAY = [...SEMANTIC_COLORS, 'gray']
 
 // === utils =========================================================
 

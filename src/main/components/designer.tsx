@@ -12,7 +12,8 @@ import {
   createTheme,
   fromThemeToCss,
   COLOR_SHADES,
-  SEMANTIC_COLORS
+  SEMANTIC_COLORS,
+  SEMANTIC_COLORS_PLUS_GRAY
 } from '../theming/theme-utils'
 
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
@@ -420,8 +421,25 @@ function getCustomizedTheme(
   }
 
   for (const color of SEMANTIC_COLORS) {
-    const color500 = `color-${color}-500`
+    const key500 = `color-${color}-500`
+    const value500 = getProp(newTokens, key500)
 
+    if (value500 !== getProp(defaultTheme, key500)) {
+      for (const shade of COLOR_SHADES) {
+        let newColor: Color
+        const colorName = `color-${color}-${shade}`
+
+        if (shade === 500) {
+          continue
+        } else if (shade < 500) {
+          newColor = Color(value500).lighten((500 - shade) / 400)
+        } else if (shade > 500) {
+          newColor = Color(value500).darken((shade - 400) / 500)
+        }
+
+        setProp(newTokens, colorName, newColor!)
+      }
+    }
     //if (getProp(newTokens, color500) !== getProp(defaultTheme, color500) {
     //  setProp(newTokens, color500, 'red')
     //}
