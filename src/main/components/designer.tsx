@@ -60,7 +60,7 @@ const [useStoreProvider, useStore] = microstore(() => {
 
     customize(values: Partial<Customizing>) {
       Object.assign(this.customizing, values)
-      this.theme = getCustomizedTheme(this.customizing)
+      this.theme = getCustomizedTheme(this.customizing, defaultTheme)
       this.themeCss = fromThemeToCss(this.theme)
     },
 
@@ -103,7 +103,14 @@ const Designer = define({
       </style>
       <ThemeExportDrawer />
       <AppLayout>
-        <div slot="header" class="header">
+        <div
+          slot="header"
+          class={
+            Color(store.customizing.colorBack).isDark()
+              ? 'header'
+              : 'header header-with-shadow'
+          }
+        >
           <Header
             onExport={() => (document.getElementById('drawer') as any).open()}
           />
@@ -394,9 +401,14 @@ const ThemeExportDrawer = define({
   )
 })
 
-// === helpers =======================================================
+// === theme customizer  =============================================
 
-function getCustomizedTheme(customizing: Customizing): Theme {
+function getCustomizedTheme(
+  customizing: Customizing,
+  defaultTheme: Theme
+): Theme {
+  const isDark = Color(customizing.colorBack).isDark()
+
   const newTokens: Partial<Theme> = {
     'color-primary-500': customizing.colorPrimary,
     'color-success-500': customizing.colorSuccess,
@@ -407,7 +419,15 @@ function getCustomizedTheme(customizing: Customizing): Theme {
     'color-white': customizing.colorBack
   }
 
-  if (Color(customizing.colorBack).isDark()) {
+  for (const color of SEMANTIC_COLORS) {
+    const color500 = `color-${color}-500`
+
+    //if (getProp(newTokens, color500) !== getProp(defaultTheme, color500) {
+    //  setProp(newTokens, color500, 'red')
+    //}
+  }
+
+  if (isDark) {
     for (const color of SEMANTIC_COLORS) {
       for (const shade of COLOR_SHADES) {
         const shade2 = 1000 - shade
@@ -422,7 +442,9 @@ function getCustomizedTheme(customizing: Customizing): Theme {
   return createTheme(newTokens)
 }
 
-function getProp(obj: object, name: string) {
+// === helpers =======================================================
+
+function getProp(obj: object, name: string): any {
   return (obj as any)[name]
 }
 
@@ -451,7 +473,6 @@ const styles = {
     .base {
       color: var(--sl-color-black);
       background-color: var(--sl-color-white);
-
     }
 
     .header {
@@ -463,7 +484,10 @@ const styles = {
       border-style: solid;
       border-color: var(--sl-color-gray-200);
       background-color: var(--sl-color-white);
-      /* box-shadow: var(--sl-color-gray-300) 0px 8px 24px; */
+    }
+
+    .header-with-shadow {
+      box-shadow: var(--sl-color-gray-300) 0px 8px 24px;
     }
 
     .sidebar {

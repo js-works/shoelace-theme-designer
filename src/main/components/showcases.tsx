@@ -1,6 +1,7 @@
 import { define, h } from 'js-element'
 import { HLayout, VLayout } from './layouts'
 import * as Shoelace from '@shoelace-style/shoelace'
+import { COLOR_SHADES, SEMANTIC_COLORS } from '../theming/theme-utils'
 
 // === exports =======================================================
 
@@ -30,6 +31,7 @@ const Showcases = define({
 })(() => {
   return () => (
     <div>
+      <PaletteShowcase />
       <AlertShowcase />
       <AvatarShowcase />
       <BadgeShowcase />
@@ -40,6 +42,38 @@ const Showcases = define({
 })
 
 // === showcases =====================================================
+
+const PaletteShowcase = define({
+  name: 'sx-palette-showcase',
+  styles: () => styles.showcasePalette
+})(() => {
+  return () => (
+    <Showcase title="Palette" class="showcase-palette">
+      <table class="palette-table" cellPadding={0} cellSpacing={0}>
+        <thead>
+          <th />
+          {SEMANTIC_COLORS.map((color) => (
+            <th>{color}</th>
+          ))}
+        </thead>
+        <tbody>
+          {COLOR_SHADES.map((shade) => (
+            <tr>
+              <td>{shade}</td>
+              {SEMANTIC_COLORS.map((color) => {
+                const style = `
+                  background-color: var(--sl-color-${color}-${shade});
+                `
+
+                return <td style={style}></td>
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </Showcase>
+  )
+})
 
 const AlertShowcase = define({
   name: 'sx-alerts-showcase',
@@ -170,12 +204,26 @@ const styles = {
     .base {
       color: var(--sl-color-black);
       margin: 10px 0 65px 0; 
+      font-family: var(--sl-font-sans);
+      font-size: var(--sl-font-size-medium);
     }
 
     h3 {
       font-weight: 400;
-      font-family: var(--sl-font-sans);
       font-size: var(--sl-font-size-large);
     } 
+  `,
+
+  showcasePalette: `
+    th {
+      padding: 2px 4px 8px 4px;
+      font-weight: var(--sl-font-weight-normal);
+    }
+
+    td {
+      width: 3em;
+      height: calc(1em + 6px);
+      text-align: center;
+    }
   `
 }
