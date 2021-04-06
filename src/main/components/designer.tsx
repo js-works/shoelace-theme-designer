@@ -1,6 +1,6 @@
 import { define, createRef, createEvent, h } from 'js-element'
 import { Listener, TypedEvent } from 'js-element'
-import { useEffect } from 'js-element/hooks'
+import { useEffect, useHost } from 'js-element/hooks'
 import { microstore } from 'js-element/utils'
 import { useEmitter } from 'js-element/hooks'
 import { AppLayout, HLayout, VLayout } from './layouts'
@@ -47,6 +47,10 @@ const [useStoreProvider, useStore] = microstore(() => {
     themeCss: fromThemeToCss(defaultTheme),
 
     showExportDrawer: false,
+
+    setDarkMode(value: boolean) {
+      this.customizing.darkMode = value
+    },
 
     customize(values: Partial<Customizing>) {
       Object.assign(this.customizing, values)
@@ -132,11 +136,16 @@ const Sidebar = define({
   name: 'sx-designer--sidebar',
   styles: () => styles.sidebar
 })(() => {
+  const host = useHost()
   const store = useStore()
   const resetColors = () => store.resetColors()
 
   return () => {
     const customizing = store.customizing
+
+    const onDarkModeChange = (ev: any) => {
+      store.setDarkMode(ev.target.checked)
+    }
 
     const createColorListener = (type: string) => {
       return (ev: any) => {
@@ -181,8 +190,12 @@ const Sidebar = define({
         </div>
         <h3 class="headline">Dark mode</h3>
         <HLayout class="dark-mode">
-          <sl-switch value={customizing.darkMode} />
-          <label>Enable dark mode</label>
+          <sl-switch
+            checked={store.customizing.darkMode}
+            onsl-change={onDarkModeChange}
+          >
+            Enable dark mode
+          </sl-switch>
         </HLayout>
       </VLayout>
     )
@@ -218,6 +231,7 @@ const ColorField = define({
         no-format-toggle
         size="small"
         value={p.value}
+        hoist
         onsl-change={onChange}
       ></sl-color-picker>
     </HLayout>

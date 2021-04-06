@@ -68,7 +68,7 @@ const styles = {
     }
 
     .sidebar {
-      overflow-vertical: auto; /* // TODO - should be same for horizontal */
+      overflow: auto; 
     }
 
     .main {
