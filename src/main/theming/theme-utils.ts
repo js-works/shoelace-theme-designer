@@ -1,7 +1,3 @@
-import { lightTheme } from './light-theme'
-import { lightHigherContrastTheme } from './light-higher-contrast-theme'
-import { darkTheme } from './dark-theme'
-import { darkHigherContrastTheme } from './dark-higher-contrast-theme'
 import { Theme } from './types'
 
 // === exports =======================================================
@@ -9,10 +5,6 @@ import { Theme } from './types'
 export {
   createTheme,
   fromThemeToCss,
-  getBaseThemeById,
-  getBaseThemeId,
-  getBaseThemeNameById,
-  getAllBaseThemeIds,
   invertTheme,
   loadTheme,
   COLOR_SHADES,
@@ -25,28 +17,6 @@ export {
 const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
 const SEMANTIC_COLORS = ['primary', 'info', 'success', 'warning', 'danger']
 const SEMANTIC_COLORS_PLUS_GRAY = [...SEMANTIC_COLORS, 'gray']
-
-const baseThemes = {
-  light: {
-    theme: lightTheme,
-    name: 'Light'
-  },
-
-  lightHighContrast: {
-    theme: lightHigherContrastTheme,
-    name: 'Light (level AA)'
-  },
-
-  dark: {
-    theme: darkTheme,
-    name: 'Dark'
-  },
-
-  darkHigherContrast: {
-    theme: darkHigherContrastTheme,
-    name: 'Dark (level AA)'
-  }
-}
 
 // === utils =========================================================
 
@@ -84,7 +54,6 @@ function loadTheme(name: string, theme: Theme) {
 }
 
 function invertTheme(theme: Theme): Theme {
-  return { ...theme }
   const newTheme: Theme = { ...theme }
 
   for (const color of SEMANTIC_COLORS_PLUS_GRAY) {
@@ -101,38 +70,4 @@ function invertTheme(theme: Theme): Theme {
   newTheme['color-black'] = theme['color-white']
 
   return newTheme
-}
-
-function getAllBaseThemeIds(): string[] {
-  return Object.keys(baseThemes)
-}
-
-function getBaseThemeById(id: string): Theme {
-  const ret = (baseThemes as any)[id].theme
-
-  if (!ret) {
-    throw Error(`[getBaseThemeById] Unknown base theme`)
-  }
-
-  return ret
-}
-
-function getBaseThemeId(theme: Theme): string {
-  for (const [key, value] of Object.entries(baseThemes)) {
-    if (value.theme === theme) {
-      return key
-    }
-  }
-
-  throw Error(`[getBaseThemeId] Unknown base theme`)
-}
-
-function getBaseThemeNameById(id: string): string {
-  const ret = (baseThemes as any)[id]?.name
-
-  if (!ret) {
-    throw Error(`[getBaseThemeNameById] Unknown base theme id`)
-  }
-
-  return ret
 }

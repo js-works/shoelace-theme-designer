@@ -7,18 +7,20 @@ import { AppLayout, HLayout, VLayout } from './layouts'
 import { H4, Text } from './typography'
 import { Theme } from '../theming/types'
 import Color from 'color'
-import { makeAutoObservable } from 'mobx'
+import { makeObservable, action, computed, observable } from 'mobx'
 
 import {
   createTheme,
   fromThemeToCss,
-  getBaseThemeId,
-  getBaseThemeById,
-  getBaseThemeNameById,
-  getAllBaseThemeIds,
   COLOR_SHADES,
   SEMANTIC_COLORS
 } from '../theming/theme-utils'
+
+import {
+  getBaseThemeById,
+  getBaseThemeNameById,
+  getAllBaseThemeIds
+} from '../theming/base-themes'
 
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon.js'
@@ -75,7 +77,15 @@ class Store {
   showExportDrawer = false
 
   constructor() {
-    makeAutoObservable(this)
+    makeObservable(this, {
+      baseThemeId: observable,
+      customizedCss: computed,
+      customizedTheme: computed,
+      customize: action,
+      customizing: observable,
+      resetTheme: action,
+      showExportDrawer: observable
+    })
   }
 
   customize(values: Partial<Customizing>) {
