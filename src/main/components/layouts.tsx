@@ -22,14 +22,24 @@ const HLayout = define({
   styles: () => styles.hLayout,
 
   props: class {
+    align = 'center' as 'top' | 'center' | 'bottom'
     gap = 'tiny' as 'tiny' | 'small' | 'medium' | 'large' | 'huge'
   }
 })((p) => {
-  return () => (
-    <div style={`gap: ${gaps[p.gap]}`}>
-      <slot />
-    </div>
-  )
+  return () => {
+    const alignItems =
+      p.align === 'top'
+        ? 'flex-start'
+        : p.align === 'bottom'
+        ? 'flex-end'
+        : 'center'
+
+    return (
+      <div style={`gap: ${gaps[p.gap]}; align-items: ${alignItems};`}>
+        <slot />
+      </div>
+    )
+  }
 })
 
 const VLayout = define({

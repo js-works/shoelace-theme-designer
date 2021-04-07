@@ -50,7 +50,7 @@ const PaletteShowcase = define({
   const dialogRef = createRef<any>()
 
   return () => (
-    <HLayout gap="huge">
+    <HLayout gap="huge" align="top">
       <Showcase title="Palette" class="showcase-palette">
         <table class="palette-table" cellPadding={0} cellSpacing={0}>
           <thead>
@@ -316,7 +316,7 @@ const styles = {
 
   showcasePalette: `
     th {
-      padding: 2px 4px 4px 8px;
+      padding: 2px 4px 6px 8px;
       width: 3.5em;
       font-weight: var(--sl-font-weight-normal);
       font-size: var(--sl-font-size-small);
@@ -324,7 +324,7 @@ const styles = {
 
     td {
       width: 3em;
-      height: calc(1em + 6px);
+      height: calc(1em + 7px);
       text-align: center;
       font-size: var(--sl-font-size-small);
     }

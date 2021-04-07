@@ -2,7 +2,7 @@ import { Theme } from './types'
 
 // === exports =======================================================
 
-export { defaultTheme }
+export { lightHigherContrastTheme }
 
 // === default theme =================================================
 
@@ -10,12 +10,12 @@ function patch(theme: Theme): Theme {
   const ret: Theme = { ...theme }
 
   ret['color-black'] = '#000000'
-  ret['color-white'] = '#ffffff'
+  ret['color-white'] = '#eaeaea'
 
   return Object.freeze(ret)
 }
 
-const defaultTheme = patch({
+const lightHigherContrastTheme = patch({
   'color-black': '#000',
   'color-white': '#fff',
   'color-gray-50': '#f9fafb',

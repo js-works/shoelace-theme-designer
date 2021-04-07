@@ -6,16 +6,18 @@ import { useEmitter } from 'js-element/hooks'
 import { AppLayout, HLayout, VLayout } from './layouts'
 import { H4, Text } from './typography'
 import { Theme } from '../theming/types'
-import { defaultTheme } from '../theming/default-theme'
 import Color from 'color'
 import { makeAutoObservable } from 'mobx'
 
 import {
   createTheme,
   fromThemeToCss,
+  getBaseThemeId,
+  getBaseThemeById,
+  getBaseThemeNameById,
+  getAllBaseThemeIds,
   COLOR_SHADES,
-  SEMANTIC_COLORS,
-  SEMANTIC_COLORS_PLUS_GRAY
+  SEMANTIC_COLORS
 } from '../theming/theme-utils'
 
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
@@ -44,9 +46,12 @@ type Customizing = {
 
 // === store ==========================================================
 
+const defaultTheme = getBaseThemeById('light')
+
 class Store {
+  baseThemeId = 'light'
+
   customizing = {
-    baseTheme: 'light' as 'light' | 'dark',
     colorPrimary: defaultTheme['color-primary-500'],
     colorSuccess: defaultTheme['color-success-500'],
     colorInfo: defaultTheme['color-info-500'],
@@ -56,8 +61,17 @@ class Store {
     colorBack: defaultTheme['color-white']
   }
 
-  theme = defaultTheme
-  themeCss = fromThemeToCss(defaultTheme)
+  get customizedTheme() {
+    return createCustomizedTheme(
+      this.customizing,
+      getBaseThemeById(this.baseThemeId)
+    )
+  }
+
+  get customizedCss() {
+    return fromThemeToCss(this.customizedTheme)
+  }
+
   showExportDrawer = false
 
   constructor() {
@@ -66,24 +80,18 @@ class Store {
 
   customize(values: Partial<Customizing>) {
     Object.assign(this.customizing, values)
-    this.theme = getCustomizedTheme(this.customizing, defaultTheme)
-    this.themeCss = fromThemeToCss(this.theme)
   }
 
-  resetColors() {
-    this.customizing.colorPrimary = defaultTheme['color-primary-500']
-    this.customizing.colorSuccess = defaultTheme['color-success-500']
-    this.customizing.colorInfo = defaultTheme['color-info-500']
-    this.customizing.colorWarning = defaultTheme['color-warning-500']
-    this.customizing.colorDanger = defaultTheme['color-danger-500']
-    this.customizing.colorFront = defaultTheme['color-black']
-    this.customizing.colorBack = defaultTheme['color-white']
-  }
+  resetTheme() {
+    const baseTheme = getBaseThemeById(this.baseThemeId)
 
-  swapFrontBackColors() {
-    const newBackColor = this.customizing.colorFront
-    this.customizing.colorFront = this.customizing.colorBack
-    this.customizing.colorBack = newBackColor
+    this.customizing.colorPrimary = baseTheme['color-primary-500']
+    this.customizing.colorSuccess = baseTheme['color-success-500']
+    this.customizing.colorInfo = baseTheme['color-info-500']
+    this.customizing.colorWarning = baseTheme['color-warning-500']
+    this.customizing.colorDanger = baseTheme['color-danger-500']
+    this.customizing.colorFront = baseTheme['color-black']
+    this.customizing.colorBack = baseTheme['color-white']
   }
 }
 
@@ -105,7 +113,7 @@ const Designer = define({
     <div class={`base sl-theme--designer-${designerId}`}>
       <style>
         {`.sl-theme--designer-${designerId} {`}
-        {store.themeCss}
+        {store.customizedCss}
         {'}'}
       </style>
       <ThemeExportDrawer />
@@ -165,8 +173,28 @@ const Sidebar = define({
   styles: () => styles.sidebar
 })(() => {
   const store = useStore()
-  const resetColors = () => store.resetColors()
-  const swapFrontBackColors = () => store.swapFrontBackColors()
+  const resetColors = () => store.resetTheme()
+
+  let ignore = false
+
+  const onBaseThemeChange = (ev: any) => {
+    if (ignore) {
+      return
+    }
+
+    ignore = true
+
+    setTimeout(() => (ignore = false))
+
+    const selectedBaseThemeId = ev.target.value
+
+    if (store.baseThemeId === selectedBaseThemeId) {
+      return
+    }
+
+    store.baseThemeId = selectedBaseThemeId
+    store.resetTheme()
+  }
 
   return () => {
     const customizing = store.customizing
@@ -181,20 +209,18 @@ const Sidebar = define({
 
     return (
       <VLayout class="base">
-        <H4>Base theme</H4>
+        <br />
         <HLayout gap="small">
-          <Text>Foundation:</Text>
-          <sl-dropdown value="light">
-            <sl-button slot="trigger" caret>
-              Light theme
-            </sl-button>
-            <sl-menu>
-              <sl-menu-item selected value="light">
-                Light theme
-              </sl-menu-item>
-              <sl-menu-item value="dark">Dark theme</sl-menu-item>
-            </sl-menu>
-          </sl-dropdown>
+          <Text>Base theme:</Text>
+          <sl-select
+            class="theme-selector"
+            onsl-change={onBaseThemeChange}
+            value={store.baseThemeId}
+          >
+            {getAllBaseThemeIds().map((id) => (
+              <sl-menu-item value={id}>{getBaseThemeNameById(id)}</sl-menu-item>
+            ))}
+          </sl-select>
         </HLayout>
         <H4>Theme colors</H4>
         <ColorField
@@ -232,13 +258,8 @@ const Sidebar = define({
           value={customizing.colorBack}
           onColorChange={createColorListener('colorBack')}
         />
-        <HLayout class="color-actions">
-          <sl-button size="small" onclick={swapFrontBackColors}>
-            Swap front/back colors
-          </sl-button>
-          <sl-button size="small" onclick={resetColors}>
-            Reset colors
-          </sl-button>
+        <HLayout class="color-actions" gap="small">
+          <sl-button onclick={resetColors}>Reset colors</sl-button>
         </HLayout>
       </VLayout>
     )
@@ -294,7 +315,7 @@ const ThemeExportDrawer = define({
   const closeDrawer = () => drawerRef.current!.hide()
 
   useEffect(
-    () => drawerRef.current[p.open ? 'show' : 'hide'](),
+    () => drawerRef.current && drawerRef.current[p.open ? 'show' : 'hide'](),
     () => [p.open]
   )
 
@@ -425,9 +446,9 @@ const ThemeExportDrawer = define({
 
 // === theme customizer  =============================================
 
-function getCustomizedTheme(
+function createCustomizedTheme(
   customizing: Customizing,
-  defaultTheme: Theme
+  baseTheme: Theme
 ): Theme {
   const isDark = Color(customizing.colorBack).isDark()
 
@@ -445,7 +466,7 @@ function getCustomizedTheme(
     const key500 = `color-${color}-500`
     const value500 = getProp(newTokens, key500)
 
-    if (value500 !== getProp(defaultTheme, key500)) {
+    if (value500 !== getProp(baseTheme, key500)) {
       for (const shade of COLOR_SHADES) {
         let newColor: Color
         const colorName = `color-${color}-${shade}`
@@ -466,19 +487,7 @@ function getCustomizedTheme(
     //}
   }
 
-  if (isDark) {
-    for (const color of SEMANTIC_COLORS_PLUS_GRAY) {
-      for (const shade of COLOR_SHADES) {
-        const shade2 = 1000 - shade
-        const key1 = `color-${color}-${shade}`
-        const key2 = `color-${color}-${shade2}`
-
-        setProp(newTokens, key1, getProp(defaultTheme, key2))
-      }
-    }
-  }
-
-  return createTheme(newTokens)
+  return createTheme(newTokens, baseTheme)
 }
 
 // === helpers =======================================================
@@ -566,9 +575,13 @@ const styles = {
       color: var(--sl-color-black)
     }
 
+    .theme-selector {
+      width: 12em;
+    }
+
     .color-actions {
-      margin: 12px 0 0 0;
-      text-align: center;
+      margin: 18px 18px 0 0;
+      text-align: right;
     }
   `,
 

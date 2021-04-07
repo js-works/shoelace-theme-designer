@@ -1,12 +1,6 @@
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities'
 import { h, render } from 'js-element'
 import { App } from './components/app'
-import { loadTheme } from './theming/theme-utils'
-import { defaultTheme } from './theming/default-theme'
-
-// === ugly stuff ====================================================
-
-loadTheme('default', defaultTheme)
 
 registerIconLibrary('default', {
   resolver: (name) =>

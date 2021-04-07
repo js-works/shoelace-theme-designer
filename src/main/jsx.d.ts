@@ -21,6 +21,7 @@ declare global {
       'sl-radio': any
       'sl-rating': any
       'sl-spinner': any
+      'sl-select': any
       'sl-switch': any
       'sl-tab': any
       'sl-tab-group': any
