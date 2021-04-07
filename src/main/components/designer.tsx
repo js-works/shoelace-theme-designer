@@ -77,7 +77,7 @@ class Store {
     return fromThemeToCss(this.customizedTheme)
   }
 
-  showExportDrawer = false
+  exportDrawerVisible = false
 
   constructor() {
     makeObservable(this, {
@@ -89,12 +89,17 @@ class Store {
       invertTheme: action,
       resetTheme: action,
       setBaseThemeId: action,
-      showExportDrawer: observable
+      setExportDrawerVisible: action,
+      exportDrawerVisible: observable
     })
   }
 
   setBaseThemeId(id: string) {
     this.baseThemeId = id
+  }
+
+  setExportDrawerVisible(value: boolean) {
+    this.exportDrawerVisible = value
   }
 
   customize(values: Partial<Customizing>) {
@@ -210,17 +215,7 @@ const Sidebar = define({
   const invertTheme = () => store.invertTheme()
   const resetTheme = () => store.resetTheme()
 
-  let ignore = false
-
   const onBaseThemeChange = (ev: any) => {
-    if (ignore) {
-      return
-    }
-
-    ignore = true
-
-    setTimeout(() => (ignore = false))
-
     const selectedBaseThemeId = ev.target.value
 
     if (store.baseThemeId === selectedBaseThemeId) {
@@ -313,6 +308,7 @@ const ColorField = define({
     onColorChange?: Listener<TypedEvent<'sx-color-change', { value: string }>>
   }
 })((p) => {
+  const pickerRef = createRef<any>()
   const emit = useEmitter()
 
   const onChange = (ev: any) => {
@@ -327,6 +323,7 @@ const ColorField = define({
       <label>{p.label}:</label>
       <span>{p.value}</span>
       <sl-color-picker
+        ref={pickerRef}
         format="hex"
         no-format-toggle
         size="small"
