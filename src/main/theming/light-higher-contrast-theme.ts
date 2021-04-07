@@ -9,7 +9,7 @@ export { lightHigherContrastTheme }
 
 const lightHigherContrastTheme = createTheme(
   {
-    'color-white': '020202'
+    'color-white': '#ededed'
   },
   lightTheme
 )
