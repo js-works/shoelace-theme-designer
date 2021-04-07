@@ -12,6 +12,7 @@ import { makeObservable, action, computed, observable } from 'mobx'
 import {
   createTheme,
   fromThemeToCss,
+  fromThemeToJson,
   invertTheme,
   COLOR_SHADES,
   SEMANTIC_COLORS
@@ -77,12 +78,17 @@ class Store {
     return fromThemeToCss(this.customizedTheme)
   }
 
+  get customizedJson() {
+    return fromThemeToJson(this.customizedTheme)
+  }
+
   exportDrawerVisible = false
 
   constructor() {
     makeObservable(this, {
       baseThemeId: observable,
       customizedCss: computed,
+      customizedJson: computed,
       customizedTheme: computed,
       customize: action,
       customizing: observable,
@@ -165,9 +171,7 @@ const Designer = define({
               : 'header header-with-shadow'
           }
         >
-          <Header
-            onExport={() => (document.getElementById('drawer') as any).open()}
-          />
+          <Header />
         </div>
         <div slot="sidebar" class="sidebar">
           <Sidebar />
@@ -183,16 +187,14 @@ const Designer = define({
 const Header = define({
   name: 'sx-designer--header',
   uses: [SlIcon, SlButton],
-  styles: () => styles.header,
-
-  props: class {
-    onExport?: Listener<TypedEvent<'sx-export'>>
-  }
+  styles: () => styles.header
 })((p) => {
-  const emit = useEmitter()
+  const store = useStore()
 
   const onExportClick = () => {
-    emit(createEvent('sx-export'), p.onExport)
+    if (!store.exportDrawerVisible) {
+      store.setExportDrawerVisible(true)
+    }
   }
 
   return () => (
@@ -200,7 +202,7 @@ const Header = define({
       <div class="brand">Shoelace Theme Designer</div>
       <div class="actions">
         <sl-button type="primary" size="medium" onclick={onExportClick}>
-          Export Theme
+          Export theme
         </sl-button>
       </div>
     </div>
@@ -344,130 +346,45 @@ const ThemeExportDrawer = define({
     open = false
   }
 })((p) => {
+  const store = useStore()
   const drawerRef = createRef<any>()
-  const closeDrawer = () => drawerRef.current!.hide()
+  const closeDrawer = () => store.setExportDrawerVisible(false)
 
   useEffect(
-    () => drawerRef.current && drawerRef.current[p.open ? 'show' : 'hide'](),
-    () => [p.open]
+    () => {
+      if (!drawerRef.current) {
+        return
+      }
+
+      if (store.exportDrawerVisible) {
+        drawerRef.current!.show()
+      } else {
+        drawerRef.current!.hide()
+      }
+    },
+    () => [store.exportDrawerVisible]
   )
 
   return () => (
     <sl-drawer
       id="drawer"
-      ref={drawerRef}
       label="Export theme"
-      class="drawer-overview"
+      class="drawer"
+      open={store.exportDrawerVisible}
+      onsl-hide={closeDrawer}
     >
       <sl-tab-group>
-        <sl-tab slot="nav" panel="code">
-          Code
+        <sl-tab slot="nav" panel="css">
+          CSS properties
         </sl-tab>
         <sl-tab slot="nav" panel="json">
           JSON
         </sl-tab>
-        <sl-tab-panel name="code">
-          <pre>
-            blalb bla bla
-            <br />
-            blablaxxx
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blalb bla bla
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-            blablaxxx
-            <br />
-          </pre>
+        <sl-tab-panel name="css">
+          <pre>{store.customizedCss}x</pre>
         </sl-tab-panel>
         <sl-tab-panel name="json">
-          <pre></pre>
+          <pre>{store.customizedJson}</pre>
         </sl-tab-panel>
       </sl-tab-group>
       <sl-button slot="footer" type="primary" onclick={closeDrawer}>
@@ -645,6 +562,10 @@ const styles = {
   `,
 
   themeExportDrawer: `
+    .drawer {
+      --size: 500px;
+    }
+
     pre {
       position: absolute;
       left: 0;

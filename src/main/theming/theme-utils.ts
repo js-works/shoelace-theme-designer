@@ -5,6 +5,7 @@ import { Theme } from './types'
 export {
   createTheme,
   fromThemeToCss,
+  fromThemeToJson,
   invertTheme,
   loadTheme,
   COLOR_SHADES,
@@ -32,6 +33,16 @@ function fromThemeToCss(theme: Theme): string {
   }
 
   return lines.join('\n')
+}
+
+function fromThemeToJson(theme: Theme): string {
+  const obj: any = {}
+
+  Object.entries(theme).forEach(([key, value]) => {
+    obj['--sl-' + key] = value
+  })
+
+  return JSON.stringify(obj, null, 2)
 }
 
 function loadTheme(name: string, theme: Theme) {
