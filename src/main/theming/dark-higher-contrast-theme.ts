@@ -1,12 +1,15 @@
 import { lightTheme } from './light-theme'
-import { invertTheme } from './theme-utils'
+import { createTheme, invertTheme } from './theme-utils'
 
 // === exports =======================================================
 
 export { darkHigherContrastTheme }
 
-// === default theme =================================================
+// === theme =========================================================
 
-const darkHigherContrastTheme = invertTheme(lightTheme)
-
-darkHigherContrastTheme['color-white'] = '#020202'
+const darkHigherContrastTheme = createTheme(
+  {
+    'color-white': '#020202'
+  },
+  invertTheme(lightTheme)
+)

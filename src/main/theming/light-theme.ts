@@ -1,3 +1,4 @@
+import { createTheme } from './theme-utils'
 import { Theme } from './types'
 
 // === exports =======================================================
@@ -7,12 +8,13 @@ export { lightTheme }
 // === default theme =================================================
 
 function patch(theme: Theme): Theme {
-  const ret: Theme = { ...theme }
-
-  ret['color-black'] = '#000000'
-  ret['color-white'] = '#ffffff'
-
-  return Object.freeze(ret)
+  return createTheme(
+    {
+      'color-black': '#000000',
+      'color-white': '#ffffff'
+    },
+    theme
+  )
 }
 
 const lightTheme = patch({

@@ -12,6 +12,7 @@ import { makeObservable, action, computed, observable } from 'mobx'
 import {
   createTheme,
   fromThemeToCss,
+  invertTheme,
   COLOR_SHADES,
   SEMANTIC_COLORS
 } from '../theming/theme-utils'
@@ -37,6 +38,7 @@ export { Designer }
 // === types ==========================================================
 
 type Customizing = {
+  readonly inverted: boolean
   readonly colorPrimary: string
   readonly colorInfo: string
   readonly colorSuccess: string
@@ -53,7 +55,8 @@ const defaultTheme = getBaseThemeById('light')
 class Store {
   baseThemeId = 'light'
 
-  customizing = {
+  customizing: Customizing = {
+    inverted: false,
     colorPrimary: defaultTheme['color-primary-500'],
     colorSuccess: defaultTheme['color-success-500'],
     colorInfo: defaultTheme['color-info-500'],
@@ -83,25 +86,46 @@ class Store {
       customizedTheme: computed,
       customize: action,
       customizing: observable,
+      invertTheme: action,
       resetTheme: action,
+      setBaseThemeId: action,
       showExportDrawer: observable
     })
+  }
+
+  setBaseThemeId(id: string) {
+    this.baseThemeId = id
   }
 
   customize(values: Partial<Customizing>) {
     Object.assign(this.customizing, values)
   }
 
+  invertTheme() {
+    const colorFront = this.customizing.colorFront
+    const colorBack = this.customizing.colorBack
+
+    this.customizing = {
+      ...this.customizing,
+      colorFront,
+      colorBack,
+      inverted: !this.customizing.inverted
+    }
+  }
+
   resetTheme() {
     const baseTheme = getBaseThemeById(this.baseThemeId)
 
-    this.customizing.colorPrimary = baseTheme['color-primary-500']
-    this.customizing.colorSuccess = baseTheme['color-success-500']
-    this.customizing.colorInfo = baseTheme['color-info-500']
-    this.customizing.colorWarning = baseTheme['color-warning-500']
-    this.customizing.colorDanger = baseTheme['color-danger-500']
-    this.customizing.colorFront = baseTheme['color-black']
-    this.customizing.colorBack = baseTheme['color-white']
+    this.customizing = {
+      inverted: false,
+      colorPrimary: baseTheme['color-primary-500'],
+      colorSuccess: baseTheme['color-success-500'],
+      colorInfo: baseTheme['color-info-500'],
+      colorWarning: baseTheme['color-warning-500'],
+      colorDanger: baseTheme['color-danger-500'],
+      colorFront: baseTheme['color-black'],
+      colorBack: baseTheme['color-white']
+    }
   }
 }
 
@@ -183,7 +207,8 @@ const Sidebar = define({
   styles: () => styles.sidebar
 })(() => {
   const store = useStore()
-  const resetColors = () => store.resetTheme()
+  const invertTheme = () => store.invertTheme()
+  const resetTheme = () => store.resetTheme()
 
   let ignore = false
 
@@ -202,7 +227,7 @@ const Sidebar = define({
       return
     }
 
-    store.baseThemeId = selectedBaseThemeId
+    store.setBaseThemeId(selectedBaseThemeId)
     store.resetTheme()
   }
 
@@ -269,7 +294,8 @@ const Sidebar = define({
           onColorChange={createColorListener('colorBack')}
         />
         <HLayout class="color-actions" gap="small">
-          <sl-button onclick={resetColors}>Reset colors</sl-button>
+          <sl-button onclick={invertTheme}>Invert theme</sl-button>
+          <sl-button onclick={resetTheme}>Reset theme</sl-button>
         </HLayout>
       </VLayout>
     )
@@ -497,7 +523,13 @@ function createCustomizedTheme(
     //}
   }
 
-  return createTheme(newTokens, baseTheme)
+  let customizedTheme = createTheme(newTokens, baseTheme)
+
+  if (customizing.inverted) {
+    customizedTheme = invertTheme(customizedTheme)
+  }
+
+  return customizedTheme
 }
 
 // === helpers =======================================================

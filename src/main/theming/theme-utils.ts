@@ -20,7 +20,7 @@ const SEMANTIC_COLORS_PLUS_GRAY = [...SEMANTIC_COLORS, 'gray']
 
 // === utils =========================================================
 
-function createTheme(tokens: Partial<Theme>, baseTheme: Theme) {
+function createTheme(tokens: Partial<Theme>, baseTheme: Theme): Theme {
   return Object.freeze({ ...baseTheme, ...tokens })
 }
 
@@ -54,7 +54,7 @@ function loadTheme(name: string, theme: Theme) {
 }
 
 function invertTheme(theme: Theme): Theme {
-  const newTheme: Theme = { ...theme }
+  const newTokens: any = { ...theme }
 
   for (const color of SEMANTIC_COLORS_PLUS_GRAY) {
     for (const shade of COLOR_SHADES) {
@@ -62,12 +62,12 @@ function invertTheme(theme: Theme): Theme {
       const key1 = `color-${color}-${shade}`
       const key2 = `color-${color}-${shade2}`
 
-      ;(newTheme as any)[key1] = (theme as any)[key2]
+      ;(newTokens as any)[key1] = (theme as any)[key2]
     }
   }
 
-  newTheme['color-white'] = theme['color-black']
-  newTheme['color-black'] = theme['color-white']
+  newTokens['color-white'] = theme['color-black']
+  newTokens['color-black'] = theme['color-white']
 
-  return newTheme
+  return (createTheme as any)(newTokens) // TODO
 }

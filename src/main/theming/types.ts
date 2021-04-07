@@ -4,7 +4,7 @@ export { Theme }
 
 // === types =========================================================
 
-type Theme = {
+type Theme = Readonly<{
   'color-black': string
   'color-white': string
   'color-gray-50': string
@@ -195,4 +195,4 @@ type Theme = {
   'z-index-dropdown': string
   'z-index-toast': string
   'z-index-tooltip': string
-}
+}>
