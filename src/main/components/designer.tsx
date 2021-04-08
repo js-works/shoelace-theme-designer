@@ -18,7 +18,9 @@ import { Customizing } from '../theming/types'
 import {
   createCustomizedTheme,
   fromThemeToCss,
-  fromThemeToJson
+  fromThemeToJson,
+  serializeCustomization,
+  unserializeCustomization
 } from '../theming/theme-utils'
 
 import {
@@ -27,6 +29,7 @@ import {
   getAllBaseThemeIds
 } from '../theming/base-themes'
 
+import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert.js'
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon.js'
 import SlColorPicker from '@shoelace-style/shoelace/dist/components/color-picker/color-picker.js'
@@ -34,6 +37,7 @@ import SlInput from '@shoelace-style/shoelace/dist/components/input/input.js'
 import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab.js'
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group'
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel'
+import { Showcases } from './showcases'
 
 // === exports =======================================================
 
@@ -45,6 +49,7 @@ const defaultTheme = getBaseThemeById('light')
 
 class Store {
   baseThemeId = 'light'
+  shareLinkMessageVisible = false
   exportDrawerVisible = false
 
   customizing: Customizing = {
@@ -85,12 +90,18 @@ class Store {
       resetTheme: action,
       setBaseThemeId: action,
       setExportDrawerVisible: action,
+      setShareLinkMessageVisible: action,
+      shareLinkMessageVisible: observable,
       exportDrawerVisible: observable
     })
   }
 
   setBaseThemeId(id: string) {
     this.baseThemeId = id
+  }
+
+  setShareLinkMessageVisible(value: boolean) {
+    this.shareLinkMessageVisible = value
   }
 
   setExportDrawerVisible(value: boolean) {
@@ -126,6 +137,16 @@ class Store {
       colorFront: baseTheme['color-black'],
       colorBack: baseTheme['color-white']
     }
+  }
+
+  copyToClipboard() {
+    const base64String = serializeCustomization({
+      baseThemeId: this.baseThemeId,
+      customizing: this.customizing
+    })
+
+    const url = `${location.href.split('#')[0]}#${base64String}`
+    navigator.clipboard.writeText(url)
   }
 }
 
@@ -193,7 +214,16 @@ const Designer = define({
           <Sidebar />
         </div>
         <div slot="main" class="showcases">
-          <slot name="showcases" class="showcases" />
+          <sl-alert
+            class="share-link-message"
+            type="success"
+            open={store.shareLinkMessageVisible}
+            closable
+          >
+            <sl-icon slot="icon" name="check2-circle"></sl-icon>
+            URL has been copied to clipboard
+          </sl-alert>
+          <Showcases />
         </div>
       </AppLayout>
     </div>
@@ -207,6 +237,15 @@ const Header = define({
 }).main(() => {
   const store = useStore()
 
+  const onShareClick = () => {
+    store.copyToClipboard()
+    store.setShareLinkMessageVisible(true)
+
+    setTimeout(() => {
+      store.setShareLinkMessageVisible(false)
+    }, 2000)
+  }
+
   const onExportClick = () => {
     if (!store.exportDrawerVisible) {
       store.setExportDrawerVisible(true)
@@ -217,9 +256,14 @@ const Header = define({
     <div class="base">
       <div class="brand">Shoelace Theme Designer</div>
       <div class="actions">
-        <sl-button type="primary" size="medium" onclick={onExportClick}>
-          Export theme
-        </sl-button>
+        <HLayout gap="small">
+          <sl-button type="default" onclick={onShareClick}>
+            Share theme
+          </sl-button>
+          <sl-button type="default" onclick={onExportClick}>
+            Export theme
+          </sl-button>
+        </HLayout>
       </div>
     </div>
   )
@@ -318,7 +362,7 @@ const Sidebar = define({
 const ColorField = define({
   name: 'sx-designer--color-field',
   uses: [SlColorPicker, SlInput],
-  styles: () => styles.colorField,
+  styles: () => styles.colorControl,
 
   props: class {
     label?: string
@@ -463,7 +507,18 @@ const styles = {
       background-color: var(--sl-color-white);
     }
 
+    .share-link-message {
+      position: absolute;
+      top: 0.5em;
+      right: 2em;
+      display: inline-block;
+      width: 22em;
+      text-align: right;
+      z-index: 20000;
+    }
+
     .showcases {
+      position: relative;
       padding: 10px 30px;
       background-color: var(--sl-color-white);
     }
@@ -471,6 +526,7 @@ const styles = {
 
   header: `
     .base {
+      position: relative;
       display: flex;
       align-items: center;
     }
@@ -500,7 +556,7 @@ const styles = {
     }
   `,
 
-  colorField: `
+  colorControl: `
     label {
       width: 9em;
       height: 2.3em;
@@ -514,10 +570,6 @@ const styles = {
     sl-color-picker {
       margin-top: -4px;
     }
-  `,
-
-  showcases: `
-    color: var(--sl-color-black)
   `,
 
   themeExportDrawer: `

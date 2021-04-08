@@ -12,6 +12,8 @@ export {
   fromThemeToJson,
   invertTheme,
   loadTheme,
+  serializeCustomization,
+  unserializeCustomization,
   COLOR_SHADES,
   SEMANTIC_COLORS,
   SEMANTIC_COLORS_PLUS_GRAY
@@ -182,4 +184,20 @@ function getProp(obj: object, name: string): any {
 
 function setProp(obj: object, name: string, value: any) {
   ;(obj as any)[name] = value
+}
+
+function serializeCustomization(data: {
+  baseThemeId: string
+  customizing: Customizing
+}) {
+  return btoa(JSON.stringify(data))
+}
+
+function unserializeCustomization(
+  base64String: string
+): {
+  baseThemeId: string
+  customizing: Customizing
+} {
+  return JSON.parse(btoa(base64String))
 }
