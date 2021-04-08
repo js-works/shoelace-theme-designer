@@ -5,17 +5,14 @@ import { createMobxHooks } from 'js-element/utils'
 import { useEmitter } from 'js-element/hooks'
 import { AppLayout, HLayout, VLayout } from './layouts'
 import { H4, Text } from './typography'
-import { Theme } from '../theming/types'
+import { Customizing, Theme } from '../theming/types'
 import Color from 'color'
 import { makeObservable, action, computed, observable } from 'mobx'
 
 import {
-  createTheme,
+  createCustomizedTheme,
   fromThemeToCss,
-  fromThemeToJson,
-  invertTheme,
-  COLOR_SHADES,
-  SEMANTIC_COLORS
+  fromThemeToJson
 } from '../theming/theme-utils'
 
 import {
@@ -35,19 +32,6 @@ import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 // === exports =======================================================
 
 export { Designer }
-
-// === types ==========================================================
-
-type Customizing = {
-  readonly inverted: boolean
-  readonly colorPrimary: string
-  readonly colorInfo: string
-  readonly colorSuccess: string
-  readonly colorWarning: string
-  readonly colorDanger: string
-  readonly colorFront: string
-  readonly colorBack: string
-}
 
 // === store ==========================================================
 
@@ -144,21 +128,19 @@ const [useStoreProvider, useStore] = createMobxHooks<Store>()
 
 // === components =====================================================
 
-let nextDesignerId = 1
-
 const Designer = define({
   name: 'sx-designer',
   slots: ['showcases'],
   styles: () => styles.designer
-})(() => {
+}).main(() => {
   const store = useStoreProvider(new Store())
-  const designerId = nextDesignerId + 1
 
   return () => (
-    <div class={`base sl-theme--designer-${designerId}`}>
+    <div>
       <style>
-        {`.sl-theme--designer-${designerId} {`}
+        {':host {'}
         {store.customizedCss}
+        font-family: var(--sl-font-sans);
         {'}'}
       </style>
       <ThemeExportDrawer />
@@ -188,7 +170,7 @@ const Header = define({
   name: 'sx-designer--header',
   uses: [SlIcon, SlButton],
   styles: () => styles.header
-})((p) => {
+}).main((p) => {
   const store = useStore()
 
   const onExportClick = () => {
@@ -212,7 +194,7 @@ const Header = define({
 const Sidebar = define({
   name: 'sx-designer--sidebar',
   styles: () => styles.sidebar
-})(() => {
+}).main(() => {
   const store = useStore()
   const invertTheme = () => store.invertTheme()
   const resetTheme = () => store.resetTheme()
@@ -309,7 +291,7 @@ const ColorField = define({
     value?: string
     onColorChange?: Listener<TypedEvent<'sx-color-change', { value: string }>>
   }
-})((p) => {
+}).main((p) => {
   const pickerRef = createRef<any>()
   const emit = useEmitter()
 
@@ -340,12 +322,8 @@ const ColorField = define({
 const ThemeExportDrawer = define({
   name: 'sx-designer--theme-export-drawer',
   uses: [SlTab, SlTabGroup, SlTabPanel],
-  styles: () => styles.themeExportDrawer,
-
-  props: class {
-    open = false
-  }
-})((p) => {
+  styles: () => styles.themeExportDrawer
+}).main(() => {
   const store = useStore()
   const drawerRef = createRef<any>()
   const closeDrawer = () => store.setExportDrawerVisible(false)
@@ -381,7 +359,7 @@ const ThemeExportDrawer = define({
           JSON
         </sl-tab>
         <sl-tab-panel name="css">
-          <pre>{store.customizedCss}x</pre>
+          <pre>{store.customizedCss}</pre>
         </sl-tab-panel>
         <sl-tab-panel name="json">
           <pre>{store.customizedJson}</pre>
@@ -393,68 +371,6 @@ const ThemeExportDrawer = define({
     </sl-drawer>
   )
 })
-
-// === theme customizer  =============================================
-
-function createCustomizedTheme(
-  customizing: Customizing,
-  baseTheme: Theme
-): Theme {
-  const isDark = Color(customizing.colorBack).isDark()
-
-  const newTokens: Partial<Theme> = {
-    'color-primary-500': customizing.colorPrimary,
-    'color-success-500': customizing.colorSuccess,
-    'color-info-500': customizing.colorInfo,
-    'color-warning-500': customizing.colorWarning,
-    'color-danger-500': customizing.colorDanger,
-    'color-black': customizing.colorFront,
-    'color-white': customizing.colorBack
-  }
-
-  for (const color of SEMANTIC_COLORS) {
-    const key500 = `color-${color}-500`
-    const value500 = getProp(newTokens, key500)
-
-    if (value500 !== getProp(baseTheme, key500)) {
-      for (const shade of COLOR_SHADES) {
-        let newColor: Color
-        const colorName = `color-${color}-${shade}`
-
-        if (shade === 500) {
-          continue
-        } else if (shade < 500) {
-          newColor = Color(value500).lighten((500 - shade) / 400)
-        } else if (shade > 500) {
-          newColor = Color(value500).darken((shade - 400) / 500)
-        }
-
-        setProp(newTokens, colorName, newColor!)
-      }
-    }
-    //if (getProp(newTokens, color500) !== getProp(defaultTheme, color500) {
-    //  setProp(newTokens, color500, 'red')
-    //}
-  }
-
-  let customizedTheme = createTheme(newTokens, baseTheme)
-
-  if (customizing.inverted) {
-    customizedTheme = invertTheme(customizedTheme)
-  }
-
-  return customizedTheme
-}
-
-// === helpers =======================================================
-
-function getProp(obj: object, name: string): any {
-  return (obj as any)[name]
-}
-
-function setProp(obj: object, name: string, value: any) {
-  ;(obj as any)[name] = value
-}
 
 // === styles ========================================================
 
@@ -513,7 +429,6 @@ const styles = {
     .base {
       display: flex;
       align-items: center;
-      font-family: var(--sl-font-sans);
     }
 
     .brand {

@@ -6,12 +6,14 @@ import { Showcases } from './showcases'
 
 export const App = define({
   name: 'sx-app'
-})(() => {
+}).main(() => {
   return () => (
-    <Designer>
-      <div slot="showcases">
-        <Showcases />
-      </div>
-    </Designer>
+    <div class="app">
+      <Designer>
+        <div slot="showcases">
+          <Showcases />
+        </div>
+      </Designer>
+    </div>
   )
 })

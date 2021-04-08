@@ -43,10 +43,10 @@
   resolved "https://registry.yarnpkg.com/@shoelace-style/animations/-/animations-1.1.0.tgz#17539abafd6dcbf2a79e089e1593175e9f7835b5"
   integrity sha512-Be+cahtZyI2dPKRm8EZSx3YJQ+jLvEcn3xzRP7tM4tqBnvd/eW/64Xh0iOf0t2w5P8iJKfdBbpVNE9naCaOf2g==
 
-"@shoelace-style/shoelace@^2.0.0-beta.36":
-  version "2.0.0-beta.36"
-  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.36.tgz#8d68c7208e91cce618d3b1f883bec2244a2ce341"
-  integrity sha512-wtlZv4fuoiqsqSAfX+2qBdUhQZlC7nuTF9rMAwDDNwrtzPaylnV+YqoEmyvarWTke0WDcpy9xpIuUF3ZEDl2lg==
+"@shoelace-style/shoelace@^2.0.0-beta.37":
+  version "2.0.0-beta.37"
+  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.37.tgz#a53c14085a403b72ecc513ea846610d91af362ad"
+  integrity sha512-3QOeECCKQPTcNHl9JQoMd3K6zhzSVYuH6gil0goEVDoHcz5fz/0NqGM+OI8MS3354egLCKU6PwEiGXtBLIUkyA==
   dependencies:
     "@popperjs/core" "^2.7.0"
     "@shoelace-style/animations" "^1.1.0"
@@ -1072,10 +1072,10 @@ jest-worker@^26.6.2:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-js-element@^0.0.66:
-  version "0.0.66"
-  resolved "https://registry.yarnpkg.com/js-element/-/js-element-0.0.66.tgz#840c0f9f9ad593821bc84f1f2b8747e5acb29707"
-  integrity sha512-ORqVdMw0ebZI+wXBJjmoIEdcpK8fC6VfoJ0B/5FJbuiOGNudAxEE/e0PZPtGTAom7GDvqVKcDIoDo3+3maTZZA==
+js-element@^0.0.67:
+  version "0.0.67"
+  resolved "https://registry.yarnpkg.com/js-element/-/js-element-0.0.67.tgz#db15d3d7e3f1e8ee06d664b3d3f9c6d87a31af21"
+  integrity sha512-jrTyBRtzJww+/eNjQq4QUHz4PBVRwRwNyV5m6KkdLH4BNrIzFSCVzhVeTf3aYQjZFgVPqHekiJNOCZQJeXfA8A==
   dependencies:
     lit-html "^1.3.0"
     mobx "^6.1.8"
@@ -1824,10 +1824,10 @@ type-is@^1.6.16:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
-typescript@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
-  integrity sha512-qOcYwxaByStAWrBf4x0fibwZvMRG+r4cQoTjbPtUlrWjBHbmCAww1i448U0GJ+3cNNEtebDteo/cHOR3xJ4wEw==
+typescript@^4.2.4:
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.4.tgz#8610b59747de028fda898a8aef0e103f156d0961"
+  integrity sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
 
 uarray@^1.0.0:
   version "1.0.0"
@@ -1981,10 +1981,10 @@ webpack-sources@^2.1.1:
     source-list-map "^2.0.1"
     source-map "^0.6.1"
 
-webpack@^5.30.0:
-  version "5.30.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.30.0.tgz#07d87c182a060e0c2491062f3dc0edc85a29d884"
-  integrity sha512-Zr9NIri5yzpfmaMea2lSMV1UygbW0zQsSlGLMgKUm63ACXg6alhd1u4v5UBSBjzYKXJN6BNMGVM7w165e7NxYA==
+webpack@^5.31.0:
+  version "5.31.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.31.0.tgz#fab61d0be896feca4af87bdad5c18815c0d63455"
+  integrity sha512-3fUfZT/FUuThWSSyL32Fsh7weUUfYP/Fjc/cGSbla5KiSo0GtI1JMssCRUopJTvmLjrw05R2q7rlLtiKdSzkzQ==
   dependencies:
     "@types/eslint-scope" "^3.7.0"
     "@types/estree" "^0.0.46"

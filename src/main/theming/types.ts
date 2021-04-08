@@ -1,8 +1,19 @@
 // === exports =======================================================
 
-export { Theme }
+export { Customizing, Theme }
 
 // === types =========================================================
+
+type Customizing = {
+  readonly inverted: boolean
+  readonly colorPrimary: string
+  readonly colorInfo: string
+  readonly colorSuccess: string
+  readonly colorWarning: string
+  readonly colorDanger: string
+  readonly colorFront: string
+  readonly colorBack: string
+}
 
 type Theme = Readonly<{
   'color-black': string

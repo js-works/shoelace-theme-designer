@@ -25,7 +25,7 @@ const HLayout = define({
     align = 'center' as 'top' | 'center' | 'bottom'
     gap = 'tiny' as 'tiny' | 'small' | 'medium' | 'large' | 'huge'
   }
-})((p) => {
+}).main((p) => {
   return () => {
     const alignItems =
       p.align === 'top'
@@ -50,7 +50,7 @@ const VLayout = define({
   props: class {
     gap = 'tiny' as 'tiny' | 'small' | 'medium' | 'large' | 'huge'
   }
-})((p) => {
+}).main((p) => {
   return () => (
     <div style={`gap: ${gaps[p.gap]}`}>
       <slot />
@@ -62,7 +62,7 @@ const AppLayout = define({
   name: 'sx-app-layout',
   slots: ['header', 'sidebar', 'main'],
   styles: () => styles.appLayout
-})(() => {
+}).main(() => {
   return () => (
     <div class="base">
       <header class="header">
@@ -110,7 +110,6 @@ const styles = {
       display: inline-flex;
       align-items: center;
       font-size: var(--sl-font-size-medium);
-      font-family: var(--sl-font-sans);
     }
   `,
 
@@ -119,7 +118,6 @@ const styles = {
       display: inline-flex;
       flex-direction: column;
       font-size: var(--sl-font-size-medium);
-      font-family: var(--sl-font-sans);
     }
   `
 }

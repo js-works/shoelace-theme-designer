@@ -17,7 +17,7 @@ const Showcase = define({
   props: class {
     title = ''
   }
-})((p) => {
+}).main((p) => {
   return () => (
     <div class="base">
       <H3>{p.title}</H3>
@@ -28,7 +28,7 @@ const Showcase = define({
 
 const Showcases = define({
   name: 'sx-showcases'
-})(() => {
+}).main(() => {
   return () => (
     <div>
       <PaletteShowcase />
@@ -46,7 +46,7 @@ const Showcases = define({
 const PaletteShowcase = define({
   name: 'sx-palette-showcase',
   styles: () => styles.showcasePalette
-})(() => {
+}).main(() => {
   const dialogRef = createRef<any>()
 
   return () => (
@@ -183,7 +183,7 @@ const PaletteShowcase = define({
 const AlertShowcase = define({
   name: 'sx-alerts-showcase',
   uses: [Shoelace.SlAlert, Shoelace.SlIcon]
-})(() => {
+}).main(() => {
   return () => (
     <Showcase title="Alerts">
       <sl-alert type="primary" open>
@@ -227,7 +227,7 @@ const AlertShowcase = define({
 const AvatarShowcase = define({
   name: 'sx-avatar-showcase',
   uses: [Shoelace.SlAvatar]
-})(() => {
+}).main(() => {
   return () => (
     <Showcase title="Avatar">
       <HLayout>
@@ -242,7 +242,7 @@ const AvatarShowcase = define({
 const BadgeShowcase = define({
   name: 'sx-badge-showcase',
   uses: [Shoelace.SlBadge]
-})(() => {
+}).main(() => {
   return () => (
     <Showcase title="Badge">
       <HLayout>
@@ -259,7 +259,7 @@ const BadgeShowcase = define({
 const ButtonShowcase = define({
   name: 'sx-button-showcase',
   uses: [Shoelace.SlButton]
-})(() => {
+}).main(() => {
   return () => (
     <Showcase title="Button">
       <HLayout>
@@ -277,7 +277,7 @@ const ButtonShowcase = define({
 const IconShowcase = define({
   name: 'sx-icon-showcase',
   uses: [Shoelace.SlIcon]
-})(() => {
+}).main(() => {
   return () => (
     <Showcase title="Icon">
       <HLayout style="font-size: 32px">
@@ -309,7 +309,7 @@ const styles = {
     .base {
       color: var(--sl-color-black);
       margin: 10px 0 65px 0; 
-      font-family: var(--sl-font-sans);
+      xxxfontdd-family: var(--sl-font-sans);
       font-size: var(--sl-font-size-medium);
     }
   `,

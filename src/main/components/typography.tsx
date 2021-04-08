@@ -12,12 +12,11 @@ const H2 = define({
 
   styles: `
     h2 {
-      font-family: var(--sl-font-sans);
       font-size: var(--sl-font-size-xx-large);
       margin: 0 0 10px 0;
     }
   `
-})(() => {
+}).main(() => {
   return () => (
     <h2>
       <slot />
@@ -32,11 +31,10 @@ const H3 = define({
   styles: `
     h3 {
       font-weight: var(--sl-font-weight-normal);
-      font-family: var(--sl-font-sans);
       font-size: var(--sl-font-size-x-large);
     }
   `
-})(() => {
+}).main(() => {
   return () => (
     <h3>
       <slot />
@@ -51,12 +49,11 @@ const H4 = define({
   styles: `
     h4 {
       font-weight: var(--sl-font-weight-normal);
-      font-family: var(--sl-font-sans);
       font-size: var(--sl-font-size-large);
       margin-bottom: 1.15em;
     }
   `
-})(() => {
+}).main(() => {
   return () => (
     <h4>
       <slot />
@@ -71,11 +68,10 @@ const Text = define({
   styles: `
     div {
       font-weight: var(--sl-font-weight-normal);
-      font-family: var(--sl-font-sans);
       font-size: var(--sl-font-size-medium);
     }
   `
-})(() => {
+}).main(() => {
   return () => (
     <div>
       <slot />
