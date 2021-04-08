@@ -1,15 +1,18 @@
-import { lightTheme } from './light-theme'
-import { createTheme, invertTheme } from './theme-utils'
+import { darkTheme } from './dark-theme'
+import { createTheme, enhanceAccessibility } from './theme-utils'
 
 // === exports =======================================================
 
 export { darkHigherContrastTheme }
 
-// === theme =========================================================
+// ===  theme ========================================================
 
-const darkHigherContrastTheme = createTheme(
-  {
-    'color-white': '#020202'
-  },
-  invertTheme(lightTheme)
+const darkHigherContrastTheme = enhanceAccessibility(
+  createTheme(
+    {
+      ...darkTheme,
+      'color-white': '#444444'
+    },
+    darkTheme
+  )
 )

@@ -7,6 +7,7 @@ export {
   contrast,
   createCustomizedTheme,
   createTheme,
+  enhanceAccessibility,
   fromThemeToCss,
   fromThemeToJson,
   invertTheme,
@@ -86,21 +87,26 @@ function invertTheme(theme: Theme): Theme {
   return createTheme(newTokens, theme)
 }
 
-function contrast(color1: Color, color2: Color) {
-  var lum1 = luminance(color1)
-  var lum2 = luminance(color2)
-  var brightest = Math.max(lum1, lum2)
-  var darkest = Math.min(lum1, lum2)
-  return (brightest + 0.05) / (darkest + 0.05)
-}
-
 function luminance(color: Color) {
-  const a = [color.red(), color.green(), color.blue()].map((v) => {
+  const r = color.red()
+  const g = color.green()
+  const b = color.blue()
+
+  const a = [r, g, b].map((v) => {
     v /= 255
     return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
   })
 
   return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722
+}
+
+function contrast(color1: Color, color2: Color) {
+  var lum1 = luminance(color1)
+  var lum2 = luminance(color2)
+
+  var brightest = Math.max(lum1, lum2)
+  var darkest = Math.min(lum1, lum2)
+  return (brightest + 0.05) / (darkest + 0.05)
 }
 
 function createCustomizedTheme(
@@ -122,6 +128,7 @@ function createCustomizedTheme(
   for (const color of SEMANTIC_COLORS) {
     const key500 = `color-${color}-500`
     const value500 = getProp(newTokens, key500)
+    const color500 = Color(value500)
 
     if (value500 !== getProp(baseTheme, key500)) {
       for (const shade of COLOR_SHADES) {
@@ -130,7 +137,7 @@ function createCustomizedTheme(
         if (shade !== 500) {
           const lightness1 = Color(getProp(baseTheme, key500)).lightness()
           const lightness2 = Color(getProp(baseTheme, colorKey)).lightness()
-          const newColor = Color(value500).lightness(lightness2)
+          const newColor = color500.lightness(lightness2)
           setProp(newTokens, colorKey, newColor!)
         }
       }
@@ -144,6 +151,27 @@ function createCustomizedTheme(
   }
 
   return customizedTheme
+}
+
+function enhanceAccessibility(theme: Theme): Theme {
+  const newTokens: any = {}
+
+  for (const color of SEMANTIC_COLORS) {
+    const color500 = Color(getProp(theme, `color-${color}-500`))
+    const colorBlack = Color(getProp(theme, 'color-black'))
+    const colorWhite = Color(getProp(theme, 'color-white'))
+
+    const contrast1 = contrast(color500, colorBlack)
+    const contrast2 = contrast(color500, colorWhite)
+
+    setProp(
+      newTokens,
+      `color-${color}-text`,
+      contrast1 >= contrast2 ? 'var(--sl-color-black)' : 'var(--sl-color-white)'
+    )
+  }
+
+  return createTheme(newTokens, theme)
 }
 
 // === helpers =======================================================

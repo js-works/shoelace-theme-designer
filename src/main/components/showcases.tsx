@@ -309,7 +309,6 @@ const styles = {
     .base {
       color: var(--sl-color-black);
       margin: 10px 0 65px 0; 
-      xxxfontdd-family: var(--sl-font-sans);
       font-size: var(--sl-font-size-medium);
     }
   `,

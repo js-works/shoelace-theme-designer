@@ -1,13 +1,11 @@
-import { define, createRef, createEvent, h } from 'js-element'
-import { Listener, TypedEvent } from 'js-element'
+import { define, createRef, h } from 'js-element'
 import { useEffect } from 'js-element/hooks'
 import { createMobxHooks } from 'js-element/utils'
-import { useEmitter } from 'js-element/hooks'
+import { makeObservable, action, computed, observable } from 'mobx'
+import Color from 'color'
 import { AppLayout, HLayout, VLayout } from './layouts'
 import { H4, Text } from './typography'
-import { Customizing, Theme } from '../theming/types'
-import Color from 'color'
-import { makeObservable, action, computed, observable } from 'mobx'
+import { Customizing } from '../theming/types'
 
 import {
   createCustomizedTheme,
@@ -39,6 +37,7 @@ const defaultTheme = getBaseThemeById('light')
 
 class Store {
   baseThemeId = 'light'
+  exportDrawerVisible = false
 
   customizing: Customizing = {
     inverted: false,
@@ -65,8 +64,6 @@ class Store {
   get customizedJson() {
     return fromThemeToJson(this.customizedTheme)
   }
-
-  exportDrawerVisible = false
 
   constructor() {
     makeObservable(this, {
@@ -124,6 +121,8 @@ class Store {
   }
 }
 
+// === store hooks ===================================================
+
 const [useStoreProvider, useStore] = createMobxHooks<Store>()
 
 // === components =====================================================
@@ -140,7 +139,7 @@ const Designer = define({
       <style>
         {':host {'}
         {store.customizedCss}
-        font-family: var(--sl-font-sans);
+        font-family: var(--sl-font-sans); color: var(--sl-color-black);
         {'}'}
       </style>
       <ThemeExportDrawer />
@@ -170,7 +169,7 @@ const Header = define({
   name: 'sx-designer--header',
   uses: [SlIcon, SlButton],
   styles: () => styles.header
-}).main((p) => {
+}).main(() => {
   const store = useStore()
 
   const onExportClick = () => {
@@ -238,39 +237,39 @@ const Sidebar = define({
         </HLayout>
         <H4>Theme colors</H4>
         <ColorField
+          colorName="primary"
           label="Primary color"
           value={customizing.colorPrimary}
-          onColorChange={createColorListener('colorPrimary')}
         />
         <ColorField
+          colorName="info"
           label="Info color"
           value={customizing.colorInfo}
-          onColorChange={createColorListener('colorInfo')}
         />
         <ColorField
+          colorName="success"
           label="Success color"
           value={customizing.colorSuccess}
-          onColorChange={createColorListener('colorSuccess')}
         />
         <ColorField
+          colorName="warning"
           label="Warning color"
           value={customizing.colorWarning}
-          onColorChange={createColorListener('colorWarning')}
         />
         <ColorField
+          colorName="danger"
           label="Danger color"
           value={customizing.colorDanger}
-          onColorChange={createColorListener('colorDanger')}
         />
         <ColorField
+          colorName="front"
           label="Front color"
           value={customizing.colorFront}
-          onColorChange={createColorListener('colorFront')}
         />
         <ColorField
+          colorName="back"
           label="Back color"
           value={customizing.colorBack}
-          onColorChange={createColorListener('colorBack')}
         />
         <HLayout class="color-actions" gap="small">
           <sl-button onclick={invertTheme}>Invert theme</sl-button>
@@ -289,17 +288,27 @@ const ColorField = define({
   props: class {
     label?: string
     value?: string
-    onColorChange?: Listener<TypedEvent<'sx-color-change', { value: string }>>
+
+    colorName?:
+      | 'primary'
+      | 'info'
+      | 'success'
+      | 'warning'
+      | 'danger'
+      | 'front'
+      | 'back'
   }
 }).main((p) => {
+  const store = useStore()
   const pickerRef = createRef<any>()
-  const emit = useEmitter()
 
   const onChange = (ev: any) => {
-    emit(
-      createEvent('sx-color-change', { value: ev.target.value }),
-      p.onColorChange
-    )
+    if (p.colorName) {
+      const colorPropName =
+        'color' + p.colorName[0].toUpperCase() + p.colorName.substr(1)
+
+      store.customize({ [colorPropName]: ev.target.value })
+    }
   }
 
   return () => (
