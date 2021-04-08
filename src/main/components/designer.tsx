@@ -1,5 +1,13 @@
-import { define, createRef, h } from 'js-element'
-import { useEffect } from 'js-element/hooks'
+import {
+  define,
+  createEvent,
+  createRef,
+  h,
+  Listener,
+  TypedEvent
+} from 'js-element'
+
+import { useEffect, useEmitter, useStatus } from 'js-element/hooks'
 import { createMobxHooks } from 'js-element/utils'
 import { makeObservable, action, computed, observable } from 'mobx'
 import Color from 'color'
@@ -72,7 +80,7 @@ class Store {
       customizedJson: computed,
       customizedTheme: computed,
       customize: action,
-      customizing: observable,
+      customizing: observable.ref,
       invertTheme: action,
       resetTheme: action,
       setBaseThemeId: action,
@@ -90,7 +98,7 @@ class Store {
   }
 
   customize(values: Partial<Customizing>) {
-    Object.assign(this.customizing, values)
+    this.customizing = Object.assign({}, this.customizing, values)
   }
 
   invertTheme() {
@@ -130,9 +138,36 @@ const [useStoreProvider, useStore] = createMobxHooks<Store>()
 const Designer = define({
   name: 'sx-designer',
   slots: ['showcases'],
-  styles: () => styles.designer
-}).main(() => {
+  styles: () => styles.designer,
+
+  props: class {
+    onThemeChange?: Listener<
+      TypedEvent<
+        'sx-theme-change',
+        {
+          customizing: Customizing
+        }
+      >
+    >
+  }
+}).main((p) => {
+  const status = useStatus()
   const store = useStoreProvider(new Store())
+  const emit = useEmitter()
+
+  useEffect(
+    () => {
+      if (status.hasUpdated()) {
+        const ev = createEvent('sx-theme-change', {
+          baseThemeId: store.baseThemeId,
+          customizing: store.customizing
+        })
+
+        emit(ev, p.onThemeChange)
+      }
+    },
+    () => [store.baseThemeId, store.customizing]
+  )
 
   return () => (
     <div>
