@@ -1,13 +1,5 @@
-import {
-  define,
-  createEvent,
-  createRef,
-  h,
-  Listener,
-  TypedEvent
-} from 'js-element'
-
-import { useEffect, useEmitter, useStatus } from 'js-element/hooks'
+import { define, createRef, h } from 'js-element'
+import { useEffect, useBeforeMount } from 'js-element/hooks'
 import { createMobxHooks } from 'js-element/utils'
 import { makeObservable, action, computed, observable } from 'mobx'
 import Color from 'color'
@@ -19,8 +11,7 @@ import {
   createCustomizedTheme,
   fromThemeToCss,
   fromThemeToJson,
-  serializeCustomization,
-  unserializeCustomization
+  serializeCustomization
 } from '../theming/theme-utils'
 
 import {
@@ -49,7 +40,7 @@ const defaultTheme = getBaseThemeById('light')
 
 class Store {
   baseThemeId = 'light'
-  shareLinkMessageVisible = false
+  shareThemeMessageVisible = false
   exportDrawerVisible = false
 
   customizing: Customizing = {
@@ -90,8 +81,8 @@ class Store {
       resetTheme: action,
       setBaseThemeId: action,
       setExportDrawerVisible: action,
-      setShareLinkMessageVisible: action,
-      shareLinkMessageVisible: observable,
+      setShareThemeMessageVisible: action,
+      shareThemeMessageVisible: observable,
       exportDrawerVisible: observable
     })
   }
@@ -100,8 +91,8 @@ class Store {
     this.baseThemeId = id
   }
 
-  setShareLinkMessageVisible(value: boolean) {
-    this.shareLinkMessageVisible = value
+  setShareThemeMessageVisible(value: boolean) {
+    this.shareThemeMessageVisible = value
   }
 
   setExportDrawerVisible(value: boolean) {
@@ -162,33 +153,19 @@ const Designer = define({
   styles: () => styles.designer,
 
   props: class {
-    onThemeChange?: Listener<
-      TypedEvent<
-        'sx-theme-change',
-        {
-          customizing: Customizing
-        }
-      >
-    >
+    initialBaseThemeId?: string
+    initialCustomizing?: Customizing
   }
 }).main((p) => {
-  const status = useStatus()
   const store = useStoreProvider(new Store())
-  const emit = useEmitter()
 
-  useEffect(
-    () => {
-      if (status.hasUpdated()) {
-        const ev = createEvent('sx-theme-change', {
-          baseThemeId: store.baseThemeId,
-          customizing: store.customizing
-        })
+  if (p.initialBaseThemeId) {
+    store.setBaseThemeId(p.initialBaseThemeId)
+  }
 
-        emit(ev, p.onThemeChange)
-      }
-    },
-    () => [store.baseThemeId, store.customizing]
-  )
+  if (p.initialCustomizing) {
+    store.customize(p.initialCustomizing)
+  }
 
   return () => (
     <div>
@@ -215,9 +192,9 @@ const Designer = define({
         </div>
         <div slot="main" class="showcases">
           <sl-alert
-            class="share-link-message"
+            class="share-theme-message"
             type="success"
-            open={store.shareLinkMessageVisible}
+            open={store.shareThemeMessageVisible}
             closable
           >
             <sl-icon slot="icon" name="check2-circle"></sl-icon>
@@ -239,10 +216,10 @@ const Header = define({
 
   const onShareClick = () => {
     store.copyToClipboard()
-    store.setShareLinkMessageVisible(true)
+    store.setShareThemeMessageVisible(true)
 
     setTimeout(() => {
-      store.setShareLinkMessageVisible(false)
+      store.setShareThemeMessageVisible(false)
     }, 2000)
   }
 
@@ -507,7 +484,7 @@ const styles = {
       background-color: var(--sl-color-white);
     }
 
-    .share-link-message {
+    .share-theme-message {
       position: absolute;
       top: 0.5em;
       right: 2em;

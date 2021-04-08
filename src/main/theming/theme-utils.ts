@@ -198,6 +198,11 @@ function unserializeCustomization(
 ): {
   baseThemeId: string
   customizing: Customizing
-} {
-  return JSON.parse(btoa(base64String))
+} | null {
+  console.log(base64String)
+  try {
+    return JSON.parse(atob(base64String))
+  } catch {
+    return null
+  }
 }
