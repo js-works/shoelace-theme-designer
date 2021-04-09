@@ -1,4 +1,5 @@
 const path = require('path')
+const { WebpackPluginServe: Serve } = require('webpack-plugin-serve')
 
 const serveOptions = {
   host: 'localhost',
@@ -12,7 +13,10 @@ const serveOptions = {
 }
 
 module.exports = {
-  entry: ['./src/main/index'],
+  entry: [
+    'webpack-plugin-serve/client', // ← important: this is required, where the magic happens in the browser
+    './src/main/index'
+  ],
   module: {
     rules: [
       {
@@ -29,6 +33,7 @@ module.exports = {
     filename: 'shoelace-theme-designer.js',
     path: path.resolve(__dirname, 'dist')
   },
-  mode: 'production',
-  plugins: []
+  mode: 'development',
+  plugins: [new Serve(serveOptions)],
+  watch: true // ← important: webpack and the server will continue to run in watch mode
 }
