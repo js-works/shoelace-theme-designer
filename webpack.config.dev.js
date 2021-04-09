@@ -7,7 +7,7 @@ const serveOptions = {
   open: true,
   liveReload: true,
   static: [
-    path.resolve(__dirname, './src/dev'),
+    path.resolve(__dirname, './public'),
     path.resolve(__dirname, './dist')
   ]
 }
