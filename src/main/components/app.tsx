@@ -9,6 +9,10 @@ const data = location.hash
   ? unserializeCustomization(location.hash.substr(1))
   : null
 
+if (location.href.indexOf('#') > -1) {
+  location.hash = ''
+}
+
 export const App = define({
   name: 'sx-app'
 }).main(() => {

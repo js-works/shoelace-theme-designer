@@ -1,5 +1,5 @@
 import { define, createRef, h } from 'js-element'
-import { useEffect, useBeforeMount } from 'js-element/hooks'
+import { useEffect } from 'js-element/hooks'
 import { createMobxHooks } from 'js-element/utils'
 import { makeObservable, action, computed, observable } from 'mobx'
 import Color from 'color'
@@ -44,14 +44,21 @@ class Store {
   exportDrawerVisible = false
 
   customizing: Customizing = {
-    inverted: false,
     colorPrimary: defaultTheme['color-primary-500'],
     colorSuccess: defaultTheme['color-success-500'],
     colorInfo: defaultTheme['color-info-500'],
     colorWarning: defaultTheme['color-warning-500'],
     colorDanger: defaultTheme['color-danger-500'],
     colorFront: defaultTheme['color-black'],
-    colorBack: defaultTheme['color-white']
+    colorBack: defaultTheme['color-white'],
+
+    textPrimary: 'default',
+    textInfo: 'default',
+    textSuccess: 'default',
+    textWarning: 'default',
+    textDanger: 'default',
+
+    inverted: false
   }
 
   get customizedTheme() {
@@ -119,14 +126,21 @@ class Store {
     const baseTheme = getBaseThemeById(this.baseThemeId)
 
     this.customizing = {
-      inverted: false,
       colorPrimary: baseTheme['color-primary-500'],
       colorSuccess: baseTheme['color-success-500'],
       colorInfo: baseTheme['color-info-500'],
       colorWarning: baseTheme['color-warning-500'],
       colorDanger: baseTheme['color-danger-500'],
       colorFront: baseTheme['color-black'],
-      colorBack: baseTheme['color-white']
+      colorBack: baseTheme['color-white'],
+
+      textPrimary: 'default',
+      textInfo: 'default',
+      textSuccess: 'default',
+      textWarning: 'default',
+      textDanger: 'default',
+
+      inverted: false
     }
   }
 
@@ -195,7 +209,6 @@ const Designer = define({
             class="share-theme-message"
             type="success"
             open={store.shareThemeMessageVisible}
-            closable
           >
             <sl-icon slot="icon" name="check2-circle"></sl-icon>
             URL has been copied to clipboard
@@ -291,42 +304,87 @@ const Sidebar = define({
             ))}
           </sl-select>
         </HLayout>
-        <H4>Theme colors</H4>
-        <ColorField
-          colorName="primary"
-          label="Primary color"
-          value={customizing.colorPrimary}
-        />
-        <ColorField
-          colorName="info"
-          label="Info color"
-          value={customizing.colorInfo}
-        />
-        <ColorField
-          colorName="success"
-          label="Success color"
-          value={customizing.colorSuccess}
-        />
-        <ColorField
-          colorName="warning"
-          label="Warning color"
-          value={customizing.colorWarning}
-        />
-        <ColorField
-          colorName="danger"
-          label="Danger color"
-          value={customizing.colorDanger}
-        />
-        <ColorField
-          colorName="front"
-          label="Front color"
-          value={customizing.colorFront}
-        />
-        <ColorField
-          colorName="back"
-          label="Back color"
-          value={customizing.colorBack}
-        />
+        <sl-tab-group class="sidebar-tabs">
+          <sl-tab slot="nav" panel="theme-colors">
+            Theme colors
+          </sl-tab>
+          <sl-tab slot="nav" panel="text-colors">
+            Text colors
+          </sl-tab>
+          <sl-tab-panel name="theme-colors">
+            <VLayout>
+              <ColorControl
+                colorName="primary"
+                label="Primary color"
+                value={customizing.colorPrimary}
+              />
+              <ColorControl
+                colorName="info"
+                label="Info color"
+                value={customizing.colorInfo}
+              />
+              <ColorControl
+                colorName="success"
+                label="Success color"
+                value={customizing.colorSuccess}
+              />
+              <ColorControl
+                colorName="warning"
+                label="Warning color"
+                value={customizing.colorWarning}
+              />
+              <ColorControl
+                colorName="danger"
+                label="Danger color"
+                value={customizing.colorDanger}
+              />
+              <ColorControl
+                colorName="front"
+                label="Front color"
+                value={customizing.colorFront}
+              />
+              <ColorControl
+                colorName="back"
+                label="Back color"
+                value={customizing.colorBack}
+              />
+            </VLayout>
+          </sl-tab-panel>
+          <sl-tab-panel name="text-colors">
+            <VLayout gap="small">
+              <Text size="small">
+                Please select whether the default text colors shall be used or
+                whether front or back color shall be enforced instead.
+              </Text>
+              <br />
+              <TextColorControl
+                colorName="primary"
+                label="Primary text"
+                value={customizing.textPrimary}
+              />
+              <TextColorControl
+                colorName="info"
+                label="Info text"
+                value={customizing.textInfo}
+              />
+              <TextColorControl
+                colorName="success"
+                label="Success text"
+                value={customizing.textSuccess}
+              />
+              <TextColorControl
+                colorName="warning"
+                label="Warning text"
+                value={customizing.textWarning}
+              />
+              <TextColorControl
+                colorName="danger"
+                label="Danger text"
+                value={customizing.textDanger}
+              />
+            </VLayout>
+          </sl-tab-panel>
+        </sl-tab-group>
         <HLayout class="color-actions" gap="small">
           <sl-button onclick={invertTheme}>Invert theme</sl-button>
           <sl-button onclick={resetTheme}>Reset theme</sl-button>
@@ -336,7 +394,7 @@ const Sidebar = define({
   }
 })
 
-const ColorField = define({
+const ColorControl = define({
   name: 'sx-designer--color-field',
   uses: [SlColorPicker, SlInput],
   styles: () => styles.colorControl,
@@ -356,14 +414,13 @@ const ColorField = define({
   }
 }).main((p) => {
   const store = useStore()
-  const pickerRef = createRef<any>()
 
   const onChange = (ev: any) => {
     if (p.colorName) {
-      const colorPropName =
+      const propName =
         'color' + p.colorName[0].toUpperCase() + p.colorName.substr(1)
 
-      store.customize({ [colorPropName]: ev.target.value })
+      store.customize({ [propName]: ev.target.value })
     }
   }
 
@@ -372,7 +429,6 @@ const ColorField = define({
       <label>{p.label}:</label>
       <span>{p.value}</span>
       <sl-color-picker
-        ref={pickerRef}
         format="hex"
         no-format-toggle
         size="small"
@@ -382,6 +438,41 @@ const ColorField = define({
       ></sl-color-picker>
     </HLayout>
   )
+})
+
+const TextColorControl = define({
+  name: 'sx-designer--text-color-control',
+  styles: () => styles.textColorControl,
+
+  props: class {
+    colorName?: string
+    label?: string
+    value?: 'default' | 'back' | 'front'
+  }
+}).main((p) => {
+  const store = useStore()
+
+  const onChange = (ev: any) => {
+    if (p.colorName) {
+      const propName =
+        'text' + p.colorName[0].toUpperCase() + p.colorName.substr(1)
+
+      store.customize({ [propName]: ev.target.value })
+    }
+  }
+
+  return () => {
+    return (
+      <HLayout>
+        <label class="label">{p.label}:</label>
+        <sl-select value={p.value} size="small" onsl-change={onChange}>
+          <sl-menu-item value="default">default</sl-menu-item>
+          <sl-menu-item value="back">back color</sl-menu-item>
+          <sl-menu-item value="front">front color</sl-menu-item>
+        </sl-select>
+      </HLayout>
+    )
+  }
 })
 
 const ThemeExportDrawer = define({
@@ -485,11 +576,11 @@ const styles = {
     }
 
     .share-theme-message {
-      position: absolute;
-      top: 0.5em;
+      position: fixed;
+      top: 3.5em;
       right: 2em;
       display: inline-block;
-      width: 22em;
+      width: 19em;
       text-align: right;
       z-index: 20000;
     }
@@ -527,8 +618,14 @@ const styles = {
       width: 12em;
     }
 
+    .sidebar-tabs {
+      margin-top: 1.5em;
+      width: 18em;
+      height: 370px;
+    }
+
     .color-actions {
-      margin: 18px 18px 0 0;
+      margin: 10px 18px 0 0;
       text-align: right;
     }
   `,
@@ -546,6 +643,17 @@ const styles = {
 
     sl-color-picker {
       margin-top: -4px;
+    }
+  `,
+
+  textColorControl: `
+    .label {
+      margin: 0 0 0 1em;
+      width: 7em;
+    }
+
+    sl-select {
+      width: 8em;
     }
   `,
 

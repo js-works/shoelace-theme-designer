@@ -65,16 +65,64 @@ const Text = define({
   name: 'sx-text',
   slots: ['default'],
 
+  props: class {
+    size = 'small' as 'small' | 'medium' | 'large'
+    weight = 'normal' as 'normal' | 'bold'
+  },
+
   styles: `
-    div {
-      font-weight: var(--sl-font-weight-normal);
+    .small {
+      font-size: var(--sl-font-size-small);
+    }
+    
+    .medium {
       font-size: var(--sl-font-size-medium);
     }
+    
+    .large {
+      font-size: var(--sl-font-size-large);
+    }
+
+    .nomal {
+      font-weight: var(--sl-font-weight-normal);
+    }
+
+    .bold {
+      font-weight: var(--sl-font-weight-bold);
+    }
   `
-}).main(() => {
-  return () => (
-    <div>
-      <slot />
-    </div>
-  )
+}).main((p) => {
+  return () => {
+    const classes = []
+
+    switch (p.size) {
+      case 'small':
+        classes.push('small')
+        break
+
+      case 'medium':
+        classes.push('medium')
+        break
+
+      case 'large':
+        classes.push('large')
+        break
+    }
+
+    switch (p.weight) {
+      case 'normal':
+        classes.push('normal')
+        break
+
+      case 'bold':
+        classes.push('bold')
+        break
+    }
+
+    return (
+      <div class={classes.join(' ')}>
+        <slot />
+      </div>
+    )
+  }
 })

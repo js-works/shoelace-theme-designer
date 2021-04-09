@@ -5,7 +5,6 @@ export { Customizing, Theme }
 // === types =========================================================
 
 type Customizing = {
-  readonly inverted: boolean
   readonly colorPrimary: string
   readonly colorInfo: string
   readonly colorSuccess: string
@@ -13,6 +12,14 @@ type Customizing = {
   readonly colorDanger: string
   readonly colorFront: string
   readonly colorBack: string
+
+  readonly textPrimary: 'default' | 'back' | 'front'
+  readonly textInfo: 'default' | 'back' | 'front'
+  readonly textSuccess: 'default' | 'back' | 'front'
+  readonly textWarning: 'default' | 'back' | 'front'
+  readonly textDanger: 'default' | 'back' | 'front'
+
+  readonly inverted: boolean
 }
 
 type Theme = Readonly<{
