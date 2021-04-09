@@ -83,8 +83,8 @@ function invertTheme(theme: Theme): Theme {
     }
   }
 
-  newTokens['color-white'] = theme['color-black']
-  newTokens['color-black'] = theme['color-white']
+  //newTokens['color-white'] = theme['color-black']
+  //newTokens['color-black'] = theme['color-white']
 
   return createTheme(newTokens, theme)
 }
@@ -151,10 +151,21 @@ function createCustomizedTheme(
     const themeKey = `color-${color}-text`
 
     if (value === 'back') {
-      console.log(themeKey, value)
-      setProp(newTokens, themeKey, 'var(--sl-color-black)')
-    } else if (value === 'white') {
-      setProp(newTokens, themeKey, 'var(--sl-color-white)')
+      setProp(
+        newTokens,
+        themeKey,
+        true || !customizing.inverted
+          ? 'var(--sl-color-white)'
+          : 'var(--sl-color-black)'
+      )
+    } else if (value === 'front') {
+      setProp(
+        newTokens,
+        themeKey,
+        true || !customizing.inverted
+          ? 'var(--sl-color-black)'
+          : 'var(--sl-color-white)'
+      )
     }
   }
 

@@ -116,8 +116,8 @@ class Store {
 
     this.customizing = {
       ...this.customizing,
-      colorFront,
-      colorBack,
+      colorFront: colorBack,
+      colorBack: colorFront,
       inverted: !this.customizing.inverted
     }
   }
