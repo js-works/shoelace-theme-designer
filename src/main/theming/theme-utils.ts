@@ -137,12 +137,24 @@ function createCustomizedTheme(
         const colorKey = `color-${color}-${shade}`
 
         if (shade !== 500) {
-          const lightness1 = Color(getProp(baseTheme, key500)).lightness()
-          const lightness2 = Color(getProp(baseTheme, colorKey)).lightness()
-          const newColor = color500.lightness(lightness2)
+          const lightness = Color(getProp(baseTheme, colorKey)).lightness()
+          const newColor = color500.lightness(lightness)
           setProp(newTokens, colorKey, newColor!)
         }
       }
+    }
+  }
+
+  for (const color of SEMANTIC_COLORS) {
+    const key = `text${color[0].toUpperCase() + color.substr(1)}`
+    const value = getProp(customizing, key)
+    const themeKey = `color-${color}-text`
+
+    if (value === 'back') {
+      console.log(themeKey, value)
+      setProp(newTokens, themeKey, 'var(--sl-color-black)')
+    } else if (value === 'white') {
+      setProp(newTokens, themeKey, 'var(--sl-color-white)')
     }
   }
 

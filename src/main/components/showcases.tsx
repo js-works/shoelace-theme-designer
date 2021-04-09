@@ -185,7 +185,7 @@ const AlertShowcase = define({
   uses: [Shoelace.SlAlert, Shoelace.SlIcon]
 }).main(() => {
   return () => (
-    <Showcase title="Alerts">
+    <Showcase title="Alert">
       <sl-alert type="primary" open>
         <sl-icon slot="icon" name="info-circle"></sl-icon>
         <strong>This is super informative</strong>
