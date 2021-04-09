@@ -4,7 +4,7 @@ import { createMobxHooks } from 'js-element/utils'
 import { makeObservable, action, computed, observable } from 'mobx'
 import Color from 'color'
 import { AppLayout, HLayout, VLayout } from './layouts'
-import { H4, Text } from './typography'
+import { Text } from './typography'
 import { Customizing } from '../theming/types'
 
 import {
@@ -165,6 +165,7 @@ const Designer = define({
   name: 'sx-designer',
   slots: ['showcases'],
   styles: () => styles.designer,
+  uses: [SlAlert],
 
   props: class {
     initialBaseThemeId?: string

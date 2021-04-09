@@ -141,7 +141,7 @@ function createCustomizedTheme(
           const factor = (lightness500 - lightnessBase500) / lightnessBase500
           const newColor = color500.lightness(lightness).lighten(factor)
 
-          setProp(newTokens, colorKey, newColor)
+          setProp(newTokens, colorKey, newColor.hex())
         }
 
         /*
@@ -167,7 +167,7 @@ function createCustomizedTheme(
       setProp(
         newTokens,
         themeKey,
-        true || !customizing.inverted
+        true || !customizing.inverted // TODO
           ? 'var(--sl-color-white)'
           : 'var(--sl-color-black)'
       )
@@ -175,7 +175,7 @@ function createCustomizedTheme(
       setProp(
         newTokens,
         themeKey,
-        true || !customizing.inverted
+        true || !customizing.inverted // TODO
           ? 'var(--sl-color-black)'
           : 'var(--sl-color-white)'
       )
