@@ -10,7 +10,7 @@ export { darkTheme }
 const darkTheme = createTheme(
   {
     'color-black': '#ffff',
-    'color-white': '#575555'
+    'color-white': '#1c1c1c'
   },
   invertTheme(lightTheme)
 )

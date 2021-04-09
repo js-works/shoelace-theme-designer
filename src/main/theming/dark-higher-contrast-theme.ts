@@ -11,7 +11,7 @@ const darkHigherContrastTheme = enhanceAccessibility(
   createTheme(
     {
       ...darkTheme,
-      'color-white': '#5f5f5f'
+      'color-white': '#101010'
     },
     darkTheme
   )
