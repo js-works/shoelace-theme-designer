@@ -143,6 +143,17 @@ function createCustomizedTheme(
 
           setProp(newTokens, colorKey, newColor)
         }
+
+        /*
+        // Semantically different calculation
+
+        if (shade !== 500) {
+          const factor = (500 - shade) / 500
+          const newColor = color500.lighten(factor)
+
+          setProp(newTokens, colorKey, newColor)
+        }
+        */
       }
     }
   }
