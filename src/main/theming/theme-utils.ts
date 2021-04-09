@@ -115,8 +115,6 @@ function createCustomizedTheme(
   customizing: Customizing,
   baseTheme: Theme
 ): Theme {
-  const isDark = Color(customizing.colorBack).isDark()
-
   const newTokens: Partial<Theme> = {
     'color-primary-500': customizing.colorPrimary,
     'color-success-500': customizing.colorSuccess,
@@ -137,9 +135,13 @@ function createCustomizedTheme(
         const colorKey = `color-${color}-${shade}`
 
         if (shade !== 500) {
+          const lightness500 = color500.lightness()
+          const lightnessBase500 = Color(getProp(baseTheme, key500)).lightness()
           const lightness = Color(getProp(baseTheme, colorKey)).lightness()
-          const newColor = color500.lightness(lightness)
-          setProp(newTokens, colorKey, newColor!)
+          const factor = (lightness500 - lightnessBase500) / lightnessBase500
+          const newColor = color500.lightness(lightness).lighten(factor)
+
+          setProp(newTokens, colorKey, newColor)
         }
       }
     }
