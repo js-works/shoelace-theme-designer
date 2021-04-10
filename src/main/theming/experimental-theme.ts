@@ -70,14 +70,14 @@ const experimentalTheme = createTheme(
     'color-danger-950': '#3B1705',
     'color-danger-text': 'var(--sl-color-white)',
 
-    'border-radius-small': '0',
-    'border-radius-medium': '0',
-    'border-radius-large': '0',
-    'border-radius-x-large': '0',
+    'border-radius-small': '2px',
+    'border-radius-medium': '2px',
+    'border-radius-large': '2px',
+    'border-radius-x-large': '2px',
 
-    'input-border-radius-small': '0',
-    'input-border-radius-medium': '0',
-    'input-border-radius-large': '0'
+    'input-border-radius-small': '2px',
+    'input-border-radius-medium': '2px',
+    'input-border-radius-large': '2px'
   },
   lightTheme
 )
