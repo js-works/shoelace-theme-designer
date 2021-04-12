@@ -1,5 +1,5 @@
 import { define, createRef, h } from 'js-element'
-import { useEffect } from 'js-element/hooks'
+import { useEffect, useRefresher, useState } from 'js-element/hooks'
 import { createMobxHooks } from 'js-element/utils'
 import { makeObservable, action, computed, observable } from 'mobx'
 import Color from 'color'
@@ -545,6 +545,7 @@ const TokenControl = define({
     
     .label-bold {
       font-weight: var(--sl-font-weight-bold);
+      font-style: italic;
     }
 
     .input {
@@ -554,7 +555,7 @@ const TokenControl = define({
 }).bind((p) => {
   const store = useStore()
 
-  const onChange = (ev: any) => {
+  const onTokenChange = (ev: any) => {
     const value = ev.currentTarget.value.trim()
     ev.currentTarget.value = value
 
@@ -588,7 +589,7 @@ const TokenControl = define({
           size="small"
           value={storeValue}
           placeholder={baseValue}
-          onsl-change={onChange}
+          onsl-change={onTokenChange}
         ></sl-input>
       </div>
     )
@@ -600,21 +601,52 @@ const TokenOverwrites = define({
 
   styles: `
     .base {
-      max-height: 320px;
-      width: 290px;
+    }
+
+    .filter-field {
+      margin: -8px 20px 10px 20px;
+    }
+
+    .scroll-pane {
+      max-height: 300px;
+      width: 300px;
       overflow: auto;
-      padding: 10px 5px;
     }
   `
 }).bind(() => {
   const store = useStore()
 
+  const [state, setState] = useState({
+    filterText: ''
+  })
+
+  const onFilterTextInput = (ev: any) => {
+    const value = ev.currentTarget.value.trim()
+
+    setState({ filterText: value })
+  }
+
   return () => {
     return (
       <div class="base">
-        {Object.entries(store.baseTheme).map(([tokenName, tokenDefault]) => {
-          return <TokenControl name={tokenName} />
-        })}
+        <sl-input
+          class="filter-field"
+          placeholder="Filter..."
+          size="small"
+          onsl-input={onFilterTextInput}
+          clearable
+          pill
+        />
+        <div class="scroll-pane">
+          {Object.keys(store.baseTheme)
+            .filter(
+              (tokenName) =>
+                state.filterText === '' || tokenName.includes(state.filterText)
+            )
+            .map((tokenName) => {
+              return <TokenControl name={tokenName} />
+            })}
+        </div>
       </div>
     )
   }

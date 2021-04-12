@@ -145,8 +145,8 @@ const PaletteShowcase = define({
             <sl-tab slot="nav" panel="spinner">
               Spinner
             </sl-tab>
-            <sl-tab slot="nav" panel="disabled" disabled>
-              Disabled
+            <sl-tab slot="nav" panel="buttons">
+              Buttons
             </sl-tab>
             <sl-tab-panel name="checkbox-radio">
               <HLayout gap="huge">
@@ -170,8 +170,14 @@ const PaletteShowcase = define({
               <sl-spinner style="font-size: 2rem;"></sl-spinner>
               <sl-spinner style="font-size: 3rem;"></sl-spinner>
             </sl-tab-panel>
-            <sl-tab-panel name="disabled">
-              This is a disabled tab panel.
+            <sl-tab-panel name="buttons">
+              <HLayout>
+                <sl-button type="primary">Primary</sl-button>
+                <sl-button type="success">Success</sl-button>
+                <sl-button type="info">Info</sl-button>
+                <sl-button type="warning">Warning</sl-button>
+                <sl-button type="danger">Danger</sl-button>
+              </HLayout>
             </sl-tab-panel>
           </sl-tab-group>
         </VLayout>
