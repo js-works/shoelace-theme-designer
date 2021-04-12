@@ -49,6 +49,7 @@ class Store {
     colorInfo: defaultTheme['color-info-500'],
     colorWarning: defaultTheme['color-warning-500'],
     colorDanger: defaultTheme['color-danger-500'],
+    colorGray: defaultTheme['color-gray-500'],
     colorFront: defaultTheme['color-black'],
     colorBack: defaultTheme['color-white'],
 
@@ -131,6 +132,7 @@ class Store {
       colorInfo: baseTheme['color-info-500'],
       colorWarning: baseTheme['color-warning-500'],
       colorDanger: baseTheme['color-danger-500'],
+      colorGray: baseTheme['color-gray-500'],
       colorFront: baseTheme['color-black'],
       colorBack: baseTheme['color-white'],
 
@@ -332,6 +334,11 @@ const Sidebar = define({
                 value={customizing.colorDanger}
               />
               <ColorControl
+                colorName="gray"
+                label="Neutral color"
+                value={customizing.colorGray}
+              />
+              <ColorControl
                 colorName="front"
                 label="Front color"
                 value={customizing.colorFront}
@@ -402,6 +409,7 @@ const ColorControl = define({
       | 'success'
       | 'warning'
       | 'danger'
+      | 'gray'
       | 'front'
       | 'back'
   }
@@ -614,7 +622,7 @@ const styles = {
     .sidebar-tabs {
       margin-top: 1.5em;
       width: 18em;
-      height: 370px;
+      height: 420px;
     }
 
     .color-actions {

@@ -10,6 +10,7 @@ type Customizing = {
   readonly colorSuccess: string
   readonly colorWarning: string
   readonly colorDanger: string
+  readonly colorGray: string
   readonly colorFront: string
   readonly colorBack: string
 

@@ -15,15 +15,21 @@ export {
   serializeCustomization,
   unserializeCustomization,
   COLOR_SHADES,
-  SEMANTIC_COLORS,
-  SEMANTIC_COLORS_PLUS_GRAY
+  SEMANTIC_COLORS
 }
 
 // === constants =====================================================
 
 const COLOR_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
-const SEMANTIC_COLORS = ['primary', 'info', 'success', 'warning', 'danger']
-const SEMANTIC_COLORS_PLUS_GRAY = [...SEMANTIC_COLORS, 'gray']
+
+const SEMANTIC_COLORS = [
+  'primary',
+  'info',
+  'success',
+  'warning',
+  'danger',
+  'gray'
+]
 
 // === utils =========================================================
 
@@ -73,7 +79,7 @@ function loadTheme(name: string, theme: Theme) {
 function invertTheme(theme: Theme): Theme {
   const newTokens: any = {}
 
-  for (const color of SEMANTIC_COLORS_PLUS_GRAY) {
+  for (const color of SEMANTIC_COLORS) {
     for (const shade of COLOR_SHADES) {
       const shade2 = 1000 - shade
       const key1 = `color-${color}-${shade}`
@@ -121,6 +127,7 @@ function createCustomizedTheme(
     'color-info-500': customizing.colorInfo,
     'color-warning-500': customizing.colorWarning,
     'color-danger-500': customizing.colorDanger,
+    'color-gray-500': customizing.colorGray,
     'color-black': customizing.colorFront,
     'color-white': customizing.colorBack
   }

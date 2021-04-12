@@ -2,7 +2,7 @@ import { createRef, define, h } from 'js-element'
 import { HLayout, VLayout } from './layouts'
 import * as Shoelace from '@shoelace-style/shoelace'
 import { H3 } from '../components/typography'
-import { COLOR_SHADES, SEMANTIC_COLORS_PLUS_GRAY } from '../theming/theme-utils'
+import { COLOR_SHADES, SEMANTIC_COLORS } from '../theming/theme-utils'
 
 // === exports =======================================================
 
@@ -55,15 +55,15 @@ const PaletteShowcase = define({
         <table class="palette-table" cellPadding={0} cellSpacing={0}>
           <thead>
             <td />
-            {SEMANTIC_COLORS_PLUS_GRAY.map((color) => (
-              <th>{color}</th>
+            {SEMANTIC_COLORS.map((color) => (
+              <th>{color === 'gray' ? 'neutral' : color}</th>
             ))}
           </thead>
           <tbody>
             {COLOR_SHADES.map((shade) => (
               <tr>
                 <td>{shade}</td>
-                {SEMANTIC_COLORS_PLUS_GRAY.map((color) => {
+                {SEMANTIC_COLORS.map((color) => {
                   const style = `
                   background-color: var(--sl-color-${color}-${shade});
                 `
