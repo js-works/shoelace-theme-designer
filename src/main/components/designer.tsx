@@ -11,6 +11,7 @@ import {
   createCustomizedTheme,
   fromThemeToCss,
   fromThemeToJson,
+  SEMANTIC_COLORS,
   serializeCustomization
 } from '../theming/theme-utils'
 
@@ -75,6 +76,30 @@ class Store {
 
   get customizedJson() {
     return fromThemeToJson(this.customizedTheme)
+  }
+
+  get themeModified() {
+    const baseTheme = getBaseThemeById(this.baseThemeId)
+    const customizedTheme = this.customizedTheme
+
+    for (const color of SEMANTIC_COLORS) {
+      if (
+        color !== 'gray' &&
+        (this.customizing as any)[
+          'text' + color[0].toUpperCase() + color.substr(1)
+        ] !== 'default'
+      ) {
+        return true
+      }
+    }
+
+    for (const key of Object.keys(customizedTheme)) {
+      if ((customizedTheme as any)[key] !== (baseTheme as any)[key]) {
+        return true
+      }
+    }
+
+    return false
   }
 
   constructor() {
@@ -299,6 +324,13 @@ const Sidebar = define({
             ))}
           </sl-select>
         </HLayout>
+        <div class="modified-badge">
+          {store.themeModified ? (
+            <sl-badge type="warning">modified</sl-badge>
+          ) : (
+            <sl-badge type="info">original</sl-badge>
+          )}
+        </div>
         <sl-tab-group class="sidebar-tabs">
           <sl-tab slot="nav" panel="theme-colors">
             Theme colors
@@ -387,7 +419,9 @@ const Sidebar = define({
         </sl-tab-group>
         <HLayout class="color-actions" gap="small">
           <sl-button onclick={invertTheme}>Invert theme</sl-button>
-          <sl-button onclick={resetTheme}>Reset theme</sl-button>
+          <sl-button onclick={resetTheme} disabled={!store.themeModified}>
+            Reset theme
+          </sl-button>
         </HLayout>
       </VLayout>
     )
@@ -617,6 +651,10 @@ const styles = {
 
     .theme-selector {
       width: 12em;
+    }
+
+    .modified-badge {
+      margin-top: -0.25em;
     }
 
     .sidebar-tabs {
