@@ -4,6 +4,7 @@ import { lightHigherContrastTheme } from './light-higher-contrast-theme'
 import { darkTheme } from './dark-theme'
 import { darkHigherContrastTheme } from './dark-higher-contrast-theme'
 import { experimentalTheme } from './experimental-theme'
+import { experimentalDarkTheme } from './experimental-dark-theme'
 
 export { getBaseThemeById, getBaseThemeNameById, getAllBaseThemeIds }
 
@@ -33,6 +34,11 @@ const baseThemes = {
   experimental: {
     theme: experimentalTheme,
     name: 'Experimental'
+  },
+
+  experimentalDark: {
+    theme: experimentalDarkTheme,
+    name: 'Experimental dark'
   }
 }
 
