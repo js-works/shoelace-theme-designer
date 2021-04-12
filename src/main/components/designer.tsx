@@ -282,14 +282,6 @@ const Sidebar = define({
   return () => {
     const customizing = store.customizing
 
-    const createColorListener = (type: string) => {
-      return (ev: any) => {
-        const newCustomizing: any = { ...customizing }
-        newCustomizing[type] = ev.detail.value
-        store.customize(newCustomizing)
-      }
-    }
-
     return (
       <VLayout class="base">
         <br />
