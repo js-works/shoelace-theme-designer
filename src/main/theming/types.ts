@@ -21,6 +21,8 @@ type Customizing = {
   readonly textDanger: 'default' | 'back' | 'front'
 
   readonly inverted: boolean
+
+  readonly overwrites: Readonly<Partial<Theme>>
 }
 
 type Theme = Readonly<{

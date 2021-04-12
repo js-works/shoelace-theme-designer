@@ -60,14 +60,17 @@ class Store {
     textWarning: 'default',
     textDanger: 'default',
 
-    inverted: false
+    inverted: false,
+
+    overwrites: {}
+  }
+
+  get baseTheme() {
+    return getBaseThemeById(this.baseThemeId)
   }
 
   get customizedTheme() {
-    return createCustomizedTheme(
-      this.customizing,
-      getBaseThemeById(this.baseThemeId)
-    )
+    return createCustomizedTheme(this.customizing, this.baseTheme)
   }
 
   get customizedCss() {
@@ -79,7 +82,7 @@ class Store {
   }
 
   get themeModified() {
-    const baseTheme = getBaseThemeById(this.baseThemeId)
+    const baseTheme = this.baseTheme
     const customizedTheme = this.customizedTheme
 
     for (const color of SEMANTIC_COLORS) {
@@ -105,18 +108,20 @@ class Store {
   constructor() {
     makeObservable(this, {
       baseThemeId: observable,
+      baseTheme: computed,
       customizedCss: computed,
       customizedJson: computed,
       customizedTheme: computed,
       customize: action,
       customizing: observable.ref,
+      exportDrawerVisible: observable,
       invertTheme: action,
       resetTheme: action,
       setBaseThemeId: action,
       setExportDrawerVisible: action,
       setShareThemeMessageVisible: action,
       shareThemeMessageVisible: observable,
-      exportDrawerVisible: observable
+      themeModified: computed
     })
   }
 
@@ -149,7 +154,7 @@ class Store {
   }
 
   resetTheme() {
-    const baseTheme = getBaseThemeById(this.baseThemeId)
+    const baseTheme = this.baseTheme
 
     this.customizing = {
       colorPrimary: baseTheme['color-primary-500'],
@@ -167,7 +172,9 @@ class Store {
       textWarning: 'default',
       textDanger: 'default',
 
-      inverted: false
+      inverted: false,
+
+      overwrites: {}
     }
   }
 
@@ -332,13 +339,16 @@ const Sidebar = define({
           )}
         </div>
         <sl-tab-group class="sidebar-tabs">
-          <sl-tab slot="nav" panel="theme-colors">
-            Theme colors
+          <sl-tab slot="nav" panel="colors">
+            Colors
           </sl-tab>
-          <sl-tab slot="nav" panel="text-colors">
-            Text colors
+          <sl-tab slot="nav" panel="text">
+            Text
           </sl-tab>
-          <sl-tab-panel name="theme-colors">
+          <sl-tab slot="nav" panel="overwrites">
+            Overwrites
+          </sl-tab>
+          <sl-tab-panel name="colors">
             <VLayout>
               <ColorControl
                 colorName="primary"
@@ -382,7 +392,7 @@ const Sidebar = define({
               />
             </VLayout>
           </sl-tab-panel>
-          <sl-tab-panel name="text-colors">
+          <sl-tab-panel name="text">
             <VLayout gap="small">
               <Text size="small">
                 Please select whether the default text colors shall be used or
@@ -415,6 +425,9 @@ const Sidebar = define({
                 value={customizing.textDanger}
               />
             </VLayout>
+          </sl-tab-panel>
+          <sl-tab-panel name="overwrites">
+            <TokenOverwrites />
           </sl-tab-panel>
         </sl-tab-group>
         <HLayout class="color-actions" gap="small">
@@ -462,7 +475,7 @@ const ColorControl = define({
   return () => (
     <HLayout>
       <label>{p.label}:</label>
-      <span>{p.value}</span>
+      <span>{p.value?.toUpperCase()}</span>
       <sl-color-picker
         format="hex"
         no-format-toggle
@@ -506,6 +519,103 @@ const TextColorControl = define({
           <sl-menu-item value="front">front color</sl-menu-item>
         </sl-select>
       </HLayout>
+    )
+  }
+})
+
+const TokenControl = define({
+  tag: 'sx-designer--token-control',
+
+  props: class {
+    name!: string
+  },
+
+  styles: `
+    .base {
+      display: flex;
+      margin: 2px 0;
+      align-items: center;
+    }
+
+    .label {
+      width: 10em;
+      font-size: var(--sl-font-size-small);
+      margin: 0 0.25em 0 0;
+    }
+    
+    .label-bold {
+      font-weight: var(--sl-font-weight-bold);
+    }
+
+    .input {
+      width: 8em;
+    }
+  `
+}).bind((p) => {
+  const store = useStore()
+
+  const onChange = (ev: any) => {
+    const value = ev.currentTarget.value.trim()
+    ev.currentTarget.value = value
+
+    const name = p.name
+    const overwrites = store.customizing.overwrites
+    const oldValue = (overwrites as any)[name]
+
+    if (value === '' && oldValue !== undefined) {
+      const newOverwrites = { ...overwrites }
+
+      delete (newOverwrites as any)[name]
+      store.customize({ overwrites: newOverwrites })
+    } else if (value !== oldValue) {
+      const newOverwrites = { ...overwrites, [name]: value }
+      store.customize({ overwrites: newOverwrites })
+    }
+  }
+
+  return () => {
+    const baseTheme = store.baseTheme
+    const baseValue = (baseTheme as any)[p.name]
+    const storeValue = (store.customizing.overwrites as any)[p.name]
+
+    return (
+      <div class="base">
+        <label class={!storeValue ? 'label' : 'label label-bold'}>
+          {p.name}
+        </label>
+        <sl-input
+          class="input"
+          size="small"
+          value={storeValue}
+          placeholder={baseValue}
+          onsl-change={onChange}
+        ></sl-input>
+      </div>
+    )
+  }
+})
+
+const TokenOverwrites = define({
+  tag: 'sx-designer--token-overwrites',
+
+  styles: `
+    .base {
+      max-height: 320px;
+      width: 290px;
+      overflow: auto;
+      padding: 10px 5px;
+    }
+  `
+}).bind(() => {
+  const store = useStore()
+
+  return () => {
+    return (
+      <div class="base">
+        {Object.entries(store.baseTheme).map(([tokenName, tokenDefault]) => {
+          return <TokenControl name={tokenName} />
+        })}
+      </div>
     )
   }
 })
@@ -602,8 +712,9 @@ const styles = {
     }
 
     .sidebar {
+      width: 380px;
       height: 100%;
-      padding: 10px 30px 10px 20px;
+      padding: 0 30px 10px 20px;
       box-sizing: border-box;
       border: 1px solid var(--sl-color-gray-200);
       border-width: 0 1px 0 0;
@@ -646,7 +757,7 @@ const styles = {
 
   sidebar: `
     .base {
-      color: var(--sl-color-black)
+      color: var(--sl-color-black);
     }
 
     .theme-selector {
@@ -659,7 +770,7 @@ const styles = {
 
     .sidebar-tabs {
       margin-top: 1.5em;
-      width: 18em;
+      width: 340px;
       height: 420px;
     }
 

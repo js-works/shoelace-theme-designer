@@ -195,6 +195,13 @@ function createCustomizedTheme(
     customizedTheme = invertTheme(customizedTheme)
   }
 
+  if (Object.keys(customizing.overwrites).length > 0) {
+    customizedTheme = createTheme(
+      { ...customizedTheme, ...customizing.overwrites },
+      baseTheme
+    )
+  }
+
   return customizedTheme
 }
 
