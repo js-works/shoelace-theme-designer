@@ -7,7 +7,7 @@ export { H2, H3, H4, Text }
 // === components ====================================================
 
 const H2 = define({
-  name: 'sx-headline2',
+  tag: 'sx-headline2',
   slots: ['default'],
 
   styles: `
@@ -16,7 +16,7 @@ const H2 = define({
       margin: 0 0 10px 0;
     }
   `
-}).main(() => {
+}).bind(() => {
   return () => (
     <h2>
       <slot />
@@ -25,7 +25,7 @@ const H2 = define({
 })
 
 const H3 = define({
-  name: 'sx-headline3',
+  tag: 'sx-headline3',
   slots: ['default'],
 
   styles: `
@@ -34,7 +34,7 @@ const H3 = define({
       font-size: var(--sl-font-size-x-large);
     }
   `
-}).main(() => {
+}).bind(() => {
   return () => (
     <h3>
       <slot />
@@ -43,7 +43,7 @@ const H3 = define({
 })
 
 const H4 = define({
-  name: 'sx-headline4',
+  tag: 'sx-headline4',
   slots: ['default'],
 
   styles: `
@@ -53,7 +53,7 @@ const H4 = define({
       margin-bottom: 1.15em;
     }
   `
-}).main(() => {
+}).bind(() => {
   return () => (
     <h4>
       <slot />
@@ -62,7 +62,7 @@ const H4 = define({
 })
 
 const Text = define({
-  name: 'sx-text',
+  tag: 'sx-text',
   slots: ['default'],
 
   props: class {
@@ -91,7 +91,7 @@ const Text = define({
       font-weight: var(--sl-font-weight-bold);
     }
   `
-}).main((p) => {
+}).bind((p) => {
   return () => {
     const classes = []
 

@@ -162,7 +162,7 @@ const [useStoreProvider, useStore] = createMobxHooks<Store>()
 // === components =====================================================
 
 const Designer = define({
-  name: 'sx-designer',
+  tag: 'sx-designer',
   slots: ['showcases'],
   styles: () => styles.designer,
   uses: [SlAlert],
@@ -171,7 +171,7 @@ const Designer = define({
     initialBaseThemeId?: string
     initialCustomizing?: Customizing
   }
-}).main((p) => {
+}).bind((p) => {
   const store = useStoreProvider(new Store())
 
   if (p.initialBaseThemeId) {
@@ -222,10 +222,10 @@ const Designer = define({
 })
 
 const Header = define({
-  name: 'sx-designer--header',
+  tag: 'sx-designer--header',
   uses: [SlIcon, SlButton],
   styles: () => styles.header
-}).main(() => {
+}).bind(() => {
   const store = useStore()
 
   const onShareClick = () => {
@@ -261,9 +261,9 @@ const Header = define({
 })
 
 const Sidebar = define({
-  name: 'sx-designer--sidebar',
+  tag: 'sx-designer--sidebar',
   styles: () => styles.sidebar
-}).main(() => {
+}).bind(() => {
   const store = useStore()
   const invertTheme = () => store.invertTheme()
   const resetTheme = () => store.resetTheme()
@@ -396,7 +396,7 @@ const Sidebar = define({
 })
 
 const ColorControl = define({
-  name: 'sx-designer--color-field',
+  tag: 'sx-designer--color-field',
   uses: [SlColorPicker, SlInput],
   styles: () => styles.colorControl,
 
@@ -413,7 +413,7 @@ const ColorControl = define({
       | 'front'
       | 'back'
   }
-}).main((p) => {
+}).bind((p) => {
   const store = useStore()
 
   const onChange = (ev: any) => {
@@ -442,7 +442,7 @@ const ColorControl = define({
 })
 
 const TextColorControl = define({
-  name: 'sx-designer--text-color-control',
+  tag: 'sx-designer--text-color-control',
   styles: () => styles.textColorControl,
 
   props: class {
@@ -450,7 +450,7 @@ const TextColorControl = define({
     label?: string
     value?: 'default' | 'back' | 'front'
   }
-}).main((p) => {
+}).bind((p) => {
   const store = useStore()
 
   const onChange = (ev: any) => {
@@ -477,10 +477,10 @@ const TextColorControl = define({
 })
 
 const ThemeExportDrawer = define({
-  name: 'sx-designer--theme-export-drawer',
+  tag: 'sx-designer--theme-export-drawer',
   uses: [SlTab, SlTabGroup, SlTabPanel],
   styles: () => styles.themeExportDrawer
-}).main(() => {
+}).bind(() => {
   const store = useStore()
   const drawerRef = createRef<any>()
   const closeDrawer = () => store.setExportDrawerVisible(false)

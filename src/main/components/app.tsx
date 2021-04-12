@@ -14,8 +14,8 @@ if (location.href.indexOf('#') > -1) {
 }
 
 export const App = define({
-  name: 'sx-app'
-}).main(() => {
+  tag: 'sx-app'
+}).bind(() => {
   return () => (
     <div class="app">
       <Designer

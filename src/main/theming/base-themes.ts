@@ -56,7 +56,7 @@ function getBaseThemeNameById(id: string): string {
   const ret = (baseThemes as any)[id]?.name
 
   if (!ret) {
-    throw Error(`[getBaseThemeNameById] Unknown base theme id`)
+    throw Error(`[getBaseThemeNameById] Unknown base theme id "${id}"`)
   }
 
   return ret

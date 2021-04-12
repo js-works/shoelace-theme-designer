@@ -11,13 +11,13 @@ export { Showcases }
 // === Showcases =====================================================
 
 const Showcase = define({
-  name: 'sx-showcase',
+  tag: 'sx-showcase',
   slots: ['default'],
 
   props: class {
     title = ''
   }
-}).main((p) => {
+}).bind((p) => {
   return () => (
     <div class="base">
       <H3>{p.title}</H3>
@@ -27,8 +27,8 @@ const Showcase = define({
 })
 
 const Showcases = define({
-  name: 'sx-showcases'
-}).main(() => {
+  tag: 'sx-showcases'
+}).bind(() => {
   return () => (
     <div>
       <PaletteShowcase />
@@ -44,9 +44,9 @@ const Showcases = define({
 // === showcases =====================================================
 
 const PaletteShowcase = define({
-  name: 'sx-palette-showcase',
+  tag: 'sx-palette-showcase',
   styles: () => styles.showcasePalette
-}).main(() => {
+}).bind(() => {
   const dialogRef = createRef<any>()
 
   return () => (
@@ -181,9 +181,9 @@ const PaletteShowcase = define({
 })
 
 const AlertShowcase = define({
-  name: 'sx-alerts-showcase',
+  tag: 'sx-alerts-showcase',
   uses: [Shoelace.SlAlert, Shoelace.SlIcon]
-}).main(() => {
+}).bind(() => {
   return () => (
     <Showcase title="Alert">
       <sl-alert type="primary" open>
@@ -225,9 +225,9 @@ const AlertShowcase = define({
 })
 
 const AvatarShowcase = define({
-  name: 'sx-avatar-showcase',
+  tag: 'sx-avatar-showcase',
   uses: [Shoelace.SlAvatar]
-}).main(() => {
+}).bind(() => {
   return () => (
     <Showcase title="Avatar">
       <HLayout>
@@ -240,9 +240,9 @@ const AvatarShowcase = define({
 })
 
 const BadgeShowcase = define({
-  name: 'sx-badge-showcase',
+  tag: 'sx-badge-showcase',
   uses: [Shoelace.SlBadge]
-}).main(() => {
+}).bind(() => {
   return () => (
     <Showcase title="Badge">
       <HLayout>
@@ -257,9 +257,9 @@ const BadgeShowcase = define({
 })
 
 const ButtonShowcase = define({
-  name: 'sx-button-showcase',
+  tag: 'sx-button-showcase',
   uses: [Shoelace.SlButton]
-}).main(() => {
+}).bind(() => {
   return () => (
     <Showcase title="Button">
       <HLayout>
@@ -275,9 +275,9 @@ const ButtonShowcase = define({
 })
 
 const IconShowcase = define({
-  name: 'sx-icon-showcase',
+  tag: 'sx-icon-showcase',
   uses: [Shoelace.SlIcon]
-}).main(() => {
+}).bind(() => {
   return () => (
     <Showcase title="Icon">
       <HLayout style="font-size: 32px">

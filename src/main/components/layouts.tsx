@@ -17,7 +17,7 @@ const gaps = {
 // === components ====================================================
 
 const HLayout = define({
-  name: 'sx-horizontal-layout',
+  tag: 'sx-horizontal-layout',
   slots: ['default'],
   styles: () => styles.hLayout,
 
@@ -25,7 +25,7 @@ const HLayout = define({
     align = 'center' as 'top' | 'center' | 'bottom'
     gap = 'tiny' as 'tiny' | 'small' | 'medium' | 'large' | 'huge'
   }
-}).main((p) => {
+}).bind((p) => {
   return () => {
     const alignItems =
       p.align === 'top'
@@ -43,14 +43,14 @@ const HLayout = define({
 })
 
 const VLayout = define({
-  name: 'sx-vertical-layout',
+  tag: 'sx-vertical-layout',
   slots: ['default'],
   styles: () => styles.vLayout,
 
   props: class {
     gap = 'tiny' as 'tiny' | 'small' | 'medium' | 'large' | 'huge'
   }
-}).main((p) => {
+}).bind((p) => {
   return () => (
     <div style={`gap: ${gaps[p.gap]}`}>
       <slot />
@@ -59,10 +59,10 @@ const VLayout = define({
 })
 
 const AppLayout = define({
-  name: 'sx-app-layout',
+  tag: 'sx-app-layout',
   slots: ['header', 'sidebar', 'main'],
   styles: () => styles.appLayout
-}).main(() => {
+}).bind(() => {
   return () => (
     <div class="base">
       <header class="header">
