@@ -9,9 +9,7 @@ import { COLOR_SHADES, SEMANTIC_COLORS } from '../theming/theme-utils'
 
 export { Showcases }
 
-// === used components ===============================================
-
-void [Shoelace.SlButton, Shoelace.SlDrawer]
+void [Shoelace.SlDrawer]
 
 // === Showcases =====================================================
 

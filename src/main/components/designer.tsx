@@ -1,4 +1,4 @@
-import { createRef, toComponent, h } from 'js-element'
+import { createRef, h } from 'js-element'
 import { useEffect, useState, useStyles } from 'js-element/hooks'
 import { createMobxHooks } from 'js-element/utils'
 import { makeObservable, action, computed, observable } from 'mobx'
@@ -21,26 +21,24 @@ import {
   getAllBaseThemeIds
 } from '../theming/base-themes'
 
+import {
+  Alert,
+  Badge,
+  Button,
+  ColorPicker,
+  Drawer,
+  Icon,
+  Input,
+  MenuItem,
+  Select,
+  Tab,
+  TabGroup,
+  TabPanel
+} from './shoelace'
+
 // === exports =======================================================
 
 export { Designer }
-
-// === shoelace components ============================================
-
-import {
-  ScAlert,
-  ScBadge,
-  ScButton,
-  ScColorPicker,
-  ScDrawer,
-  ScIcon,
-  ScInput,
-  ScMenuItem,
-  ScSelect,
-  ScTab,
-  ScTabGroup,
-  ScTabPanel
-} from './shoelace'
 
 // === store ==========================================================
 
@@ -242,14 +240,14 @@ function Designer(p: {
           <Sidebar />
         </div>
         <div slot="main" class="showcases">
-          <ScAlert
+          <Alert
             class="share-theme-message"
             type="success"
             open={store.shareThemeMessageVisible}
           >
-            <ScIcon slot="icon" name="check2-circle"></ScIcon>
+            <Icon slot="icon" name="check2-circle"></Icon>
             URL has been copied to clipboard
-          </ScAlert>
+          </Alert>
           <slot name="showcases" />
         </div>
       </AppLayout>
@@ -282,12 +280,12 @@ function Header() {
       <div class="brand">Shoelace Theme Designer</div>
       <div class="actions">
         <HLayout gap="small">
-          <ScButton type="default" onclick={onShareClick}>
+          <Button type="default" onclick={onShareClick}>
             Share theme
-          </ScButton>
-          <ScButton type="default" onclick={onExportClick}>
+          </Button>
+          <Button type="default" onclick={onExportClick}>
             Export theme
-          </ScButton>
+          </Button>
         </HLayout>
       </div>
     </div>
@@ -320,34 +318,36 @@ function Sidebar() {
         <br />
         <HLayout gap="small">
           <Text>Base theme:</Text>
-          <ScSelect
+          <Select
             class="theme-selector"
             onsl-change={onBaseThemeChange}
             value={store.baseThemeId}
           >
             {getAllBaseThemeIds().map((id) => (
-              <ScMenuItem value={id}>{getBaseThemeNameById(id)}</ScMenuItem>
+              <MenuItem key={id} value={id}>
+                {getBaseThemeNameById(id)}
+              </MenuItem>
             ))}
-          </ScSelect>
+          </Select>
         </HLayout>
         <div class="modified-badge">
           {store.themeModified ? (
-            <ScBadge type="warning">modified</ScBadge>
+            <Badge type="warning">modified</Badge>
           ) : (
-            <ScBadge type="info">original</ScBadge>
+            <Badge type="info">original</Badge>
           )}
         </div>
-        <ScTabGroup class="sidebar-tabs">
-          <ScTab slot="nav" panel="colors">
+        <TabGroup class="sidebar-tabs">
+          <Tab slot="nav" panel="colors">
             Colors
-          </ScTab>
-          <ScTab slot="nav" panel="text">
+          </Tab>
+          <Tab slot="nav" panel="text">
             Text
-          </ScTab>
-          <ScTab slot="nav" panel="overwrites">
+          </Tab>
+          <Tab slot="nav" panel="overwrites">
             Overwrites
-          </ScTab>
-          <ScTabPanel name="colors">
+          </Tab>
+          <TabPanel name="colors">
             <VLayout>
               <ColorControl
                 colorName="primary"
@@ -390,8 +390,8 @@ function Sidebar() {
                 value={customizing.colorBack}
               />
             </VLayout>
-          </ScTabPanel>
-          <ScTabPanel name="text">
+          </TabPanel>
+          <TabPanel name="text">
             <VLayout gap="small">
               <Text size="small">
                 Please select whether the default text colors shall be used or
@@ -424,16 +424,16 @@ function Sidebar() {
                 value={customizing.textDanger}
               />
             </VLayout>
-          </ScTabPanel>
-          <ScTabPanel name="overwrites">
+          </TabPanel>
+          <TabPanel name="overwrites">
             <TokenOverwrites />
-          </ScTabPanel>
-        </ScTabGroup>
+          </TabPanel>
+        </TabGroup>
         <HLayout class="color-actions" gap="small">
-          <ScButton onclick={invertTheme}>Invert theme</ScButton>
-          <ScButton onclick={resetTheme} disabled={!store.themeModified}>
+          <Button onclick={invertTheme}>Invert theme</Button>
+          <Button onclick={resetTheme} disabled={!store.themeModified}>
             Reset theme
-          </ScButton>
+          </Button>
         </HLayout>
       </VLayout>
     )
@@ -441,10 +441,10 @@ function Sidebar() {
 }
 
 function ColorControl(p: {
-  label?: string
-  value?: string
+  label: string
+  value: string
 
-  colorName?:
+  colorName:
     | 'primary'
     | 'info'
     | 'success'
@@ -471,22 +471,22 @@ function ColorControl(p: {
     <HLayout>
       <label>{p.label}:</label>
       <span>{p.value?.toUpperCase()}</span>
-      <ScColorPicker
+      <ColorPicker
         format="hex"
         no-format-toggle
         size="small"
         value={p.value}
         hoist
         onsl-change={onChange}
-      ></ScColorPicker>
+      ></ColorPicker>
     </HLayout>
   )
 }
 
 function TextColorControl(p: {
-  colorName?: string
-  label?: string
-  value?: 'default' | 'back' | 'front'
+  colorName: string
+  label: string
+  value: 'default' | 'back' | 'front'
 }) {
   const store = useStore()
 
@@ -505,11 +505,11 @@ function TextColorControl(p: {
     return (
       <HLayout>
         <label class="label">{p.label}:</label>
-        <ScSelect value={p.value} size="small" onsl-change={onChange}>
-          <ScMenuItem value="default">default</ScMenuItem>
-          <ScMenuItem value="back">back color</ScMenuItem>
-          <ScMenuItem value="front">front color</ScMenuItem>
-        </ScSelect>
+        <Select value={p.value} size="small" onsl-change={onChange}>
+          <MenuItem value="default">default</MenuItem>
+          <MenuItem value="back">back color</MenuItem>
+          <MenuItem value="front">front color</MenuItem>
+        </Select>
       </HLayout>
     )
   }
@@ -549,13 +549,13 @@ function TokenControl(p: { name: string }) {
         <label class={!storeValue ? 'label' : 'label label-bold'}>
           {p.name}
         </label>
-        <ScInput
+        <Input
           class="input"
           size="small"
           value={storeValue}
           placeholder={baseValue}
           onsl-change={onTokenChange}
-        ></ScInput>
+        ></Input>
       </div>
     )
   }
@@ -579,7 +579,7 @@ function TokenOverwrites() {
   return () => {
     return (
       <div class="base">
-        <ScInput
+        <Input
           class="filter-field"
           placeholder="Filter..."
           size="small"
@@ -625,31 +625,31 @@ function ThemeExportDrawer() {
   )
 
   return () => (
-    <ScDrawer
+    <Drawer
       id="drawer"
       label="Export theme"
       class="drawer"
       open={store.exportDrawerVisible}
       onsl-hide={closeDrawer}
     >
-      <sl-tab-group>
-        <sl-tab slot="nav" panel="css">
+      <TabGroup>
+        <Tab slot="nav" panel="css">
           CSS properties
-        </sl-tab>
-        <sl-tab slot="nav" panel="json">
+        </Tab>
+        <Tab slot="nav" panel="json">
           JSON
-        </sl-tab>
-        <sl-tab-panel name="css">
+        </Tab>
+        <TabPanel name="css">
           <pre>{store.customizedCss}</pre>
-        </sl-tab-panel>
-        <sl-tab-panel name="json">
+        </TabPanel>
+        <TabPanel name="json">
           <pre>{store.customizedJson}</pre>
-        </sl-tab-panel>
-      </sl-tab-group>
-      <sl-button slot="footer" type="primary" onclick={closeDrawer}>
+        </TabPanel>
+      </TabGroup>
+      <Button slot="footer" type="primary" onclick={closeDrawer}>
         Close
-      </sl-button>
-    </ScDrawer>
+      </Button>
+    </Drawer>
   )
 }
 
