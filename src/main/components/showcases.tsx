@@ -1,4 +1,5 @@
-import { createRef, define, h } from 'js-element'
+import { createRef, h } from 'js-element'
+import { useStyles } from 'js-element/hooks'
 import { HLayout, VLayout } from './layouts'
 import * as Shoelace from '@shoelace-style/shoelace'
 import { H3 } from '../components/typography'
@@ -8,27 +9,24 @@ import { COLOR_SHADES, SEMANTIC_COLORS } from '../theming/theme-utils'
 
 export { Showcases }
 
+// === used components ===============================================
+
+void [Shoelace.SlButton, Shoelace.SlDrawer]
+
 // === Showcases =====================================================
 
-const Showcase = define({
-  tag: 'sx-showcase',
-  slots: ['default'],
+function Showcase(p: { title: string }) {
+  useStyles(styles.showcase)
 
-  props: class {
-    title = ''
-  }
-}).bind((p) => {
   return () => (
     <div class="base">
       <H3>{p.title}</H3>
       <slot />
     </div>
   )
-})
+}
 
-const Showcases = define({
-  tag: 'sx-showcases'
-}).bind(() => {
+function Showcases() {
   return () => (
     <div>
       <PaletteShowcase />
@@ -39,15 +37,14 @@ const Showcases = define({
       <IconShowcase />
     </div>
   )
-})
+}
 
 // === showcases =====================================================
 
-const PaletteShowcase = define({
-  tag: 'sx-palette-showcase',
-  styles: () => styles.showcasePalette
-}).bind(() => {
+function PaletteShowcase() {
   const dialogRef = createRef<any>()
+
+  useStyles(styles.paletteShowcase)
 
   return () => (
     <HLayout gap="huge" align="top">
@@ -184,12 +181,9 @@ const PaletteShowcase = define({
       </Showcase>
     </HLayout>
   )
-})
+}
 
-const AlertShowcase = define({
-  tag: 'sx-alerts-showcase',
-  uses: [Shoelace.SlAlert, Shoelace.SlIcon]
-}).bind(() => {
+function AlertShowcase() {
   return () => (
     <Showcase title="Alert">
       <sl-alert type="primary" open>
@@ -228,12 +222,9 @@ const AlertShowcase = define({
       </sl-alert>
     </Showcase>
   )
-})
+}
 
-const AvatarShowcase = define({
-  tag: 'sx-avatar-showcase',
-  uses: [Shoelace.SlAvatar]
-}).bind(() => {
+function AvatarShowcase() {
   return () => (
     <Showcase title="Avatar">
       <HLayout>
@@ -243,12 +234,9 @@ const AvatarShowcase = define({
       </HLayout>
     </Showcase>
   )
-})
+}
 
-const BadgeShowcase = define({
-  tag: 'sx-badge-showcase',
-  uses: [Shoelace.SlBadge]
-}).bind(() => {
+function BadgeShowcase() {
   return () => (
     <Showcase title="Badge">
       <HLayout>
@@ -260,12 +248,9 @@ const BadgeShowcase = define({
       </HLayout>
     </Showcase>
   )
-})
+}
 
-const ButtonShowcase = define({
-  tag: 'sx-button-showcase',
-  uses: [Shoelace.SlButton]
-}).bind(() => {
+function ButtonShowcase() {
   return () => (
     <Showcase title="Button">
       <HLayout>
@@ -278,12 +263,9 @@ const ButtonShowcase = define({
       </HLayout>
     </Showcase>
   )
-})
+}
 
-const IconShowcase = define({
-  tag: 'sx-icon-showcase',
-  uses: [Shoelace.SlIcon]
-}).bind(() => {
+function IconShowcase() {
   return () => (
     <Showcase title="Icon">
       <HLayout style="font-size: 32px">
@@ -306,7 +288,7 @@ const IconShowcase = define({
       </HLayout>
     </Showcase>
   )
-})
+}
 
 // === styles ========================================================
 
@@ -319,7 +301,7 @@ const styles = {
     }
   `,
 
-  showcasePalette: `
+  paletteShowcase: `
     th {
       padding: 2px 4px 6px 8px;
       width: 3.5em;

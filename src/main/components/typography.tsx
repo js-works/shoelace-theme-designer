@@ -1,4 +1,5 @@
-import { define, h } from 'js-element'
+import { h } from 'js-element'
+import { useDefaults, useStyles } from 'js-element/hooks'
 
 // === exports =======================================================
 
@@ -6,92 +7,47 @@ export { H2, H3, H4, Text }
 
 // === components ====================================================
 
-const H2 = define({
-  tag: 'sx-headline2',
-  slots: ['default'],
+function H2() {
+  useStyles(styles.h2)
 
-  styles: `
-    h2 {
-      font-size: var(--sl-font-size-xx-large);
-      margin: 0 0 10px 0;
-    }
-  `
-}).bind(() => {
   return () => (
     <h2>
       <slot />
     </h2>
   )
-})
+}
 
-const H3 = define({
-  tag: 'sx-headline3',
-  slots: ['default'],
+function H3() {
+  useStyles(styles.h3)
 
-  styles: `
-    h3 {
-      font-weight: var(--sl-font-weight-normal);
-      font-size: var(--sl-font-size-x-large);
-    }
-  `
-}).bind(() => {
   return () => (
     <h3>
       <slot />
     </h3>
   )
-})
+}
 
-const H4 = define({
-  tag: 'sx-headline4',
-  slots: ['default'],
+function H4() {
+  useStyles(styles.h4)
 
-  styles: `
-    h4 {
-      font-weight: var(--sl-font-weight-normal);
-      font-size: var(--sl-font-size-large);
-      margin-bottom: 1.15em;
-    }
-  `
-}).bind(() => {
   return () => (
     <h4>
       <slot />
     </h4>
   )
-})
+}
 
-const Text = define({
-  tag: 'sx-text',
-  slots: ['default'],
+function Text(props: {
+  size?: 'small' | 'medium' | 'large'
+  weight?: 'normal' | 'bold'
+}) {
+  const p = useDefaults(props, {
+    size: 'medium',
+    weight: 'normal'
+  })
 
-  props: class {
-    size = 'small' as 'small' | 'medium' | 'large'
-    weight = 'normal' as 'normal' | 'bold'
-  },
+  useStyles(styles.text)
 
-  styles: `
-    .small {
-      font-size: var(--sl-font-size-small);
-    }
-    
-    .medium {
-      font-size: var(--sl-font-size-medium);
-    }
-    
-    .large {
-      font-size: var(--sl-font-size-large);
-    }
-
-    .nomal {
-      font-weight: var(--sl-font-weight-normal);
-    }
-
-    .bold {
-      font-weight: var(--sl-font-weight-bold);
-    }
-  `
-}).bind((p) => {
   return () => {
     const classes = []
 
@@ -125,4 +81,52 @@ const Text = define({
       </div>
     )
   }
-})
+}
+
+// === styles ========================================================
+
+const styles = {
+  h2: `
+    h2 {
+      font-size: var(--sl-font-size-xx-large);
+      margin: 0 0 10px 0;
+    }
+  `,
+
+  h3: `
+    h3 {
+      font-weight: var(--sl-font-weight-normal);
+      font-size: var(--sl-font-size-x-large);
+    }
+  `,
+
+  h4: `
+    h4 {
+      font-weight: var(--sl-font-weight-normal);
+      font-size: var(--sl-font-size-large);
+      margin-bottom: 1.15em;
+    }
+  `,
+
+  text: `
+    .small {
+      font-size: var(--sl-font-size-small);
+    }
+    
+    .medium {
+      font-size: var(--sl-font-size-medium);
+    }
+    
+    .large {
+      font-size: var(--sl-font-size-large);
+    }
+
+    .nomal {
+      font-weight: var(--sl-font-weight-normal);
+    }
+
+    .bold {
+      font-weight: var(--sl-font-weight-bold);
+    }
+  `
+}

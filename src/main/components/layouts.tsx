@@ -1,4 +1,5 @@
-import { define, h } from 'js-element'
+import { h } from 'js-element'
+import { useDefaults, useStyles } from 'js-element/hooks'
 
 // === exports =======================================================
 
@@ -16,16 +17,17 @@ const gaps = {
 
 // === components ====================================================
 
-const HLayout = define({
-  tag: 'sx-horizontal-layout',
-  slots: ['default'],
-  styles: () => styles.hLayout,
+function HLayout(props: {
+  align?: 'top' | 'center' | 'bottom'
+  gap?: 'tiny' | 'small' | 'medium' | 'large' | 'huge'
+}) {
+  const p = useDefaults(props, {
+    align: 'center',
+    gap: 'tiny'
+  })
 
-  props: class {
-    align = 'center' as 'top' | 'center' | 'bottom'
-    gap = 'tiny' as 'tiny' | 'small' | 'medium' | 'large' | 'huge'
-  }
-}).bind((p) => {
+  useStyles(styles.hLayout)
+
   return () => {
     const alignItems =
       p.align === 'top'
@@ -40,29 +42,27 @@ const HLayout = define({
       </div>
     )
   }
-})
+}
 
-const VLayout = define({
-  tag: 'sx-vertical-layout',
-  slots: ['default'],
-  styles: () => styles.vLayout,
+function VLayout(props: {
+  gap?: 'tiny' | 'small' | 'medium' | 'large' | 'huge'
+}) {
+  const p = useDefaults(props, {
+    gap: 'tiny'
+  })
 
-  props: class {
-    gap = 'tiny' as 'tiny' | 'small' | 'medium' | 'large' | 'huge'
-  }
-}).bind((p) => {
+  useStyles(styles.vLayout)
+
   return () => (
     <div style={`gap: ${gaps[p.gap]}`}>
       <slot />
     </div>
   )
-})
+}
 
-const AppLayout = define({
-  tag: 'sx-app-layout',
-  slots: ['header', 'sidebar', 'main'],
-  styles: () => styles.appLayout
-}).bind(() => {
+function AppLayout() {
+  useStyles(styles.appLayout)
+
   return () => (
     <div class="base">
       <header class="header">
@@ -76,7 +76,7 @@ const AppLayout = define({
       </main>
     </div>
   )
-})
+}
 
 // === styles ========================================================
 

@@ -1,5 +1,5 @@
-import { define, createRef, h } from 'js-element'
-import { useEffect, useRefresher, useState } from 'js-element/hooks'
+import { createRef, toComponent, h } from 'js-element'
+import { useEffect, useState, useStyles } from 'js-element/hooks'
 import { createMobxHooks } from 'js-element/utils'
 import { makeObservable, action, computed, observable } from 'mobx'
 import Color from 'color'
@@ -21,19 +21,26 @@ import {
   getAllBaseThemeIds
 } from '../theming/base-themes'
 
-import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert.js'
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon.js'
-import SlColorPicker from '@shoelace-style/shoelace/dist/components/color-picker/color-picker.js'
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input.js'
-import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab.js'
-import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group'
-import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel'
-import { Showcases } from './showcases'
-
 // === exports =======================================================
 
 export { Designer }
+
+// === shoelace components ============================================
+
+import {
+  ScAlert,
+  ScBadge,
+  ScButton,
+  ScColorPicker,
+  ScDrawer,
+  ScIcon,
+  ScInput,
+  ScMenuItem,
+  ScSelect,
+  ScTab,
+  ScTabGroup,
+  ScTabPanel
+} from './shoelace'
 
 // === store ==========================================================
 
@@ -195,17 +202,10 @@ const [useStoreProvider, useStore] = createMobxHooks<Store>()
 
 // === components =====================================================
 
-const Designer = define({
-  tag: 'sx-designer',
-  slots: ['showcases'],
-  styles: () => styles.designer,
-  uses: [SlAlert],
-
-  props: class {
-    initialBaseThemeId?: string
-    initialCustomizing?: Customizing
-  }
-}).bind((p) => {
+function Designer(p: {
+  initialBaseThemeId?: string
+  initialCustomizing?: Customizing
+}) {
   const store = useStoreProvider(new Store())
 
   if (p.initialBaseThemeId) {
@@ -215,6 +215,8 @@ const Designer = define({
   if (p.initialCustomizing) {
     store.customize(p.initialCustomizing)
   }
+
+  useStyles(styles.designer)
 
   return () => (
     <div>
@@ -240,26 +242,22 @@ const Designer = define({
           <Sidebar />
         </div>
         <div slot="main" class="showcases">
-          <sl-alert
+          <ScAlert
             class="share-theme-message"
             type="success"
             open={store.shareThemeMessageVisible}
           >
-            <sl-icon slot="icon" name="check2-circle"></sl-icon>
+            <ScIcon slot="icon" name="check2-circle"></ScIcon>
             URL has been copied to clipboard
-          </sl-alert>
-          <Showcases />
+          </ScAlert>
+          <slot name="showcases" />
         </div>
       </AppLayout>
     </div>
   )
-})
+}
 
-const Header = define({
-  tag: 'sx-designer--header',
-  uses: [SlIcon, SlButton],
-  styles: () => styles.header
-}).bind(() => {
+function Header() {
   const store = useStore()
 
   const onShareClick = () => {
@@ -277,27 +275,26 @@ const Header = define({
     }
   }
 
+  useStyles(styles.header)
+
   return () => (
     <div class="base">
       <div class="brand">Shoelace Theme Designer</div>
       <div class="actions">
         <HLayout gap="small">
-          <sl-button type="default" onclick={onShareClick}>
+          <ScButton type="default" onclick={onShareClick}>
             Share theme
-          </sl-button>
-          <sl-button type="default" onclick={onExportClick}>
+          </ScButton>
+          <ScButton type="default" onclick={onExportClick}>
             Export theme
-          </sl-button>
+          </ScButton>
         </HLayout>
       </div>
     </div>
   )
-})
+}
 
-const Sidebar = define({
-  tag: 'sx-designer--sidebar',
-  styles: () => styles.sidebar
-}).bind(() => {
+function Sidebar() {
   const store = useStore()
   const invertTheme = () => store.invertTheme()
   const resetTheme = () => store.resetTheme()
@@ -313,6 +310,8 @@ const Sidebar = define({
     store.resetTheme()
   }
 
+  useStyles(styles.sidebar)
+
   return () => {
     const customizing = store.customizing
 
@@ -321,34 +320,34 @@ const Sidebar = define({
         <br />
         <HLayout gap="small">
           <Text>Base theme:</Text>
-          <sl-select
+          <ScSelect
             class="theme-selector"
             onsl-change={onBaseThemeChange}
             value={store.baseThemeId}
           >
             {getAllBaseThemeIds().map((id) => (
-              <sl-menu-item value={id}>{getBaseThemeNameById(id)}</sl-menu-item>
+              <ScMenuItem value={id}>{getBaseThemeNameById(id)}</ScMenuItem>
             ))}
-          </sl-select>
+          </ScSelect>
         </HLayout>
         <div class="modified-badge">
           {store.themeModified ? (
-            <sl-badge type="warning">modified</sl-badge>
+            <ScBadge type="warning">modified</ScBadge>
           ) : (
-            <sl-badge type="info">original</sl-badge>
+            <ScBadge type="info">original</ScBadge>
           )}
         </div>
-        <sl-tab-group class="sidebar-tabs">
-          <sl-tab slot="nav" panel="colors">
+        <ScTabGroup class="sidebar-tabs">
+          <ScTab slot="nav" panel="colors">
             Colors
-          </sl-tab>
-          <sl-tab slot="nav" panel="text">
+          </ScTab>
+          <ScTab slot="nav" panel="text">
             Text
-          </sl-tab>
-          <sl-tab slot="nav" panel="overwrites">
+          </ScTab>
+          <ScTab slot="nav" panel="overwrites">
             Overwrites
-          </sl-tab>
-          <sl-tab-panel name="colors">
+          </ScTab>
+          <ScTabPanel name="colors">
             <VLayout>
               <ColorControl
                 colorName="primary"
@@ -391,8 +390,8 @@ const Sidebar = define({
                 value={customizing.colorBack}
               />
             </VLayout>
-          </sl-tab-panel>
-          <sl-tab-panel name="text">
+          </ScTabPanel>
+          <ScTabPanel name="text">
             <VLayout gap="small">
               <Text size="small">
                 Please select whether the default text colors shall be used or
@@ -425,42 +424,36 @@ const Sidebar = define({
                 value={customizing.textDanger}
               />
             </VLayout>
-          </sl-tab-panel>
-          <sl-tab-panel name="overwrites">
+          </ScTabPanel>
+          <ScTabPanel name="overwrites">
             <TokenOverwrites />
-          </sl-tab-panel>
-        </sl-tab-group>
+          </ScTabPanel>
+        </ScTabGroup>
         <HLayout class="color-actions" gap="small">
-          <sl-button onclick={invertTheme}>Invert theme</sl-button>
-          <sl-button onclick={resetTheme} disabled={!store.themeModified}>
+          <ScButton onclick={invertTheme}>Invert theme</ScButton>
+          <ScButton onclick={resetTheme} disabled={!store.themeModified}>
             Reset theme
-          </sl-button>
+          </ScButton>
         </HLayout>
       </VLayout>
     )
   }
-})
+}
 
-const ColorControl = define({
-  tag: 'sx-designer--color-field',
-  uses: [SlColorPicker, SlInput],
-  styles: () => styles.colorControl,
+function ColorControl(p: {
+  label?: string
+  value?: string
 
-  props: class {
-    label?: string
-    value?: string
-
-    colorName?:
-      | 'primary'
-      | 'info'
-      | 'success'
-      | 'warning'
-      | 'danger'
-      | 'gray'
-      | 'front'
-      | 'back'
-  }
-}).bind((p) => {
+  colorName?:
+    | 'primary'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'danger'
+    | 'gray'
+    | 'front'
+    | 'back'
+}) {
   const store = useStore()
 
   const onChange = (ev: any) => {
@@ -472,32 +465,29 @@ const ColorControl = define({
     }
   }
 
+  useStyles(styles.colorControl)
+
   return () => (
     <HLayout>
       <label>{p.label}:</label>
       <span>{p.value?.toUpperCase()}</span>
-      <sl-color-picker
+      <ScColorPicker
         format="hex"
         no-format-toggle
         size="small"
         value={p.value}
         hoist
         onsl-change={onChange}
-      ></sl-color-picker>
+      ></ScColorPicker>
     </HLayout>
   )
-})
+}
 
-const TextColorControl = define({
-  tag: 'sx-designer--text-color-control',
-  styles: () => styles.textColorControl,
-
-  props: class {
-    colorName?: string
-    label?: string
-    value?: 'default' | 'back' | 'front'
-  }
-}).bind((p) => {
+function TextColorControl(p: {
+  colorName?: string
+  label?: string
+  value?: 'default' | 'back' | 'front'
+}) {
   const store = useStore()
 
   const onChange = (ev: any) => {
@@ -509,50 +499,23 @@ const TextColorControl = define({
     }
   }
 
+  useStyles(styles.textColorControl)
+
   return () => {
     return (
       <HLayout>
         <label class="label">{p.label}:</label>
-        <sl-select value={p.value} size="small" onsl-change={onChange}>
-          <sl-menu-item value="default">default</sl-menu-item>
-          <sl-menu-item value="back">back color</sl-menu-item>
-          <sl-menu-item value="front">front color</sl-menu-item>
-        </sl-select>
+        <ScSelect value={p.value} size="small" onsl-change={onChange}>
+          <ScMenuItem value="default">default</ScMenuItem>
+          <ScMenuItem value="back">back color</ScMenuItem>
+          <ScMenuItem value="front">front color</ScMenuItem>
+        </ScSelect>
       </HLayout>
     )
   }
-})
+}
 
-const TokenControl = define({
-  tag: 'sx-designer--token-control',
-
-  props: class {
-    name!: string
-  },
-
-  styles: `
-    .base {
-      display: flex;
-      margin: 2px 0;
-      align-items: center;
-    }
-
-    .label {
-      width: 10em;
-      font-size: var(--sl-font-size-small);
-      margin: 0 0.25em 0 0;
-    }
-    
-    .label-bold {
-      font-weight: var(--sl-font-weight-bold);
-      font-style: italic;
-    }
-
-    .input {
-      width: 8em;
-    }
-  `
-}).bind((p) => {
+function TokenControl(p: { name: string }) {
   const store = useStore()
 
   const onTokenChange = (ev: any) => {
@@ -574,6 +537,8 @@ const TokenControl = define({
     }
   }
 
+  useStyles(styles.tokenControl)
+
   return () => {
     const baseTheme = store.baseTheme
     const baseValue = (baseTheme as any)[p.name]
@@ -584,36 +549,19 @@ const TokenControl = define({
         <label class={!storeValue ? 'label' : 'label label-bold'}>
           {p.name}
         </label>
-        <sl-input
+        <ScInput
           class="input"
           size="small"
           value={storeValue}
           placeholder={baseValue}
           onsl-change={onTokenChange}
-        ></sl-input>
+        ></ScInput>
       </div>
     )
   }
-})
+}
 
-const TokenOverwrites = define({
-  tag: 'sx-designer--token-overwrites',
-
-  styles: `
-    .base {
-    }
-
-    .filter-field {
-      margin: -8px 20px 10px 20px;
-    }
-
-    .scroll-pane {
-      max-height: 300px;
-      width: 300px;
-      overflow: auto;
-    }
-  `
-}).bind(() => {
+function TokenOverwrites() {
   const store = useStore()
 
   const [state, setState] = useState({
@@ -626,10 +574,12 @@ const TokenOverwrites = define({
     setState({ filterText: value })
   }
 
+  useStyles(styles.tokenOverwrites)
+
   return () => {
     return (
       <div class="base">
-        <sl-input
+        <ScInput
           class="filter-field"
           placeholder="Filter..."
           size="small"
@@ -650,16 +600,14 @@ const TokenOverwrites = define({
       </div>
     )
   }
-})
+}
 
-const ThemeExportDrawer = define({
-  tag: 'sx-designer--theme-export-drawer',
-  uses: [SlTab, SlTabGroup, SlTabPanel],
-  styles: () => styles.themeExportDrawer
-}).bind(() => {
+function ThemeExportDrawer() {
   const store = useStore()
   const drawerRef = createRef<any>()
   const closeDrawer = () => store.setExportDrawerVisible(false)
+
+  useStyles(styles.themeExportDrawer)
 
   useEffect(
     () => {
@@ -677,7 +625,7 @@ const ThemeExportDrawer = define({
   )
 
   return () => (
-    <sl-drawer
+    <ScDrawer
       id="drawer"
       label="Export theme"
       class="drawer"
@@ -701,9 +649,9 @@ const ThemeExportDrawer = define({
       <sl-button slot="footer" type="primary" onclick={closeDrawer}>
         Close
       </sl-button>
-    </sl-drawer>
+    </ScDrawer>
   )
-})
+}
 
 // === styles ========================================================
 
@@ -836,6 +784,44 @@ const styles = {
 
     sl-select {
       width: 8em;
+    }
+  `,
+
+  tokenControl: `
+    .base {
+      display: flex;
+      margin: 2px 0;
+      align-items: center;
+    }
+
+    .label {
+      width: 10em;
+      font-size: var(--sl-font-size-small);
+      margin: 0 0.25em 0 0;
+    }
+    
+    .label-bold {
+      font-weight: var(--sl-font-weight-bold);
+      font-style: italic;
+    }
+
+    .input {
+      width: 8em;
+    }
+  `,
+
+  tokenOverwrites: `
+    .base {
+    }
+
+    .filter-field {
+      margin: -8px 20px 10px 20px;
+    }
+
+    .scroll-pane {
+      max-height: 300px;
+      width: 300px;
+      overflow: auto;
     }
   `,
 

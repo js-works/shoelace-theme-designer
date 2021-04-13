@@ -1072,10 +1072,10 @@ jest-worker@^26.6.2:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-js-element@^0.0.85:
-  version "0.0.85"
-  resolved "https://registry.yarnpkg.com/js-element/-/js-element-0.0.85.tgz#0126b9248dc98791fe1c372dd0796f0cb309be0f"
-  integrity sha512-E++UamUORDcthGngvFwefU5iYo+2S+SQ9qxPnZMfI1U3y+7FbDMpjpfHciQMmq8jbJo5EgVvE6wyZDvGIDWz1w==
+js-element@^0.0.104:
+  version "0.0.104"
+  resolved "https://registry.yarnpkg.com/js-element/-/js-element-0.0.104.tgz#e4d79ae24c9d3bb2103387d4961cd1cdea8f35bb"
+  integrity sha512-KIw5rTV5B1n+jRdibXD7ODC1ylxRUSTNYM1h6gRgJmkkoS6YXRysbMqPpeVi4U5PXA20zAV40JqQvtDsXr4XlQ==
   dependencies:
     lit-html "^1.3.0"
     mobx "^6.1.8"

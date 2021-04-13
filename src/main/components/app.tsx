@@ -1,7 +1,11 @@
-import { define, h } from 'js-element'
+import { h } from 'js-element'
 import { Designer } from './designer'
 import { Showcases } from './showcases'
 import { unserializeCustomization } from '../theming/theme-utils'
+
+// === exports =======================================================
+
+export { App }
 
 // === components ====================================================
 
@@ -13,9 +17,7 @@ if (location.href.indexOf('#') > -1) {
   location.hash = ''
 }
 
-export const App = define({
-  tag: 'sx-app'
-}).bind(() => {
+function App() {
   return () => (
     <div class="app">
       <Designer
@@ -28,4 +30,4 @@ export const App = define({
       </Designer>
     </div>
   )
-})
+}
