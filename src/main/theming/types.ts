@@ -22,7 +22,7 @@ type Customizing = {
 
   readonly inverted: boolean
 
-  readonly overwrites: Readonly<Partial<Theme>>
+  readonly overrides: Readonly<Partial<Theme>>
 }
 
 type Theme = Readonly<{

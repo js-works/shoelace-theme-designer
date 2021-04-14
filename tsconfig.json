@@ -19,7 +19,7 @@
     "baseUrl": ".",
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["node_modules/@types", "./src/types"],
     "types": ["node"]
   },
   "files": ["src/main/index.tsx"],

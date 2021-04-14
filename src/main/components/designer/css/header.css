@@ -1,0 +1,14 @@
+.base {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.brand {
+  font-weight: normal;
+  font-size: var(--sl-font-size-large);
+  background-image: url('https://www.svgrepo.com/show/221575/pantone-color-palette.svg');
+  background-repeat: no-repeat;
+  padding: 0 0 0 38px;
+  flex-grow: 1;
+}

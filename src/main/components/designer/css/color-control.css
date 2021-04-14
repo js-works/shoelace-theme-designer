@@ -1,0 +1,13 @@
+label {
+  width: 9em;
+  height: 2.3em;
+  padding: 0 0 0 0.5em;
+}
+
+span {
+  width: 4.5em;
+}
+
+sl-color-picker {
+  margin-top: -4px;
+}

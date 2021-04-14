@@ -1,0 +1,14 @@
+.drawer {
+  --size: 500px;
+}
+
+pre {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 500px;
+  width: 100%;
+  overflow: auto;
+  border: 1px solid var(--sl-color-gray-400);
+}

@@ -3,9 +3,9 @@ import { useEffect, useState, useStyles } from 'js-element/hooks'
 import { createMobxHooks } from 'js-element/utils'
 import { makeObservable, action, computed, observable } from 'mobx'
 import Color from 'color'
-import { AppLayout, HLayout, VLayout } from './layouts'
-import { Text } from './typography'
-import { Customizing } from '../theming/types'
+import { AppLayout, HLayout, VLayout } from '../layout/layouts'
+import { Text } from '../typography/typography'
+import { Customizing } from '../../theming/types'
 
 import {
   createCustomizedTheme,
@@ -13,13 +13,13 @@ import {
   fromThemeToJson,
   SEMANTIC_COLORS,
   serializeCustomization
-} from '../theming/theme-utils'
+} from '../../theming/theme-utils'
 
 import {
   getBaseThemeById,
   getBaseThemeNameById,
   getAllBaseThemeIds
-} from '../theming/base-themes'
+} from '../../theming/base-themes'
 
 import {
   Alert,
@@ -34,7 +34,16 @@ import {
   Tab,
   TabGroup,
   TabPanel
-} from './shoelace'
+} from '../shoelaces/shoelace'
+
+import colorControlStyles from './css/color-control.css'
+import designerStyles from './css/designer.css'
+import headerStyles from './css/header.css'
+import sidebarStyles from './css/sidebar.css'
+import textColorControlStyles from './css/text-color-control.css'
+import themeExportDrawerStyles from './css/theme-export-drawer.css'
+import tokenControlStyles from './css/token-control.css'
+import tokenOverridesStyles from './css/token-overrides.css'
 
 // === exports =======================================================
 
@@ -67,7 +76,7 @@ class Store {
 
     inverted: false,
 
-    overwrites: {}
+    overrides: {}
   }
 
   get baseTheme() {
@@ -179,7 +188,7 @@ class Store {
 
       inverted: false,
 
-      overwrites: {}
+      overrides: {}
     }
   }
 
@@ -214,7 +223,7 @@ function Designer(p: {
     store.customize(p.initialCustomizing)
   }
 
-  useStyles(styles.designer)
+  useStyles(designerStyles)
 
   return () => (
     <div>
@@ -273,7 +282,7 @@ function Header() {
     }
   }
 
-  useStyles(styles.header)
+  useStyles(headerStyles)
 
   return () => (
     <div class="base">
@@ -308,7 +317,7 @@ function Sidebar() {
     store.resetTheme()
   }
 
-  useStyles(styles.sidebar)
+  useStyles(sidebarStyles)
 
   return () => {
     const customizing = store.customizing
@@ -344,8 +353,8 @@ function Sidebar() {
           <Tab slot="nav" panel="text">
             Text
           </Tab>
-          <Tab slot="nav" panel="overwrites">
-            Overwrites
+          <Tab slot="nav" panel="overrides">
+            Overrides
           </Tab>
           <TabPanel name="colors">
             <VLayout>
@@ -425,8 +434,8 @@ function Sidebar() {
               />
             </VLayout>
           </TabPanel>
-          <TabPanel name="overwrites">
-            <TokenOverwrites />
+          <TabPanel name="overrides">
+            <TokenOverrides />
           </TabPanel>
         </TabGroup>
         <HLayout class="color-actions" gap="small">
@@ -465,7 +474,7 @@ function ColorControl(p: {
     }
   }
 
-  useStyles(styles.colorControl)
+  useStyles(colorControlStyles)
 
   return () => (
     <HLayout>
@@ -499,7 +508,7 @@ function TextColorControl(p: {
     }
   }
 
-  useStyles(styles.textColorControl)
+  useStyles(textColorControlStyles)
 
   return () => {
     return (
@@ -523,26 +532,26 @@ function TokenControl(p: { name: string }) {
     ev.currentTarget.value = value
 
     const name = p.name
-    const overwrites = store.customizing.overwrites
-    const oldValue = (overwrites as any)[name]
+    const overrides = store.customizing.overrides
+    const oldValue = (overrides as any)[name]
 
     if (value === '' && oldValue !== undefined) {
-      const newOverwrites = { ...overwrites }
+      const newOverrides = { ...overrides }
 
-      delete (newOverwrites as any)[name]
-      store.customize({ overwrites: newOverwrites })
+      delete (newOverrides as any)[name]
+      store.customize({ overrides: newOverrides })
     } else if (value !== oldValue) {
-      const newOverwrites = { ...overwrites, [name]: value }
-      store.customize({ overwrites: newOverwrites })
+      const newOverrides = { ...overrides, [name]: value }
+      store.customize({ overrides: newOverrides })
     }
   }
 
-  useStyles(styles.tokenControl)
+  useStyles(tokenControlStyles)
 
   return () => {
     const baseTheme = store.baseTheme
     const baseValue = (baseTheme as any)[p.name]
-    const storeValue = (store.customizing.overwrites as any)[p.name]
+    const storeValue = (store.customizing.overrides as any)[p.name]
 
     return (
       <div class="base">
@@ -561,7 +570,7 @@ function TokenControl(p: { name: string }) {
   }
 }
 
-function TokenOverwrites() {
+function TokenOverrides() {
   const store = useStore()
 
   const [state, setState] = useState({
@@ -574,7 +583,7 @@ function TokenOverwrites() {
     setState({ filterText: value })
   }
 
-  useStyles(styles.tokenOverwrites)
+  useStyles(tokenOverridesStyles)
 
   return () => {
     return (
@@ -607,7 +616,7 @@ function ThemeExportDrawer() {
   const drawerRef = createRef<any>()
   const closeDrawer = () => store.setExportDrawerVisible(false)
 
-  useStyles(styles.themeExportDrawer)
+  useStyles(themeExportDrawerStyles)
 
   useEffect(
     () => {
@@ -651,195 +660,4 @@ function ThemeExportDrawer() {
       </Button>
     </Drawer>
   )
-}
-
-// === styles ========================================================
-
-const styles = {
-  designer: `
-    :host {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      max-width: 100%;
-      max-height: 100%;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      margin: 0;
-      overflow: hidden;
-    }
-
-    .base {
-      color: var(--sl-color-black);
-      background-color: var(--sl-color-white);
-    }
-
-    .header {
-      padding: 5px 10px 6px 10px;
-      height: 51px;
-      width: 100%;
-      box-sizing: border-box;
-      border-width: 0 0 1px 0;
-      border-style: solid;
-      border-color: var(--sl-color-gray-200);
-      background-color: var(--sl-color-white);
-    }
-
-    .header-with-shadow {
-      box-shadow: var(--sl-color-gray-300) 0px 8px 24px;
-    }
-
-    .sidebar {
-      width: 380px;
-      height: 100%;
-      padding: 0 30px 10px 20px;
-      box-sizing: border-box;
-      border: 1px solid var(--sl-color-gray-200);
-      border-width: 0 1px 0 0;
-      background-color: var(--sl-color-white);
-    }
-
-    .share-theme-message {
-      position: fixed;
-      top: 3.5em;
-      right: 2em;
-      display: inline-block;
-      width: 19em;
-      text-align: right;
-      z-index: 20000;
-    }
-
-    .showcases {
-      position: relative;
-      padding: 10px 30px;
-      background-color: var(--sl-color-white);
-    }
-  `,
-
-  header: `
-    .base {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .brand {
-      font-weight: normal;
-      font-size: var(--sl-font-size-large);
-      background-image: url('https://www.svgrepo.com/show/221575/pantone-color-palette.svg');
-      background-repeat: no-repeat;
-      padding: 0 0 0 38px;
-      flex-grow: 1;
-    }
-  `,
-
-  sidebar: `
-    .base {
-      color: var(--sl-color-black);
-    }
-
-    .theme-selector {
-      width: 12em;
-    }
-
-    .modified-badge {
-      margin-top: -0.25em;
-    }
-
-    .sidebar-tabs {
-      margin-top: 1.5em;
-      width: 340px;
-      height: 420px;
-    }
-
-    .color-actions {
-      margin: 10px 18px 0 0;
-      text-align: right;
-    }
-  `,
-
-  colorControl: `
-    label {
-      width: 9em;
-      height: 2.3em;
-      padding: 0 0 0 0.5em;
-    }
-
-    span {
-      width: 4.5em;
-    }
-
-    sl-color-picker {
-      margin-top: -4px;
-    }
-  `,
-
-  textColorControl: `
-    .label {
-      margin: 0 0 0 1em;
-      width: 7em;
-    }
-
-    sl-select {
-      width: 8em;
-    }
-  `,
-
-  tokenControl: `
-    .base {
-      display: flex;
-      margin: 2px 0;
-      align-items: center;
-    }
-
-    .label {
-      width: 10em;
-      font-size: var(--sl-font-size-small);
-      margin: 0 0.25em 0 0;
-    }
-    
-    .label-bold {
-      font-weight: var(--sl-font-weight-bold);
-      font-style: italic;
-    }
-
-    .input {
-      width: 8em;
-    }
-  `,
-
-  tokenOverwrites: `
-    .base {
-    }
-
-    .filter-field {
-      margin: -8px 20px 10px 20px;
-    }
-
-    .scroll-pane {
-      max-height: 300px;
-      width: 300px;
-      overflow: auto;
-    }
-  `,
-
-  themeExportDrawer: `
-    .drawer {
-      --size: 500px;
-    }
-
-    pre {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      right 0;
-      height: 500px;
-      width: 100%;
-      overflow: auto; 
-      border: 1px solid var(--sl-color-gray-400);
-    }
-  `
 }

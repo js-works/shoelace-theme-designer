@@ -1,0 +1,9 @@
+.filter-field {
+  margin: -8px 20px 10px 20px;
+}
+
+.scroll-pane {
+  max-height: 300px;
+  width: 300px;
+  overflow: auto;
+}

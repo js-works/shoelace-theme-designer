@@ -1,7 +1,7 @@
 import { h } from 'js-element'
-import { Designer } from './designer'
-import { Showcases } from './showcases'
-import { unserializeCustomization } from '../theming/theme-utils'
+import { Designer } from '../designer/designer'
+import { Showcases } from '../showcases/showcases'
+import { unserializeCustomization } from '../../theming/theme-utils'
 
 // === exports =======================================================
 

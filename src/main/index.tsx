@@ -1,6 +1,6 @@
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities'
 import { h, render } from 'js-element'
-import { App } from './components/app'
+import { App } from './components/app/app'
 
 registerIconLibrary('default', {
   resolver: (name) =>

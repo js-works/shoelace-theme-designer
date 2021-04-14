@@ -1,20 +1,25 @@
 import { createRef, h } from 'js-element'
 import { useStyles } from 'js-element/hooks'
-import { HLayout, VLayout } from './layouts'
+import { HLayout, VLayout } from '../layout/layouts'
 import * as Shoelace from '@shoelace-style/shoelace'
-import { H3 } from '../components/typography'
-import { COLOR_SHADES, SEMANTIC_COLORS } from '../theming/theme-utils'
+import { H3 } from '../typography/typography'
+import { COLOR_SHADES, SEMANTIC_COLORS } from '../../theming/theme-utils'
+
+import paletteShowcaseStyles from './css/palette-showcase.css'
+import showcaseStyles from './css/showcase.css'
 
 // === exports =======================================================
 
 export { Showcases }
 
-void [Shoelace.SlDrawer]
+// === load all shoelace components ==================================
+
+void [Shoelace]
 
 // === Showcases =====================================================
 
 function Showcase(p: { title: string }) {
-  useStyles(styles.showcase)
+  useStyles(showcaseStyles)
 
   return () => (
     <div class="base">
@@ -42,7 +47,7 @@ function Showcases() {
 function PaletteShowcase() {
   const dialogRef = createRef<any>()
 
-  useStyles(styles.paletteShowcase)
+  useStyles(paletteShowcaseStyles)
 
   return () => (
     <HLayout gap="huge" align="top">
@@ -286,32 +291,4 @@ function IconShowcase() {
       </HLayout>
     </Showcase>
   )
-}
-
-// === styles ========================================================
-
-const styles = {
-  showcase: `
-    .base {
-      color: var(--sl-color-black);
-      margin: 10px 0 65px 0; 
-      font-size: var(--sl-font-size-medium);
-    }
-  `,
-
-  paletteShowcase: `
-    th {
-      padding: 2px 4px 6px 8px;
-      width: 3.5em;
-      font-weight: var(--sl-font-weight-normal);
-      font-size: var(--sl-font-size-small);
-    }
-
-    td {
-      width: 3em;
-      height: calc(1em + 7px);
-      text-align: center;
-      font-size: var(--sl-font-size-small);
-    }
-  `
 }

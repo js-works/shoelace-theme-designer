@@ -1,15 +1,5 @@
 const path = require('path')
-
-const serveOptions = {
-  host: 'localhost',
-  port: 55555,
-  open: true,
-  liveReload: true,
-  static: [
-    path.resolve(__dirname, './src/dev'),
-    path.resolve(__dirname, './dist')
-  ]
-}
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
   entry: ['./src/main/index'],
@@ -19,16 +9,24 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/
+      },
+      {
+        test: /\.css$/i,
+        use: ['raw-loader']
       }
     ]
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js']
+    extensions: ['.tsx', '.ts', '.js', '.css']
   },
   output: {
     filename: 'shoelace-theme-designer.js',
     path: path.resolve(__dirname, 'public')
   },
   mode: 'production',
-  plugins: []
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].css'
+    })
+  ]
 }

@@ -1,5 +1,8 @@
 import { h } from 'js-element'
 import { useDefaults, useStyles } from 'js-element/hooks'
+import vLayoutStyles from './css/v-layout.css'
+import hLayoutStyles from './css/h-layout.css'
+import appLayoutStyles from './css/app-layout.css'
 
 // === exports =======================================================
 
@@ -26,7 +29,7 @@ function HLayout(props: {
     gap: 'tiny'
   })
 
-  useStyles(styles.hLayout)
+  useStyles(hLayoutStyles)
 
   return () => {
     const alignItems =
@@ -51,7 +54,7 @@ function VLayout(props: {
     gap: 'tiny'
   })
 
-  useStyles(styles.vLayout)
+  useStyles(vLayoutStyles)
 
   return () => (
     <div style={`gap: ${gaps[p.gap]}`}>
@@ -61,7 +64,7 @@ function VLayout(props: {
 }
 
 function AppLayout() {
-  useStyles(styles.appLayout)
+  useStyles(appLayoutStyles)
 
   return () => (
     <div class="base">
@@ -76,48 +79,4 @@ function AppLayout() {
       </main>
     </div>
   )
-}
-
-// === styles ========================================================
-
-const styles = {
-  appLayout: `
-    .base {
-      display: grid;
-      grid-template-rows: auto 1fr;
-      grid-template-columns: auto 1fr;
-      position: absolute;
-      height: 100%;
-      width: 100%;
-    }
-
-    .header {
-      grid-column: 1/-1;
-      z-index: 100;
-    }
-
-    .sidebar {
-      overflow: auto; 
-    }
-
-    .main {
-      overflow: auto;
-    }
-  `,
-
-  hLayout: `
-    div {
-      display: inline-flex;
-      align-items: center;
-      font-size: var(--sl-font-size-medium);
-    }
-  `,
-
-  vLayout: `
-    div {
-      display: inline-flex;
-      flex-direction: column;
-      font-size: var(--sl-font-size-medium);
-    }
-  `
 }

@@ -1,0 +1,20 @@
+.base {
+  display: flex;
+  margin: 2px 0;
+  align-items: center;
+}
+
+.label {
+  width: 10em;
+  font-size: var(--sl-font-size-small);
+  margin: 0 0.25em 0 0;
+}
+
+.label-bold {
+  font-weight: var(--sl-font-weight-bold);
+  font-style: italic;
+}
+
+.input {
+  width: 8em;
+}
