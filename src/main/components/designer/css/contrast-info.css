@@ -5,9 +5,10 @@
 }
 
 .default-badge {
+  color: var(--sl-color-black);
+  background-color: var(--sl-color-white);
   border-color: var(--sl-color-gray-300) !important;
   border-style: solid;
   border-width: 1px;
-  color: var(--sl-color-black);
-  background-color: var(--sl-color-white);
+  border-radius: var(--sl-border-radius-small);
 }
