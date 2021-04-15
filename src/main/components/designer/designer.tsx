@@ -540,7 +540,7 @@ function Palette() {
             </Dropdown>
             <Range min="0" max="100" step="1"></Range>
           </HLayout>
-          <HLayout gap="medium" align="center">
+          <HLayout gap="medium" align="bottom">
             <Input label="Some input" placeholder="Enter text here..."></Input>
             <ButtonGroup label="Some button group">
               <Button>Left</Button>
