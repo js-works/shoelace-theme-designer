@@ -699,10 +699,10 @@ function ThemeExportDrawer() {
           JSON
         </Tab>
         <TabPanel name="css">
-          <pre>{store.customizedCss}</pre>
+          <textarea readonly>{store.customizedCss}</textarea>
         </TabPanel>
         <TabPanel name="json">
-          <pre>{store.customizedJson}</pre>
+          <textarea readonly>{store.customizedJson}</textarea>
         </TabPanel>
       </TabGroup>
       <Button slot="footer" type="primary" onclick={closeDrawer}>

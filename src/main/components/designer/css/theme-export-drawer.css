@@ -2,13 +2,9 @@
   --size: 500px;
 }
 
-pre {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  height: 500px;
-  width: 100%;
-  overflow: auto;
-  border: 1px solid var(--sl-color-gray-400);
+textarea {
+  height: 450px;
+  width: 400px;
+  overflow: auto !important;
+  white-space: pre;
 }
