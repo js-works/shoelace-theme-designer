@@ -450,7 +450,7 @@ function Palette() {
   useStyles(paletteStyles)
 
   return () => (
-    <HLayout gap="huge" align="top">
+    <HLayout gap="huge" align="top" wrap={true}>
       <div class="palette">
         <H4>Palette</H4>
         <table class="palette-table" cellPadding={0} cellSpacing={0}>

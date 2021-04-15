@@ -23,10 +23,12 @@ const gaps = {
 function HLayout(props: {
   align?: 'top' | 'center' | 'bottom'
   gap?: 'tiny' | 'small' | 'medium' | 'large' | 'huge'
+  wrap?: boolean
 }) {
   const p = useDefaults(props, {
     align: 'center',
-    gap: 'tiny'
+    gap: 'tiny',
+    wrap: false
   })
 
   useStyles(hLayoutStyles)
@@ -39,8 +41,14 @@ function HLayout(props: {
         ? 'flex-end'
         : 'center'
 
+    const flexWrap = p.wrap ? 'wrap' : 'nowrap'
+
     return (
-      <div style={`gap: ${gaps[p.gap]}; align-items: ${alignItems};`}>
+      <div
+        style={`gap: ${
+          gaps[p.gap]
+        }; align-items: ${alignItems}; flex-wrap: ${flexWrap};`}
+      >
         <slot />
       </div>
     )
