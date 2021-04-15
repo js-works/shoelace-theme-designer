@@ -1,15 +1,17 @@
 import { Customizing, Theme } from './types'
 import Color from 'color'
+import { getProp, setProp } from '../lib/utils'
 
 // === exports =======================================================
 
 export {
-  contrast,
+  getContrast,
   createCustomizedTheme,
   createTheme,
   enhanceAccessibility,
   fromThemeToCss,
   fromThemeToJson,
+  getColor,
   invertTheme,
   loadTheme,
   serializeCustomization,
@@ -108,7 +110,7 @@ function luminance(color: Color) {
   return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722
 }
 
-function contrast(color1: Color, color2: Color) {
+function getContrast(color1: Color, color2: Color) {
   var lum1 = luminance(color1)
   var lum2 = luminance(color2)
 
@@ -213,8 +215,8 @@ function enhanceAccessibility(theme: Theme): Theme {
     const colorBlack = Color(getProp(theme, 'color-black'))
     const colorWhite = Color(getProp(theme, 'color-white'))
 
-    const contrast1 = contrast(color500, colorBlack)
-    const contrast2 = contrast(color500, colorWhite)
+    const contrast1 = getContrast(color500, colorBlack)
+    const contrast2 = getContrast(color500, colorWhite)
 
     setProp(
       newTokens,
@@ -226,15 +228,20 @@ function enhanceAccessibility(theme: Theme): Theme {
   return createTheme(newTokens, theme)
 }
 
+function getColor(colorName: string, theme: Theme): Color {
+  let value = getProp(theme, colorName)
+
+  // TODO - this is not very nice
+  if (value === 'var(--sl-color-black)') {
+    value = getProp(theme, 'color-black')
+  } else if (value === 'var(--sl-color-white)') {
+    value = getProp(theme, 'color-white')
+  }
+
+  return Color(value)
+}
+
 // === helpers =======================================================
-
-function getProp(obj: object, name: string): any {
-  return (obj as any)[name]
-}
-
-function setProp(obj: object, name: string, value: any) {
-  ;(obj as any)[name] = value
-}
 
 function serializeCustomization(data: {
   baseThemeId: string

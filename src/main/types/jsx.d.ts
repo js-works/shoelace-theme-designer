@@ -22,6 +22,7 @@ declare global {
       'sl-rating': any
       'sl-spinner': any
       'sl-select': any
+      'sl-tooltip': any
       'sl-switch': any
       'sl-tab': any
       'sl-tab-group': any

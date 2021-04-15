@@ -35,7 +35,7 @@
 .sidebar {
   width: 380px;
   height: 100%;
-  padding: 0 30px 10px 20px;
+  padding: 1.25em 30px 10px 20px;
   box-sizing: border-box;
   border: 1px solid var(--sl-color-gray-200);
   border-width: 0 1px 0 0;
@@ -52,8 +52,12 @@
   z-index: 20000;
 }
 
-.showcases {
+.main {
   position: relative;
-  padding: 10px 30px;
+  padding: 10px 30px 10px 30px;
   background-color: var(--sl-color-white);
+}
+
+.showcases {
+  margin-top: 4em;
 }

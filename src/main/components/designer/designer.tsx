@@ -2,9 +2,15 @@ import { createRef, h } from 'js-element'
 import { useEffect, useState, useStyles } from 'js-element/hooks'
 import Color from 'color'
 import { AppLayout, HLayout, VLayout } from '../layout/layouts'
-import { Text } from '../typography/typography'
-import { Customizing } from '../../theming/types'
+import { H3, H4, Text } from '../typography/typography'
 import { useStore } from '../../store/store-hooks'
+
+import {
+  getColor,
+  getContrast,
+  COLOR_SHADES,
+  SEMANTIC_COLORS
+} from '../../theming/theme-utils'
 
 import {
   getBaseThemeNameById,
@@ -34,6 +40,8 @@ import textColorControlStyles from './css/text-color-control.css'
 import themeExportDrawerStyles from './css/theme-export-drawer.css'
 import tokenControlStyles from './css/token-control.css'
 import tokenOverridesStyles from './css/token-overrides.css'
+import paletteStyles from './css/palette.css'
+import contrastInfoStyles from './css/contrast-info.css'
 
 // === exports =======================================================
 
@@ -69,7 +77,7 @@ function Designer() {
         <div slot="sidebar" class="sidebar">
           <Sidebar />
         </div>
-        <div slot="main" class="showcases">
+        <div slot="main" class="main">
           <Alert
             class="share-theme-message"
             type="success"
@@ -78,7 +86,10 @@ function Designer() {
             <Icon slot="icon" name="check2-circle"></Icon>
             URL has been copied to clipboard
           </Alert>
-          <slot name="showcases" />
+          <Palette />
+          <div class="showcases">
+            <slot name="showcases" />
+          </div>
         </div>
       </AppLayout>
     </div>
@@ -145,7 +156,6 @@ function Sidebar() {
 
     return (
       <VLayout class="base">
-        <br />
         <HLayout gap="small">
           <Text>Base theme:</Text>
           <Select
@@ -185,14 +195,14 @@ function Sidebar() {
                 value={customizing.colorPrimary}
               />
               <ColorControl
-                colorName="info"
-                label="Info color"
-                value={customizing.colorInfo}
-              />
-              <ColorControl
                 colorName="success"
                 label="Success color"
                 value={customizing.colorSuccess}
+              />
+              <ColorControl
+                colorName="info"
+                label="Info color"
+                value={customizing.colorInfo}
               />
               <ColorControl
                 colorName="warning"
@@ -234,14 +244,14 @@ function Sidebar() {
                 value={customizing.textPrimary}
               />
               <TextColorControl
-                colorName="info"
-                label="Info text"
-                value={customizing.textInfo}
-              />
-              <TextColorControl
                 colorName="success"
                 label="Success text"
                 value={customizing.textSuccess}
+              />
+              <TextColorControl
+                colorName="info"
+                label="Info text"
+                value={customizing.textInfo}
               />
               <TextColorControl
                 colorName="warning"
@@ -426,6 +436,210 @@ function TokenOverrides() {
             .map((tokenName) => {
               return <TokenControl name={tokenName} />
             })}
+        </div>
+      </div>
+    )
+  }
+}
+
+function Palette() {
+  const dialogRef = createRef<any>()
+
+  useStyles(paletteStyles)
+
+  return () => (
+    <HLayout gap="huge" align="top">
+      <div class="palette">
+        <H4>Palette</H4>
+        <table class="palette-table" cellPadding={0} cellSpacing={0}>
+          <thead>
+            <td />
+            {SEMANTIC_COLORS.map((color) => (
+              <th>{color === 'gray' ? 'neutral' : color}</th>
+            ))}
+          </thead>
+          <tbody>
+            {COLOR_SHADES.map((shade) => (
+              <tr>
+                <td>{shade}</td>
+                {SEMANTIC_COLORS.map((color) => {
+                  const style = `
+                  background-color: var(--sl-color-${color}-${shade});
+                `
+                  return <td style={style}></td>
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <VLayout>
+          <H4>Contrast</H4>
+          <HLayout>
+            <ContrastInfo colorName="default" />
+            <ContrastInfo colorName="primary" />
+            <ContrastInfo colorName="success" />
+          </HLayout>
+          <HLayout>
+            <ContrastInfo colorName="info" />
+            <ContrastInfo colorName="warning" />
+            <ContrastInfo colorName="danger" />
+          </HLayout>
+        </VLayout>
+      </div>
+      <div>
+        <H4>Assorted components</H4>
+        <VLayout gap="medium">
+          <HLayout>
+            <sl-button size="small">Default</sl-button>
+            <sl-button type="primary" size="small">
+              Primary
+            </sl-button>
+            <sl-button type="success" size="small">
+              Success
+            </sl-button>
+            <sl-button type="info" size="small">
+              Info
+            </sl-button>
+            <sl-button type="warning" size="small">
+              Warning
+            </sl-button>
+            <sl-button type="danger" size="small">
+              Danger
+            </sl-button>
+          </HLayout>
+          <HLayout gap="medium">
+            <sl-dropdown>
+              <sl-button slot="trigger" caret>
+                Dropdown
+              </sl-button>
+              <sl-menu>
+                <sl-menu-item>Dropdown Item 1</sl-menu-item>
+                <sl-menu-item>Dropdown Item 2</sl-menu-item>
+                <sl-menu-item>Dropdown Item 3</sl-menu-item>
+                <sl-menu-divider></sl-menu-divider>
+                <sl-menu-item checked>Checked</sl-menu-item>
+                <sl-menu-item disabled>Disabled</sl-menu-item>
+                <sl-menu-divider></sl-menu-divider>
+                <sl-menu-item>
+                  Prefix
+                  <sl-icon slot="prefix" name="gift"></sl-icon>
+                </sl-menu-item>
+                <sl-menu-item>
+                  Suffix Icon
+                  <sl-icon slot="suffix" name="heart"></sl-icon>
+                </sl-menu-item>
+              </sl-menu>
+            </sl-dropdown>
+            <sl-range min="0" max="100" step="1"></sl-range>
+          </HLayout>
+          <HLayout gap="medium">
+            <sl-switch>Enable some feature</sl-switch>
+            <sl-button onclick={(ev: any) => dialogRef.current!.show()}>
+              Press to open dialog
+            </sl-button>
+            <sl-dialog ref={dialogRef} label="Dialog" class="dialog-overview">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              <sl-button
+                slot="footer"
+                type="primary"
+                onclick={() => dialogRef.current!.hide()}
+              >
+                Close
+              </sl-button>
+            </sl-dialog>
+          </HLayout>
+          <sl-tab-group>
+            <sl-tab slot="nav" panel="checkbox-radio">
+              Checkbox/Radio
+            </sl-tab>
+            <sl-tab slot="nav" panel="rating">
+              Rating
+            </sl-tab>
+            <sl-tab slot="nav" panel="spinner">
+              Spinner
+            </sl-tab>
+            <sl-tab slot="nav" panel="buttons">
+              Buttons
+            </sl-tab>
+            <sl-tab-panel name="checkbox-radio">
+              <HLayout gap="huge">
+                <VLayout>
+                  <sl-checkbox checked>Some checkbox</sl-checkbox>
+                  <sl-checkbox>Another checkbox</sl-checkbox>
+                </VLayout>
+                <VLayout>
+                  <sl-radio name="option">Option 1</sl-radio>
+                  <sl-radio name="option" checked>
+                    Option 2
+                  </sl-radio>
+                </VLayout>
+              </HLayout>
+            </sl-tab-panel>
+            <sl-tab-panel name="rating">
+              <sl-rating precision=".5" value="2.5"></sl-rating>
+            </sl-tab-panel>
+            <sl-tab-panel name="spinner">
+              <sl-spinner></sl-spinner>
+              <sl-spinner style="font-size: 2rem;"></sl-spinner>
+              <sl-spinner style="font-size: 3rem;"></sl-spinner>
+            </sl-tab-panel>
+            <sl-tab-panel name="buttons">
+              <HLayout>
+                <sl-button type="primary">Primary</sl-button>
+                <sl-button type="success">Success</sl-button>
+                <sl-button type="info">Info</sl-button>
+                <sl-button type="warning">Warning</sl-button>
+                <sl-button type="danger">Danger</sl-button>
+              </HLayout>
+            </sl-tab-panel>
+          </sl-tab-group>
+        </VLayout>
+      </div>
+    </HLayout>
+  )
+}
+
+function ContrastInfo(p: {
+  colorName: 'default' | 'primary' | 'success' | 'info' | 'warning' | 'danger'
+}) {
+  const store = useStore()
+
+  useStyles(contrastInfoStyles)
+
+  return () => {
+    let colorTxt: Color
+    let colorBg: Color
+
+    if (p.colorName === 'default') {
+      colorTxt = getColor('color-black', store.customizedTheme)
+      colorBg = getColor('color-white', store.customizedTheme)
+    } else {
+      colorBg = getColor(`color-${p.colorName}-500`, store.customizedTheme)
+      colorTxt = getColor(`color-${p.colorName}-text`, store.customizedTheme)
+    }
+
+    const contrast = getContrast(Color(colorTxt), Color(colorBg))
+    const contrastString = contrast.toFixed(2)
+    const badgeClass = p.colorName === 'default' ? 'default-badge' : ''
+
+    let result: string
+
+    if (contrast >= 7) {
+      result = 'level AAA'
+    } else if (contrast >= 4.5) {
+      result = 'level AA'
+    } else {
+      result = 'poor'
+    }
+
+    return (
+      <div>
+        <div>
+          <sl-badge type={p.colorName} class={badgeClass}>
+            <div class="badge-text">
+              {p.colorName}: {contrastString} ({result})
+            </div>
+          </sl-badge>
         </div>
       </div>
     )

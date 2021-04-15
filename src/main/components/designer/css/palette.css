@@ -1,13 +1,17 @@
+table {
+  margin-bottom: 1em;
+}
+
 th {
   padding: 2px 4px 6px 8px;
-  width: 3.5em;
+  width: 4.4em;
   font-weight: var(--sl-font-weight-normal);
   font-size: var(--sl-font-size-small);
 }
 
 td {
   width: 3em;
-  height: calc(1em + 7px);
+  height: calc(1em + 5px);
   text-align: center;
   font-size: var(--sl-font-size-small);
 }
