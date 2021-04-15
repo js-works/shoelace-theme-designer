@@ -1,6 +1,9 @@
+.base {
+  margin: 2px 0;
+}
+
 label {
   width: 9em;
-  height: 2.3em;
   padding: 0 0 0 0.5em;
 }
 

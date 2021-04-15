@@ -5,9 +5,9 @@
 }
 
 .label {
-  width: 10em;
+  width: 8em;
   font-size: var(--sl-font-size-small);
-  margin: 0 0.25em 0 0;
+  margin: 0 0.5em 0 0;
 }
 
 .label-bold {

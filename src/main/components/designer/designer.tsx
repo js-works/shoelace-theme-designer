@@ -308,18 +308,20 @@ function ColorControl(p: {
   useStyles(colorControlStyles)
 
   return () => (
-    <HLayout>
-      <label>{p.label}:</label>
-      <span>{p.value?.toUpperCase()}</span>
-      <ColorPicker
-        format="hex"
-        no-format-toggle
-        size="small"
-        value={p.value}
-        hoist
-        onsl-change={onChange}
-      ></ColorPicker>
-    </HLayout>
+    <div class="base">
+      <HLayout class="base">
+        <label>{p.label}:</label>
+        <span>{p.value?.toUpperCase()}</span>
+        <ColorPicker
+          format="hex"
+          no-format-toggle
+          size="small"
+          value={p.value}
+          hoist
+          onsl-change={onChange}
+        ></ColorPicker>
+      </HLayout>
+    </div>
   )
 }
 
