@@ -1105,10 +1105,10 @@ jest-worker@^26.6.2:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-js-element@^0.0.105:
-  version "0.0.105"
-  resolved "https://registry.yarnpkg.com/js-element/-/js-element-0.0.105.tgz#62ee79b248b8e931f4b607d275ecfb5d96cc799c"
-  integrity sha512-A1e0yWS3bOORbEFCohiTpiYk1cVtOAi4WU2mmp+UJdeTO2GpaOYfBYOYe/RJrNqw0fjNGKiAPoMh4VglzD3o7Q==
+js-element@^0.0.107:
+  version "0.0.107"
+  resolved "https://registry.yarnpkg.com/js-element/-/js-element-0.0.107.tgz#3a0b2e75df56e945d145dcc2e8f73bbf7973fc17"
+  integrity sha512-/jp0Yn+hg93/p0OxwZ+fyoG9QN4I4ZG2EiL2Q81ndKb/Y0MSEQLPSrIAcuV9Rz2MxEchywpY0AtaaExO3rA4uQ==
   dependencies:
     lit-html "^1.3.0"
     mobx "^6.1.8"
@@ -2114,10 +2114,10 @@ webpack-sources@^2.1.1:
     source-list-map "^2.0.1"
     source-map "^0.6.1"
 
-webpack@^5.32.0:
-  version "5.32.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.32.0.tgz#f013932d778dad81bd51292d0ea00865056dc22c"
-  integrity sha512-jB9PrNMFnPRiZGnm/j3qfNqJmP3ViRzkuQMIf8za0dgOYvSLi/cgA+UEEGvik9EQHX1KYyGng5PgBTTzGrH9xg==
+webpack@^5.33.2:
+  version "5.33.2"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.33.2.tgz#c049717c9b038febf5a72fd2f53319ad59a8c1fc"
+  integrity sha512-X4b7F1sYBmJx8mlh2B7mV5szEkE0jYNJ2y3akgAP0ERi0vLCG1VvdsIxt8lFd4st6SUy0lf7W0CCQS566MBpJg==
   dependencies:
     "@types/eslint-scope" "^3.7.0"
     "@types/estree" "^0.0.46"
