@@ -21,11 +21,17 @@ import {
   Alert,
   Badge,
   Button,
+  ButtonGroup,
+  Checkbox,
   ColorPicker,
   Drawer,
+  Dropdown,
   Icon,
   Input,
+  Menu,
+  MenuDivider,
   MenuItem,
+  Range,
   Select,
   Tab,
   TabGroup,
@@ -492,82 +498,90 @@ function Palette() {
         <H4>Assorted components</H4>
         <VLayout gap="medium">
           <HLayout>
-            <sl-button size="small">Default</sl-button>
-            <sl-button type="primary" size="small">
+            <Button size="small">Default</Button>
+            <Button type="primary" size="small">
               Primary
-            </sl-button>
-            <sl-button type="success" size="small">
+            </Button>
+            <Button type="success" size="small">
               Success
-            </sl-button>
-            <sl-button type="info" size="small">
+            </Button>
+            <Button type="info" size="small">
               Info
-            </sl-button>
-            <sl-button type="warning" size="small">
+            </Button>
+            <Button type="warning" size="small">
               Warning
-            </sl-button>
-            <sl-button type="danger" size="small">
+            </Button>
+            <Button type="danger" size="small">
               Danger
-            </sl-button>
+            </Button>
           </HLayout>
           <HLayout gap="medium">
-            <sl-dropdown>
-              <sl-button slot="trigger" caret>
+            <Dropdown>
+              <Button slot="trigger" caret>
                 Dropdown
-              </sl-button>
-              <sl-menu>
-                <sl-menu-item>Dropdown Item 1</sl-menu-item>
-                <sl-menu-item>Dropdown Item 2</sl-menu-item>
-                <sl-menu-item>Dropdown Item 3</sl-menu-item>
-                <sl-menu-divider></sl-menu-divider>
-                <sl-menu-item checked>Checked</sl-menu-item>
-                <sl-menu-item disabled>Disabled</sl-menu-item>
-                <sl-menu-divider></sl-menu-divider>
-                <sl-menu-item>
+              </Button>
+              <Menu>
+                <MenuItem>Dropdown Item 1</MenuItem>
+                <MenuItem>Dropdown Item 2</MenuItem>
+                <MenuItem>Dropdown Item 3</MenuItem>
+                <MenuDivider></MenuDivider>
+                <MenuItem checked>Checked</MenuItem>
+                <MenuItem disabled>Disabled</MenuItem>
+                <MenuDivider></MenuDivider>
+                <MenuItem>
                   Prefix
-                  <sl-icon slot="prefix" name="gift"></sl-icon>
-                </sl-menu-item>
-                <sl-menu-item>
+                  <Icon slot="prefix" name="gift"></Icon>
+                </MenuItem>
+                <MenuItem>
                   Suffix Icon
-                  <sl-icon slot="suffix" name="heart"></sl-icon>
-                </sl-menu-item>
-              </sl-menu>
-            </sl-dropdown>
-            <sl-range min="0" max="100" step="1"></sl-range>
+                  <Icon slot="suffix" name="heart"></Icon>
+                </MenuItem>
+              </Menu>
+            </Dropdown>
+            <Range min="0" max="100" step="1"></Range>
+          </HLayout>
+          <HLayout gap="medium" align="center">
+            <Input label="Some input" placeholder="Enter text here..."></Input>
+            <ButtonGroup label="Some button group">
+              <Button>Left</Button>
+              <Button>Center</Button>
+              <Button>Right</Button>
+            </ButtonGroup>
           </HLayout>
           <HLayout gap="medium">
             <sl-switch>Enable some feature</sl-switch>
-            <sl-button onclick={(ev: any) => dialogRef.current!.show()}>
+            <Button onclick={(ev: any) => dialogRef.current!.show()}>
               Press to open dialog
-            </sl-button>
+            </Button>
             <sl-dialog ref={dialogRef} label="Dialog" class="dialog-overview">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              <sl-button
+              <Button
                 slot="footer"
                 type="primary"
                 onclick={() => dialogRef.current!.hide()}
               >
                 Close
-              </sl-button>
+              </Button>
             </sl-dialog>
           </HLayout>
-          <sl-tab-group>
-            <sl-tab slot="nav" panel="checkbox-radio">
+          <TabGroup>
+            <Tab slot="nav" panel="checkbox-radio">
               Checkbox/Radio
-            </sl-tab>
-            <sl-tab slot="nav" panel="rating">
+            </Tab>
+            <Tab slot="nav" panel="rating">
               Rating
-            </sl-tab>
-            <sl-tab slot="nav" panel="spinner">
+            </Tab>
+            <Tab slot="nav" panel="spinner">
               Spinner
-            </sl-tab>
-            <sl-tab slot="nav" panel="buttons">
+            </Tab>
+            <Tab slot="nav" panel="buttons">
               Buttons
-            </sl-tab>
-            <sl-tab-panel name="checkbox-radio">
+            </Tab>
+            <TabPanel name="checkbox-radio">
               <HLayout gap="huge">
                 <VLayout>
-                  <sl-checkbox checked>Some checkbox</sl-checkbox>
-                  <sl-checkbox>Another checkbox</sl-checkbox>
+                  <Checkbox checked>Some checkbox</Checkbox>
+                  <Checkbox>Another checkbox</Checkbox>
                 </VLayout>
                 <VLayout>
                   <sl-radio name="option">Option 1</sl-radio>
@@ -576,25 +590,25 @@ function Palette() {
                   </sl-radio>
                 </VLayout>
               </HLayout>
-            </sl-tab-panel>
-            <sl-tab-panel name="rating">
+            </TabPanel>
+            <TabPanel name="rating">
               <sl-rating precision=".5" value="2.5"></sl-rating>
-            </sl-tab-panel>
-            <sl-tab-panel name="spinner">
+            </TabPanel>
+            <TabPanel name="spinner">
               <sl-spinner></sl-spinner>
               <sl-spinner style="font-size: 2rem;"></sl-spinner>
               <sl-spinner style="font-size: 3rem;"></sl-spinner>
-            </sl-tab-panel>
-            <sl-tab-panel name="buttons">
+            </TabPanel>
+            <TabPanel name="buttons">
               <HLayout>
-                <sl-button type="primary">Primary</sl-button>
-                <sl-button type="success">Success</sl-button>
-                <sl-button type="info">Info</sl-button>
-                <sl-button type="warning">Warning</sl-button>
-                <sl-button type="danger">Danger</sl-button>
+                <Button type="primary">Primary</Button>
+                <Button type="success">Success</Button>
+                <Button type="info">Info</Button>
+                <Button type="warning">Warning</Button>
+                <Button type="danger">Danger</Button>
               </HLayout>
-            </sl-tab-panel>
-          </sl-tab-group>
+            </TabPanel>
+          </TabGroup>
         </VLayout>
       </div>
     </HLayout>
