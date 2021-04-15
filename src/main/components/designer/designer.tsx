@@ -621,7 +621,6 @@ function ContrastInfo(p: {
     const contrast = getContrast(Color(colorTxt), Color(colorBg))
     const contrastString = contrast.toFixed(2)
     const badgeClass = p.colorName === 'default' ? 'default-badge' : ''
-
     let result: string
 
     if (contrast >= 7) {

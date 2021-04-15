@@ -1,14 +1,16 @@
 .badge-text {
   width: 12em;
   height: 1em;
-  padding: 2px;
+  padding: 1px;
 }
 
 .default-badge {
   color: var(--sl-color-black);
   background-color: var(--sl-color-white);
-  border-color: var(--sl-color-gray-300) !important;
-  border-style: solid;
-  border-width: 1px;
+  border: 1px solid var(--sl-color-gray-300);
   border-radius: var(--sl-border-radius-small);
+}
+
+.default-badge > .badge-text {
+  padding: 0;
 }
