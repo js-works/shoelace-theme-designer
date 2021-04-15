@@ -18,6 +18,7 @@ import SlSelect from '@shoelace-style/shoelace/dist/components/select/select.js'
 import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab.js'
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group'
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel'
+import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip'
 
 // === exports =======================================================
 
@@ -39,3 +40,4 @@ export const Select = toComponent('sl-select', SlSelect)
 export const Tab = toComponent('sl-tab', SlTab)
 export const TabGroup = toComponent('sl-tab-group', SlTabGroup)
 export const TabPanel = toComponent('sl-tab-panel', SlTabPanel)
+export const Tooltip = toComponent('sl-tooltip', SlTooltip)

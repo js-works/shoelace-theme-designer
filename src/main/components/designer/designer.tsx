@@ -35,7 +35,8 @@ import {
   Select,
   Tab,
   TabGroup,
-  TabPanel
+  TabPanel,
+  Tooltip
 } from '../shoelaces/shoelace'
 
 import colorControlStyles from './css/color-control.css'
@@ -397,13 +398,15 @@ function TokenControl(p: { name: string }) {
         <label class={!storeValue ? 'label' : 'label label-bold'}>
           {p.name}
         </label>
-        <Input
-          class="input"
-          size="small"
-          value={storeValue}
-          placeholder={baseValue}
-          onsl-change={onTokenChange}
-        ></Input>
+        <Tooltip class="tooltip" content={`Base theme value: ${baseValue}`}>
+          <Input
+            class="input"
+            size="small"
+            value={storeValue}
+            placeholder={baseValue}
+            onsl-change={onTokenChange}
+          ></Input>
+        </Tooltip>
       </div>
     )
   }

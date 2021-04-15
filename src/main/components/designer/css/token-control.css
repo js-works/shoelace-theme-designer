@@ -18,3 +18,7 @@
 .input {
   width: 8em;
 }
+
+.tooltip {
+  --show-delay: 1000ms;
+}
