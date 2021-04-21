@@ -1073,7 +1073,7 @@ jest-worker@^26.6.2:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-js-element@^0.0.107:
+js-element@0.0.107:
   version "0.0.107"
   resolved "https://registry.yarnpkg.com/js-element/-/js-element-0.0.107.tgz#3a0b2e75df56e945d145dcc2e8f73bbf7973fc17"
   integrity sha512-/jp0Yn+hg93/p0OxwZ+fyoG9QN4I4ZG2EiL2Q81ndKb/Y0MSEQLPSrIAcuV9Rz2MxEchywpY0AtaaExO3rA4uQ==
