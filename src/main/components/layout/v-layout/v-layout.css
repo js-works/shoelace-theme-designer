@@ -1,5 +1,4 @@
-div {
+.v-layout {
   display: inline-flex;
   flex-direction: column;
-  font-size: var(--sl-font-size-medium);
 }

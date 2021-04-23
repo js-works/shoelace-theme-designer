@@ -23,12 +23,16 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ['raw-loader']
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.svg$/i,
+        type: 'asset/inline'
       }
     ]
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.css']
+    extensions: ['.tsx', '.ts', '.js', '.css', '.svg']
   },
   output: {
     filename: 'shoelace-theme-designer.js',

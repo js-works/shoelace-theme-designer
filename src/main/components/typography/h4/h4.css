@@ -1,0 +1,5 @@
+.h4 {
+  font-weight: var(--sl-font-weight-normal);
+  font-size: var(--sl-font-size-large);
+  margin-bottom: 1.15em;
+}

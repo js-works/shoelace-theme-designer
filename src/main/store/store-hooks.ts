@@ -1,10 +1,19 @@
-import { createMobxHooks } from 'js-element/utils'
+import { useContext } from 'react'
 import { Store } from './store'
+import { StoreCtx } from './store-ctx'
 
 // === exports =======================================================
 
-export { useStoreProvider, useStore }
+export { useStore }
 
-// === store hooks ===================================================
+// === hooks =========================================================
 
-const [useStoreProvider, useStore] = createMobxHooks<Store>()
+function useStore(): Store {
+  const store = useContext(StoreCtx)
+
+  if (!store) {
+    throw new Error('Store has not been provided')
+  }
+
+  return store
+}

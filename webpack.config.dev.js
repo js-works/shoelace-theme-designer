@@ -7,6 +7,7 @@ const serveOptions = {
   port: 55555,
   open: true,
   liveReload: true,
+
   static: [
     path.resolve(__dirname, './public'),
     path.resolve(__dirname, './dist')
@@ -18,6 +19,7 @@ module.exports = {
     'webpack-plugin-serve/client', // ← important: this is required, where the magic happens in the browser
     './src/main/index'
   ],
+
   module: {
     rules: [
       {
@@ -27,7 +29,11 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ['raw-loader' /*, 'css-loader'*/]
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.svg$/i,
+        type: 'asset/inline'
       }
       /*
       {

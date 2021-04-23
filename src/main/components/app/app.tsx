@@ -1,9 +1,9 @@
-import { h } from 'js-element'
-import { Designer } from '../designer/designer'
-import { Showcases } from '../showcases/showcases'
+import { Designer } from '../theme-designer/designer/designer'
+import { Showcases } from '../showroom/showcases/showcases'
 import { unserializeCustomization } from '../../theming/theme-utils'
 import { Store } from '../../store/store'
-import { useStoreProvider } from '../../store/store-hooks'
+import { StoreCtx } from '../../store/store-ctx'
+import './app.css'
 
 // === exports =======================================================
 
@@ -20,7 +20,7 @@ if (location.href.indexOf('#') > -1) {
 }
 
 function App() {
-  const store = useStoreProvider(new Store())
+  const store = new Store()
 
   if (data?.baseThemeId) {
     store.setBaseThemeId(data.baseThemeId)
@@ -30,13 +30,11 @@ function App() {
     store.customize(data.customizing)
   }
 
-  return () => (
-    <div class="app">
-      <Designer>
-        <div slot="showcases">
-          <Showcases />
-        </div>
-      </Designer>
+  return (
+    <div className="app">
+      <StoreCtx.Provider value={store}>
+        <Designer slotShowcases={<Showcases />} />
+      </StoreCtx.Provider>
     </div>
   )
 }

@@ -1,0 +1,7 @@
+.app {
+  color: var(--sl-color-black);
+  background-color: var(--sl-color-white);
+  font-family: var(--sl-font-sans);
+  font-size: var(--sl-font-size-medium);
+  font-weight: var(--sl-font-weight-normal);
+}

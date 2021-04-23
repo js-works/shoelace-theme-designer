@@ -1,0 +1,19 @@
+.text--size-small {
+  font-size: var(--sl-font-size-small);
+}
+
+.text--size-medium {
+  font-size: var(--sl-font-size-medium);
+}
+
+.text--size-large {
+  font-size: var(--sl-font-size-large);
+}
+
+.text--weight-nomal {
+  font-weight: var(--sl-font-weight-normal);
+}
+
+.text--weight-bold {
+  font-weight: var(--sl-font-weight-bold);
+}

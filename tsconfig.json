@@ -5,8 +5,7 @@
     "module": "ES2020",
     "moduleResolution": "node",
     "strict": true,
-    "jsx": "react",
-    "jsxFactory": "h",
+    "jsx": "react-jsx",
     "useDefineForClassFields": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
@@ -19,7 +18,7 @@
     "baseUrl": ".",
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "typeRoots": ["node_modules/@types", "./src/types"],
+    "typeRoots": ["node_modules/@types", "src/main/types"],
     "types": ["node"]
   },
   "files": ["src/main/index.tsx"],
