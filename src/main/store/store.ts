@@ -114,6 +114,7 @@ class Store {
   }
 
   setExportDrawerVisible(value: boolean) {
+    this.shareThemeMessageVisible = false
     this.exportDrawerVisible = value
   }
 

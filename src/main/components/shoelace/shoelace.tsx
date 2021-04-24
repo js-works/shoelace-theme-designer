@@ -1,13 +1,4 @@
-import {
-  createElement,
-  forwardRef,
-  createRef,
-  useCallback,
-  useEffect,
-  useRef,
-  Component,
-  FC
-} from 'react'
+import { createElement, Component } from 'react'
 
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert.js'
 import SlAvatar from '@shoelace-style/shoelace/dist/components/avatar/avatar.js'
@@ -90,79 +81,92 @@ export const Tooltip = asComponent('sl-tooltip', SlTooltip)
 
 // === utils =========================================================
 
+// Notes:
+// - argument `elementClass` will be needed for proper typing
+//   in future, also it makes sure that the element class will
+//   never be tree-shaken away and the corresponding custom
+//   element will be always be automatically registered
+//
+// - argument `dependencies` is used to make sure that all the
+//   depending elements are properly registered and not tree-shaken
+//   away
 function asComponent(
   tagName: string,
-  base: any,
+  elementClass: any,
   dependencies?: any[]
-): FC<any> {
-  const ret = (props: any, ref: any) => {
-    // TODO: Why is props.input sometimes given but undefined????
-    if (tagName === 'sl-input' && props.value === undefined) {
-      props = { ...props, value: '' }
+): any {
+  const compo = class extends Component<any> {
+    element: HTMLElement | null = null
+
+    componentDidMount() {
+      this.element && syncProps(this.element, this.props)
     }
 
-    const elemRef = useRef<any>()
-    const propsRef = useRef<any>()
-    const hasUpdatedRef = useRef(false)
-
-    propsRef.current = props
-
-    useEffect(() => {
-      if (ref) {
-        ref.current = elemRef.current
-      }
-
-      syncProps(elemRef.current, propsRef.current)
-
-      hasUpdatedRef.current = true
-    })
-
-    // TODO: Workaround - I have no idea, what's the problem there?!?
-    if (tagName === 'sl-alert' || tagName === 'sl-drawer') {
-      if (!props.open) {
-        props = { ...props }
-        delete props.open
-      }
+    componentDidUpdate() {
+      this.element && syncProps(this.element, this.props)
     }
 
-    return createElement(tagName, {
-      ...props,
-      ref: elemRef,
-      style: props.style,
-      children: props.children
-    })
+    render() {
+      // start workaround due to bug - see: https://github.com/shoelace-style/shoelace/issues/425
+      let p: any = null
+
+      if (tagName === 'sl-color-picker' && this.props.value) {
+        p = { value: this.props.value }
+      } else if (tagName === 'sl-alert' && this.props.open === true) {
+        p = { open: '' }
+      }
+      // end workaround - see also usage of variable `p` below
+
+      return createElement(tagName, {
+        ...p,
+        ref: (elem: any) => (this.element = elem),
+        style: this.props.style,
+        children: this.props.children
+      })
+    }
   }
 
-  ret.displayName = tagName
+  ;(compo as any).displayName = tagName
 
-  return forwardRef(ret)
+  return compo
 }
 
-function syncProps(elem: any, props: any) {
+function syncProps(element: HTMLElement, props: Record<string, any>) {
+  const el: any = element
+
   Object.keys(props).forEach((name) => {
     if (name === 'children' || name === 'style') {
       return
     }
 
     if (name.indexOf('on') === 0) {
-      syncEvent(elem, name.substring(2), props[name])
+      syncEvent(el, name.substring(2), props[name])
     } else {
-      elem[name] = props[name]
+      el[name] = props[name]
     }
   })
 }
 
-function syncEvent(elem: any, eventName: string, newEventHandler: Function) {
+function syncEvent(
+  element: HTMLElement,
+  eventName: string,
+  newEventHandler: Function | null | undefined
+): void {
+  const el: any = element
   const eventNameLc = eventName[0].toLowerCase() + eventName.substring(1)
-  const eventStore = elem.__events || (elem.__events = {})
+  const eventStore = el.__events || (el.__events = {})
   const oldEventHandler = eventStore[eventNameLc]
 
+  if (oldEventHandler === newEventHandler) {
+    return
+  }
+
   if (oldEventHandler) {
-    elem.removeEventListener(eventNameLc, oldEventHandler)
+    el.removeEventListener(eventNameLc, oldEventHandler)
   }
 
   if (newEventHandler) {
-    elem.addEventListener(
+    el.addEventListener(
       eventNameLc,
       (eventStore[eventNameLc] = function handler(event: any) {
         newEventHandler.call(this, event)

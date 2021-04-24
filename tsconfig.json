@@ -6,7 +6,7 @@
     "moduleResolution": "node",
     "strict": true,
     "jsx": "react-jsx",
-    "useDefineForClassFields": true,
+    "useDefineForClassFields": false,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "removeComments": true,
@@ -17,7 +17,7 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "skipLibCheck": true,
-    "experimentalDecorators": true,
+    "experimentalDecorators": false,
     "typeRoots": ["node_modules/@types", "src/main/types"],
     "types": ["node"]
   },

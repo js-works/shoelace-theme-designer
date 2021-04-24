@@ -306,7 +306,7 @@ const ColorControl = observer((props: ColorControlProps) => {
       </span>
       <ColorPicker
         format="hex"
-        no-format-toggle
+        noFormatToggle={true}
         size="small"
         value={value}
         hoist
@@ -437,7 +437,7 @@ function TokenControl({ name }: TokenControlProps) {
         <Input
           className="designer__token-control-input"
           size="small"
-          value={storeValue}
+          value={storeValue || ''}
           placeholder={baseValue}
           onsl-change={onTokenChange}
         ></Input>
@@ -473,23 +473,10 @@ const Main = observer(({ children }: MainProps) => {
 
 const ThemeExportDrawer = observer(() => {
   const store = useStore()
-  const drawerRef = createRef<any>()
 
   const closeDrawer = () => {
     store.setExportDrawerVisible(false)
   }
-
-  useEffect(() => {
-    if (!drawerRef.current) {
-      return
-    }
-
-    if (store.exportDrawerVisible) {
-      drawerRef.current!.show()
-    } else {
-      drawerRef.current!.hide()
-    }
-  }, [store.exportDrawerVisible])
 
   return (
     <Drawer
@@ -637,7 +624,7 @@ const Overview = observer(() => {
           </HLayout>
           <HLayout gap="medium">
             <Switch>Enable some feature</Switch>
-            <Button onclick={(ev: any) => dialogRef.current!.show()}>
+            <Button onclick={(ev: any) => dialogRef.current!.element.show()}>
               Press to open dialog
             </Button>
             <Dialog ref={dialogRef} label="Dialog" className="dialog-overview">
@@ -645,7 +632,7 @@ const Overview = observer(() => {
               <Button
                 slot="footer"
                 type="primary"
-                onclick={() => dialogRef.current!.hide()}
+                onclick={() => dialogRef.current!.element.hide()}
               >
                 Close
               </Button>
