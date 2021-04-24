@@ -2,7 +2,7 @@
  *  Important: This file is auto-generated - please don't edit it  *
  * =============================================================== */
 
-// generated 2021-04-24T22:28:05.858Z
+// generated 2021-04-24T23:57:17.803Z
 
 import { asComponent } from './react-wrapper';
 
@@ -53,294 +53,374 @@ import SlTag from '@shoelace-style/shoelace/dist/components/tag/tag.js';
 import SlTextarea from '@shoelace-style/shoelace/dist/components/textarea/textarea.js';
 import SlTooltip from '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
-type SlAlertMethods = 'hide' | 'show' | 'toast;'
+type SlAlertPropName = 'closable' | 'duration' | 'open' | 'type';
 
-export const Alert = asComponent<SlAlert, SlAlertMethods>(
+type SlAlertMethodName = 'hide' | 'show' | 'toast';
+
+export const Alert = asComponent<SlAlert, Pick<SlAlert, SlAlertPropName>, Pick<SlAlert, SlAlertMethodName>>(
   'sl-alert',
   SlAlert,
   [SlIcon, SlIconButton]
 );
 
-type SlAnimationMethods = 'cancel' | 'finish' | 'getCurrentTime' | 'setCurrentTime;'
+type SlAnimationPropName = 'delay' | 'direction' | 'duration' | 'easing' | 'endDelay' | 'fill' | 'iterationStart' | 'iterations' | 'keyframes' | 'name' | 'pause' | 'playbackRate';
 
-export const Animation = asComponent<SlAnimation, SlAnimationMethods>(
+type SlAnimationMethodName = 'cancel' | 'finish' | 'getCurrentTime' | 'setCurrentTime';
+
+export const Animation = asComponent<SlAnimation, Pick<SlAnimation, SlAnimationPropName>, Pick<SlAnimation, SlAnimationMethodName>>(
   'sl-animation',
   SlAnimation
 );
 
-export const Avatar = asComponent<SlAvatar>(
+type SlAvatarPropName = 'alt' | 'image' | 'initials' | 'shape';
+
+export const Avatar = asComponent<SlAvatar, Pick<SlAvatar, SlAvatarPropName>, {}>(
   'sl-avatar',
   SlAvatar,
   [SlIcon]
 );
 
-export const Badge = asComponent<SlBadge>(
+type SlBadgePropName = 'pill' | 'pulse' | 'type';
+
+export const Badge = asComponent<SlBadge, Pick<SlBadge, SlBadgePropName>, {}>(
   'sl-badge',
   SlBadge
 );
 
-type SlButtonMethods = 'blur' | 'click' | 'focus;'
+type SlButtonPropName = 'caret' | 'circle' | 'disabled' | 'download' | 'href' | 'loading' | 'name' | 'pill' | 'size' | 'submit' | 'target' | 'type' | 'value';
 
-export const Button = asComponent<SlButton, SlButtonMethods>(
+type SlButtonMethodName = 'blur' | 'click' | 'focus';
+
+export const Button = asComponent<SlButton, Pick<SlButton, SlButtonPropName>, Pick<SlButton, SlButtonMethodName>>(
   'sl-button',
   SlButton,
   [SlSpinner]
 );
 
-export const ButtonGroup = asComponent<SlButtonGroup>(
+type SlButtonGroupPropName = 'label';
+
+export const ButtonGroup = asComponent<SlButtonGroup, Pick<SlButtonGroup, SlButtonGroupPropName>, {}>(
   'sl-button-group',
   SlButtonGroup
 );
 
-export const Card = asComponent<SlCard>(
+export const Card = asComponent<SlCard, {}, {}>(
   'sl-card',
   SlCard
 );
 
-type SlCheckboxMethods = 'blur' | 'click' | 'focus' | 'reportValidity' | 'setCustomValidity;'
+type SlCheckboxPropName = 'checked' | 'disabled' | 'indeterminate' | 'invalid' | 'name' | 'required' | 'value';
 
-export const Checkbox = asComponent<SlCheckbox, SlCheckboxMethods>(
+type SlCheckboxMethodName = 'blur' | 'click' | 'focus' | 'reportValidity' | 'setCustomValidity';
+
+export const Checkbox = asComponent<SlCheckbox, Pick<SlCheckbox, SlCheckboxPropName>, Pick<SlCheckbox, SlCheckboxMethodName>>(
   'sl-checkbox',
   SlCheckbox
 );
 
-type SlColorPickerMethods = 'getFormattedValue' | 'reportValidity' | 'setCustomValidity;'
+type SlColorPickerPropName = 'disabled' | 'format' | 'hoist' | 'inline' | 'invalid' | 'name' | 'noFormatToggle' | 'opacity' | 'size' | 'swatches' | 'uppercase' | 'value';
 
-export const ColorPicker = asComponent<SlColorPicker, SlColorPickerMethods>(
+type SlColorPickerMethodName = 'getFormattedValue' | 'reportValidity' | 'setCustomValidity';
+
+export const ColorPicker = asComponent<SlColorPicker, Pick<SlColorPicker, SlColorPickerPropName>, Pick<SlColorPicker, SlColorPickerMethodName>>(
   'sl-color-picker',
   SlColorPicker,
   [SlButton, SlDropdown, SlIcon, SlInput, SlSpinner]
 );
 
-type SlDetailsMethods = 'hide' | 'show;'
+type SlDetailsPropName = 'disabled' | 'open' | 'summary';
 
-export const Details = asComponent<SlDetails, SlDetailsMethods>(
+type SlDetailsMethodName = 'hide' | 'show';
+
+export const Details = asComponent<SlDetails, Pick<SlDetails, SlDetailsPropName>, Pick<SlDetails, SlDetailsMethodName>>(
   'sl-details',
   SlDetails,
   [SlIcon]
 );
 
-type SlDialogMethods = 'hide' | 'show;'
+type SlDialogPropName = 'label' | 'noHeader' | 'open';
 
-export const Dialog = asComponent<SlDialog, SlDialogMethods>(
+type SlDialogMethodName = 'hide' | 'show';
+
+export const Dialog = asComponent<SlDialog, Pick<SlDialog, SlDialogPropName>, Pick<SlDialog, SlDialogMethodName>>(
   'sl-dialog',
   SlDialog,
   [SlIcon, SlIconButton]
 );
 
-type SlDrawerMethods = 'hide' | 'show;'
+type SlDrawerPropName = 'contained' | 'label' | 'noHeader' | 'open' | 'placement';
 
-export const Drawer = asComponent<SlDrawer, SlDrawerMethods>(
+type SlDrawerMethodName = 'hide' | 'show';
+
+export const Drawer = asComponent<SlDrawer, Pick<SlDrawer, SlDrawerPropName>, Pick<SlDrawer, SlDrawerMethodName>>(
   'sl-drawer',
   SlDrawer,
   [SlIcon, SlIconButton]
 );
 
-type SlDropdownMethods = 'hide' | 'reposition' | 'show;'
+type SlDropdownPropName = 'closeOnSelect' | 'containingElement' | 'distance' | 'hoist' | 'open' | 'placement' | 'skidding';
 
-export const Dropdown = asComponent<SlDropdown, SlDropdownMethods>(
+type SlDropdownMethodName = 'hide' | 'reposition' | 'show';
+
+export const Dropdown = asComponent<SlDropdown, Pick<SlDropdown, SlDropdownPropName>, Pick<SlDropdown, SlDropdownMethodName>>(
   'sl-dropdown',
   SlDropdown
 );
 
-type SlFormMethods = 'getFormControls' | 'getFormData' | 'submit;'
+type SlFormPropName = 'novalidate';
 
-export const Form = asComponent<SlForm, SlFormMethods>(
+type SlFormMethodName = 'getFormControls' | 'getFormData' | 'submit';
+
+export const Form = asComponent<SlForm, Pick<SlForm, SlFormPropName>, Pick<SlForm, SlFormMethodName>>(
   'sl-form',
   SlForm
 );
 
-export const FormatBytes = asComponent<SlFormatBytes>(
+type SlFormatBytesPropName = 'locale' | 'unit' | 'value';
+
+export const FormatBytes = asComponent<SlFormatBytes, Pick<SlFormatBytes, SlFormatBytesPropName>, {}>(
   'sl-format-bytes',
   SlFormatBytes
 );
 
-export const FormatDate = asComponent<SlFormatDate>(
+type SlFormatDatePropName = 'date' | 'day' | 'era' | 'hour' | 'hourFormat' | 'locale' | 'minute' | 'month' | 'second' | 'timeZone' | 'timeZoneName' | 'weekday' | 'year';
+
+export const FormatDate = asComponent<SlFormatDate, Pick<SlFormatDate, SlFormatDatePropName>, {}>(
   'sl-format-date',
   SlFormatDate
 );
 
-export const FormatNumber = asComponent<SlFormatNumber>(
+type SlFormatNumberPropName = 'currency' | 'currencyDisplay' | 'locale' | 'maximumFractionDigits' | 'maximumSignificantDigits' | 'minimumFractionDigits' | 'minimumIntegerDigits' | 'minimumSignificantDigits' | 'noGrouping' | 'type' | 'value';
+
+export const FormatNumber = asComponent<SlFormatNumber, Pick<SlFormatNumber, SlFormatNumberPropName>, {}>(
   'sl-format-number',
   SlFormatNumber
 );
 
-export const Icon = asComponent<SlIcon>(
+type SlIconPropName = 'label' | 'library' | 'name' | 'src';
+
+export const Icon = asComponent<SlIcon, Pick<SlIcon, SlIconPropName>, {}>(
   'sl-icon',
   SlIcon
 );
 
-export const IconButton = asComponent<SlIconButton>(
+type SlIconButtonPropName = 'disabled' | 'label' | 'library' | 'name' | 'src';
+
+export const IconButton = asComponent<SlIconButton, Pick<SlIconButton, SlIconButtonPropName>, {}>(
   'sl-icon-button',
   SlIconButton,
   [SlIcon]
 );
 
-export const ImageComparer = asComponent<SlImageComparer>(
+type SlImageComparerPropName = 'position';
+
+export const ImageComparer = asComponent<SlImageComparer, Pick<SlImageComparer, SlImageComparerPropName>, {}>(
   'sl-image-comparer',
   SlImageComparer,
   [SlIcon]
 );
 
-export const Include = asComponent<SlInclude>(
+type SlIncludePropName = 'allowScripts' | 'mode' | 'src';
+
+export const Include = asComponent<SlInclude, Pick<SlInclude, SlIncludePropName>, {}>(
   'sl-include',
   SlInclude
 );
 
-type SlInputMethods = 'blur' | 'focus' | 'reportValidity' | 'select' | 'setCustomValidity' | 'setRangeText' | 'setSelectionRange;'
+type SlInputPropName = 'autocapitalize' | 'autocomplete' | 'autocorrect' | 'autofocus' | 'clearable' | 'disabled' | 'helpText' | 'inputmode' | 'invalid' | 'label' | 'max' | 'maxlength' | 'min' | 'minlength' | 'name' | 'pattern' | 'pill' | 'placeholder' | 'readonly' | 'required' | 'size' | 'spellcheck' | 'step' | 'togglePassword' | 'type' | 'value';
 
-export const Input = asComponent<SlInput, SlInputMethods>(
+type SlInputMethodName = 'blur' | 'focus' | 'reportValidity' | 'select' | 'setCustomValidity' | 'setRangeText' | 'setSelectionRange';
+
+export const Input = asComponent<SlInput, Pick<SlInput, SlInputPropName>, Pick<SlInput, SlInputMethodName>>(
   'sl-input',
   SlInput,
   [SlIcon]
 );
 
-type SlMenuMethods = 'typeToSelect;'
+type SlMenuMethodName = 'typeToSelect';
 
-export const Menu = asComponent<SlMenu, SlMenuMethods>(
+export const Menu = asComponent<SlMenu, {}, Pick<SlMenu, SlMenuMethodName>>(
   'sl-menu',
   SlMenu
 );
 
-export const MenuDivider = asComponent<SlMenuDivider>(
+export const MenuDivider = asComponent<SlMenuDivider, {}, {}>(
   'sl-menu-divider',
   SlMenuDivider,
   [SlMenu]
 );
 
-type SlMenuItemMethods = 'blur' | 'focus;'
+type SlMenuItemPropName = 'checked' | 'disabled' | 'value';
 
-export const MenuItem = asComponent<SlMenuItem, SlMenuItemMethods>(
+type SlMenuItemMethodName = 'blur' | 'focus';
+
+export const MenuItem = asComponent<SlMenuItem, Pick<SlMenuItem, SlMenuItemPropName>, Pick<SlMenuItem, SlMenuItemMethodName>>(
   'sl-menu-item',
   SlMenuItem,
   [SlIcon]
 );
 
-export const MenuLabel = asComponent<SlMenuLabel>(
+export const MenuLabel = asComponent<SlMenuLabel, {}, {}>(
   'sl-menu-label',
   SlMenuLabel,
   [SlMenu]
 );
 
-export const ProgressBar = asComponent<SlProgressBar>(
+type SlProgressBarPropName = 'indeterminate' | 'percentage';
+
+export const ProgressBar = asComponent<SlProgressBar, Pick<SlProgressBar, SlProgressBarPropName>, {}>(
   'sl-progress-bar',
   SlProgressBar
 );
 
-export const ProgressRing = asComponent<SlProgressRing>(
+type SlProgressRingPropName = 'percentage' | 'size' | 'strokeWidth';
+
+export const ProgressRing = asComponent<SlProgressRing, Pick<SlProgressRing, SlProgressRingPropName>, {}>(
   'sl-progress-ring',
   SlProgressRing
 );
 
-export const QrCode = asComponent<SlQrCode>(
+type SlQrCodePropName = 'background' | 'fill' | 'label' | 'radius' | 'size' | 'value';
+
+export const QrCode = asComponent<SlQrCode, Pick<SlQrCode, SlQrCodePropName>, {}>(
   'sl-qr-code',
   SlQrCode
 );
 
-type SlRadioMethods = 'blur' | 'click' | 'focus' | 'reportValidity' | 'setCustomValidity;'
+type SlRadioPropName = 'checked' | 'disabled' | 'invalid' | 'name' | 'value';
 
-export const Radio = asComponent<SlRadio, SlRadioMethods>(
+type SlRadioMethodName = 'blur' | 'click' | 'focus' | 'reportValidity' | 'setCustomValidity';
+
+export const Radio = asComponent<SlRadio, Pick<SlRadio, SlRadioPropName>, Pick<SlRadio, SlRadioMethodName>>(
   'sl-radio',
   SlRadio
 );
 
-export const RadioGroup = asComponent<SlRadioGroup>(
+type SlRadioGroupPropName = 'label' | 'noFieldset';
+
+export const RadioGroup = asComponent<SlRadioGroup, Pick<SlRadioGroup, SlRadioGroupPropName>, {}>(
   'sl-radio-group',
   SlRadioGroup
 );
 
-type SlRangeMethods = 'blur' | 'focus' | 'setCustomValidity' | 'tooltipFormatter;'
+type SlRangePropName = 'disabled' | 'helpText' | 'invalid' | 'label' | 'max' | 'min' | 'name' | 'step' | 'tooltip' | 'value';
 
-export const Range = asComponent<SlRange, SlRangeMethods>(
+type SlRangeMethodName = 'blur' | 'focus' | 'setCustomValidity' | 'tooltipFormatter';
+
+export const Range = asComponent<SlRange, Pick<SlRange, SlRangePropName>, Pick<SlRange, SlRangeMethodName>>(
   'sl-range',
   SlRange
 );
 
-type SlRatingMethods = 'blur' | 'focus' | 'getSymbol;'
+type SlRatingPropName = 'disabled' | 'max' | 'precision' | 'readonly' | 'value';
 
-export const Rating = asComponent<SlRating, SlRatingMethods>(
+type SlRatingMethodName = 'blur' | 'focus' | 'getSymbol';
+
+export const Rating = asComponent<SlRating, Pick<SlRating, SlRatingPropName>, Pick<SlRating, SlRatingMethodName>>(
   'sl-rating',
   SlRating,
   [SlIcon]
 );
 
-export const RelativeTime = asComponent<SlRelativeTime>(
+type SlRelativeTimePropName = 'date' | 'format' | 'locale' | 'numeric' | 'sync';
+
+export const RelativeTime = asComponent<SlRelativeTime, Pick<SlRelativeTime, SlRelativeTimePropName>, {}>(
   'sl-relative-time',
   SlRelativeTime
 );
 
-export const ResizeObserver = asComponent<SlResizeObserver>(
+export const ResizeObserver = asComponent<SlResizeObserver, {}, {}>(
   'sl-resize-observer',
   SlResizeObserver
 );
 
-export const ResponsiveEmbed = asComponent<SlResponsiveEmbed>(
+type SlResponsiveEmbedPropName = 'aspectRatio';
+
+export const ResponsiveEmbed = asComponent<SlResponsiveEmbed, Pick<SlResponsiveEmbed, SlResponsiveEmbedPropName>, {}>(
   'sl-responsive-embed',
   SlResponsiveEmbed
 );
 
-type SlSelectMethods = 'reportValidity' | 'setCustomValidity;'
+type SlSelectPropName = 'clearable' | 'disabled' | 'helpText' | 'hoist' | 'invalid' | 'label' | 'maxTagsVisible' | 'multiple' | 'name' | 'pill' | 'placeholder' | 'required' | 'size' | 'value';
 
-export const Select = asComponent<SlSelect, SlSelectMethods>(
+type SlSelectMethodName = 'reportValidity' | 'setCustomValidity';
+
+export const Select = asComponent<SlSelect, Pick<SlSelect, SlSelectPropName>, Pick<SlSelect, SlSelectMethodName>>(
   'sl-select',
   SlSelect,
   [SlDropdown, SlIcon, SlIconButton, SlMenu, SlTag]
 );
 
-export const Skeleton = asComponent<SlSkeleton>(
+type SlSkeletonPropName = 'effect';
+
+export const Skeleton = asComponent<SlSkeleton, Pick<SlSkeleton, SlSkeletonPropName>, {}>(
   'sl-skeleton',
   SlSkeleton
 );
 
-export const Spinner = asComponent<SlSpinner>(
+export const Spinner = asComponent<SlSpinner, {}, {}>(
   'sl-spinner',
   SlSpinner
 );
 
-type SlSwitchMethods = 'blur' | 'click' | 'focus' | 'reportValidity' | 'setCustomValidity;'
+type SlSwitchPropName = 'checked' | 'disabled' | 'invalid' | 'name' | 'required' | 'value';
 
-export const Switch = asComponent<SlSwitch, SlSwitchMethods>(
+type SlSwitchMethodName = 'blur' | 'click' | 'focus' | 'reportValidity' | 'setCustomValidity';
+
+export const Switch = asComponent<SlSwitch, Pick<SlSwitch, SlSwitchPropName>, Pick<SlSwitch, SlSwitchMethodName>>(
   'sl-switch',
   SlSwitch
 );
 
-type SlTabMethods = 'blur' | 'focus;'
+type SlTabPropName = 'active' | 'closable' | 'disabled' | 'panel';
 
-export const Tab = asComponent<SlTab, SlTabMethods>(
+type SlTabMethodName = 'blur' | 'focus';
+
+export const Tab = asComponent<SlTab, Pick<SlTab, SlTabPropName>, Pick<SlTab, SlTabMethodName>>(
   'sl-tab',
   SlTab,
   [SlIcon, SlIconButton]
 );
 
-type SlTabGroupMethods = 'show;'
+type SlTabGroupPropName = 'activation' | 'noScrollControls' | 'placement';
 
-export const TabGroup = asComponent<SlTabGroup, SlTabGroupMethods>(
+type SlTabGroupMethodName = 'show';
+
+export const TabGroup = asComponent<SlTabGroup, Pick<SlTabGroup, SlTabGroupPropName>, Pick<SlTabGroup, SlTabGroupMethodName>>(
   'sl-tab-group',
   SlTabGroup,
   [SlIcon, SlIconButton]
 );
 
-export const TabPanel = asComponent<SlTabPanel>(
+type SlTabPanelPropName = 'active' | 'name';
+
+export const TabPanel = asComponent<SlTabPanel, Pick<SlTabPanel, SlTabPanelPropName>, {}>(
   'sl-tab-panel',
   SlTabPanel
 );
 
-export const Tag = asComponent<SlTag>(
+type SlTagPropName = 'clearable' | 'pill' | 'size' | 'type';
+
+export const Tag = asComponent<SlTag, Pick<SlTag, SlTagPropName>, {}>(
   'sl-tag',
   SlTag,
   [SlIcon, SlIconButton]
 );
 
-type SlTextareaMethods = 'blur' | 'focus' | 'reportValidity' | 'select' | 'setCustomValidity' | 'setRangeText' | 'setSelectionRange;'
+type SlTextareaPropName = 'autocapitalize' | 'autocomplete' | 'autocorrect' | 'autofocus' | 'disabled' | 'helpText' | 'inputmode' | 'invalid' | 'label' | 'maxlength' | 'minlength' | 'name' | 'pattern' | 'placeholder' | 'readonly' | 'required' | 'resize' | 'rows' | 'size' | 'spellcheck' | 'value';
 
-export const Textarea = asComponent<SlTextarea, SlTextareaMethods>(
+type SlTextareaMethodName = 'blur' | 'focus' | 'reportValidity' | 'select' | 'setCustomValidity' | 'setRangeText' | 'setSelectionRange';
+
+export const Textarea = asComponent<SlTextarea, Pick<SlTextarea, SlTextareaPropName>, Pick<SlTextarea, SlTextareaMethodName>>(
   'sl-textarea',
   SlTextarea
 );
 
-type SlTooltipMethods = 'hide' | 'show;'
+type SlTooltipPropName = 'content' | 'disabled' | 'distance' | 'open' | 'placement' | 'skidding' | 'trigger';
 
-export const Tooltip = asComponent<SlTooltip, SlTooltipMethods>(
+type SlTooltipMethodName = 'hide' | 'show';
+
+export const Tooltip = asComponent<SlTooltip, Pick<SlTooltip, SlTooltipPropName>, Pick<SlTooltip, SlTooltipMethodName>>(
   'sl-tooltip',
   SlTooltip
 );

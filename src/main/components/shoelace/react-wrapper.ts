@@ -1,4 +1,11 @@
-import { forwardRef, createElement, Component } from 'react'
+import {
+  forwardRef,
+  createElement,
+  Component,
+  FC,
+  HTMLAttributes,
+  Ref
+} from 'react'
 
 // Notes:
 // - argument `elementClass` will be needed for proper typing
@@ -9,11 +16,17 @@ import { forwardRef, createElement, Component } from 'react'
 // - argument `dependencies` is used to make sure that all the
 //   depending elements are properly registered and not tree-shaken
 //   away
-export function asComponent<T extends HTMLElement, M = unknown>(
+export function asComponent<T extends HTMLElement, P, M>(
   tagName: string,
   elementClass: { new (): T },
   dependencies?: any[]
-): any {
+): FC<
+  Partial<P> &
+    HTMLAttributes<any> &
+    JSX.IntrinsicAttributes & {
+      ref?: Ref<M>
+    }
+> {
   const compo = class extends Component<any> {
     private __element: HTMLElement | null = null
 

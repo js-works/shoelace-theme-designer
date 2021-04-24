@@ -42,5 +42,6 @@
     "webpack": "^5.35.1",
     "webpack-cli": "^4.6.0",
     "webpack-plugin-serve": "^1.4.1"
-  }
+  },
+  "dependencies": {}
 }

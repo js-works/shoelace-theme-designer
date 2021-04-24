@@ -115,10 +115,10 @@ const Header = observer(() => {
     <div className={cssClass}>
       <div className="designer__brand">Shoelace Theme Designer</div>
       <HLayout gap="small">
-        <Button type="default" onclick={onShareClick}>
+        <Button type="default" onClick={onShareClick}>
           Share theme
         </Button>
-        <Button type="default" onclick={onExportClick}>
+        <Button type="default" onClick={onExportClick}>
           Export theme
         </Button>
       </HLayout>
@@ -258,8 +258,8 @@ function Sidebar() {
         </TabPanel>
       </TabGroup>
       <HLayout className="designer__sidebar-color-actions" gap="small">
-        <Button onclick={invertTheme}>Invert theme</Button>
-        <Button onclick={resetTheme} disabled={!store.themeModified}>
+        <Button onClick={invertTheme}>Invert theme</Button>
+        <Button onClick={resetTheme} disabled={!store.themeModified}>
           Reset theme
         </Button>
       </HLayout>
@@ -508,7 +508,7 @@ const ThemeExportDrawer = observer(() => {
           />
         </TabPanel>
       </TabGroup>
-      <Button slot="footer" type="primary" onclick={closeDrawer}>
+      <Button slot="footer" type="primary" onClick={closeDrawer}>
         Close
       </Button>
     </Drawer>
@@ -612,7 +612,7 @@ const Overview = observer(() => {
                 </MenuItem>
               </Menu>
             </Dropdown>
-            <Range min="0" max="100" step="1"></Range>
+            <Range min={0} max={100} step={1}></Range>
           </HLayout>
           <HLayout gap="medium" align="bottom">
             <Input label="Some input" placeholder="Enter text here..."></Input>
@@ -624,7 +624,7 @@ const Overview = observer(() => {
           </HLayout>
           <HLayout gap="medium">
             <Switch>Enable some feature</Switch>
-            <Button onclick={(ev: any) => dialogRef.current!.show()}>
+            <Button onClick={(ev: any) => dialogRef.current!.show()}>
               Press to open dialog
             </Button>
             <Dialog ref={dialogRef} label="Dialog" className="dialog-overview">
@@ -632,7 +632,7 @@ const Overview = observer(() => {
               <Button
                 slot="footer"
                 type="primary"
-                onclick={() => dialogRef.current!.hide()}
+                onClick={() => dialogRef.current!.hide()}
               >
                 Close
               </Button>
@@ -666,7 +666,7 @@ const Overview = observer(() => {
               </HLayout>
             </TabPanel>
             <TabPanel name="rating">
-              <Rating precision=".5" value="2.5"></Rating>
+              <Rating precision={0.5} value={2.5}></Rating>
             </TabPanel>
             <TabPanel name="spinner">
               <Spinner></Spinner>
@@ -730,7 +730,8 @@ const ContrastInfo = observer(({ colorName }: ContrastInfoProps) => {
 
   return (
     <div>
-      <Badge type={colorName} className={badgeClass}>
+      {/* TODO!!!!!!!!!!!!! */}
+      <Badge type={colorName as any} className={badgeClass}>
         <div className={badgeTextClass}>
           {colorName}: {contrastString} ({result})
         </div>

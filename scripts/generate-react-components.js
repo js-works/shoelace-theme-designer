@@ -16,11 +16,12 @@ const meta = JSON.parse(fs.readFileSync(metaFile))
 const dataMap = new Map()
 const tags = meta.components.map(({ tag }) => tag).sort()
 
-meta.components.forEach(({ tag, className, dependencies, methods }) => {
+meta.components.forEach(({ tag, className, dependencies, props, methods }) => {
   const depsSet = new Set([...dependencies].sort())
 
   dataMap.set(tag, {
     className,
+    props: props.map((it) => it.name).sort(),
     methods: methods.map((it) => it.name).sort(),
     depsSet
   })
@@ -76,23 +77,32 @@ for (const tag of tags) {
 lines.push('')
 
 for (const tag of tags) {
-  const { className, depsSet, methods } = dataMap.get(tag)
+  const { className, depsSet, props, methods } = dataMap.get(tag)
   const name = className.substr(2)
+
+  const propsTypeString =
+    props.length === 0 ? '{}' : `Pick<${className}, ${className}PropName>`
+
+  const methodsTypeString =
+    methods.length === 0 ? '{}' : `Pick<${className}, ${className}MethodName>`
 
   const depsInfo = [...depsSet]
     .map((it) => dataMap.get(it).className)
     .join(', ')
 
-  if (methods.length === 0) {
-    lines.push(`export const ${name} = asComponent<${className}>(`)
-  } else {
-    lines.push(`type ${className}Methods = '${methods.join("' | '")};'`)
+  if (props.length > 0) {
+    lines.push(`type ${className}PropName = '${props.join("' | '")}';`)
     lines.push('')
-
-    lines.push(
-      `export const ${name} = asComponent<${className}, ${className}Methods>(`
-    )
   }
+
+  if (methods.length > 0) {
+    lines.push(`type ${className}MethodName = '${methods.join("' | '")}';`)
+    lines.push('')
+  }
+
+  lines.push(
+    `export const ${name} = asComponent<${className}, ${propsTypeString}, ${methodsTypeString}>(`
+  )
 
   lines.push(`  '${tag}',`)
 
