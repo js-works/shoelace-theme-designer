@@ -624,7 +624,7 @@ const Overview = observer(() => {
           </HLayout>
           <HLayout gap="medium">
             <Switch>Enable some feature</Switch>
-            <Button onclick={(ev: any) => dialogRef.current!.element.show()}>
+            <Button onclick={(ev: any) => dialogRef.current!.show()}>
               Press to open dialog
             </Button>
             <Dialog ref={dialogRef} label="Dialog" className="dialog-overview">
@@ -632,7 +632,7 @@ const Overview = observer(() => {
               <Button
                 slot="footer"
                 type="primary"
-                onclick={() => dialogRef.current!.element.hide()}
+                onclick={() => dialogRef.current!.hide()}
               >
                 Close
               </Button>

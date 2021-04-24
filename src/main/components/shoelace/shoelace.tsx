@@ -1,4 +1,4 @@
-import { createElement, Component } from 'react'
+import { createElement, forwardRef, Component } from 'react'
 
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert.js'
 import SlAvatar from '@shoelace-style/shoelace/dist/components/avatar/avatar.js'
@@ -96,14 +96,16 @@ function asComponent(
   dependencies?: any[]
 ): any {
   const compo = class extends Component<any> {
-    element: HTMLElement | null = null
+    private __element: HTMLElement | null = null
+
+    static displayName = tagName + '/inner'
 
     componentDidMount() {
-      this.element && syncProps(this.element, this.props)
+      this.__element && syncProps(this.__element, this.props)
     }
 
     componentDidUpdate() {
-      this.element && syncProps(this.element, this.props)
+      this.__element && syncProps(this.__element, this.props)
     }
 
     render() {
@@ -119,16 +121,34 @@ function asComponent(
 
       return createElement(tagName, {
         ...p,
-        ref: (elem: any) => (this.element = elem),
+
+        ref: (elem: any) => {
+          this.__element = elem
+
+          const forwardedRef = this.props.__forwardedRef
+
+          if (forwardedRef) {
+            if (typeof forwardedRef === 'function') {
+              forwardedRef(elem)
+            } else {
+              forwardedRef.current = elem
+            }
+          }
+        },
+
         style: this.props.style,
         children: this.props.children
       })
     }
   }
 
-  ;(compo as any).displayName = tagName
+  const fn = (props: any, ref: any) => {
+    return createElement(compo, { ...props, __forwardedRef: ref })
+  }
 
-  return compo
+  fn.displayName = tagName + '/outer'
+
+  return forwardRef(fn)
 }
 
 function syncProps(element: HTMLElement, props: Record<string, any>) {
