@@ -16,7 +16,7 @@ import {
 // - argument `dependencies` is used to make sure that all the
 //   depending elements are properly registered and not tree-shaken
 //   away
-export function asComponent<T extends HTMLElement, P, M>(
+export function asComponent<T extends HTMLElement, E, P>(
   tagName: string,
   elementClass: { new (): T },
   dependencies?: any[]
@@ -24,7 +24,7 @@ export function asComponent<T extends HTMLElement, P, M>(
   Partial<P> &
     HTMLAttributes<any> &
     JSX.IntrinsicAttributes & {
-      ref?: Ref<M>
+      ref?: Ref<E>
     }
 > {
   const compo = class extends Component<any> {

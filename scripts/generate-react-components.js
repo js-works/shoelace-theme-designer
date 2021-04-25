@@ -61,6 +61,7 @@ const lines = [
   '',
   `// generated ${new Date().toISOString()}`,
   '',
+  "import { HTMLAttributes, Ref } from 'react';",
   "import { asComponent } from './react-wrapper';",
   ''
 ]
@@ -79,41 +80,37 @@ lines.push('')
 for (const tag of tags) {
   const { className, depsSet, props, methods } = dataMap.get(tag)
   const name = className.substr(2)
-
-  const propsTypeString =
-    props.length === 0 ? '{}' : `Pick<${className}, ${className}PropName>`
-
-  const methodsTypeString =
-    methods.length === 0 ? '{}' : `Pick<${className}, ${className}MethodName>`
+  const propsTypeString = props.length === 0 ? '{}' : `${name}Props`
+  const elementTypeString = `${name}Element`
 
   const depsInfo = [...depsSet]
     .map((it) => dataMap.get(it).className)
     .join(', ')
 
   if (props.length > 0) {
-    lines.push(`type ${className}PropName = '${props.join("' | '")}';`)
-    lines.push('')
+    lines.push(
+      `export type ${name}Props = Pick<${className}, '${props.join(
+        "' | '"
+      )}'> & HTMLAttributes<any>;`
+    )
+  } else {
+    lines.push(`type ${name}Props = HTMLAttributes<any>;`)
   }
 
   if (methods.length > 0) {
-    lines.push(`type ${className}MethodName = '${methods.join("' | '")}';`)
-    lines.push('')
+    lines.push(
+      `export type ${name}Element = ${name}Props & Pick<${className}, '${methods.join(
+        "' | '"
+      )}'>;`
+    )
+  } else {
+    lines.push(`export type ${name}Element = ${name}Props;`)
   }
 
   lines.push(
-    `export const ${name} = asComponent<${className}, ${propsTypeString}, ${methodsTypeString}>(`
+    `export const ${name} = asComponent<${className}, ${elementTypeString}, ${propsTypeString}>('${tag}', ${className}, [${depsInfo}]);`
   )
 
-  lines.push(`  '${tag}',`)
-
-  if (depsInfo) {
-    lines.push(`  ${className},`)
-    lines.push(`  [${depsInfo}]`)
-  } else {
-    lines.push(`  ${className}`)
-  }
-
-  lines.push(`);`)
   lines.push('')
 }
 

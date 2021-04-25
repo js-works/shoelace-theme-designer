@@ -1,5 +1,5 @@
 // external imports
-import { createRef, useCallback, useEffect, useState, ReactNode } from 'react'
+import { useRef, useCallback, useEffect, useState, ReactNode } from 'react'
 import Color from 'color'
 import { BsCheckCircle, BsGift, BsHeart } from 'react-icons/bs'
 import { observer } from 'mobx-react-lite'
@@ -49,7 +49,8 @@ import {
   Tab,
   TabGroup,
   TabPanel,
-  Tooltip
+  Tooltip,
+  DialogElement
 } from '../../shoelace/shoelace'
 
 // styles
@@ -516,7 +517,7 @@ const ThemeExportDrawer = observer(() => {
 })
 
 const Overview = observer(() => {
-  const dialogRef = createRef<any>()
+  const dialogRef = useRef<DialogElement>(null)
 
   return (
     <HLayout gap="huge" align="top" wrap={true}>
