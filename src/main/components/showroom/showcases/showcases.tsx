@@ -133,7 +133,7 @@ function ButtonShowcase() {
 function IconShowcase() {
   return (
     <Showcase headline="Icon" className="icon-showcase">
-      <HLayout gap="medium">
+      <HLayout gap="medium" wrap={true}>
         <Icon name="exclamation-triangle"></Icon>
         <Icon name="archive"></Icon>
         <Icon name="battery-charging"></Icon>
