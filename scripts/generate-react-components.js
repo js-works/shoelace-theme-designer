@@ -89,12 +89,12 @@ for (const tag of tags) {
 
   if (props.length > 0) {
     lines.push(
-      `export type ${name}Props = Pick<${className}, '${props.join(
+      `export type ${name}Props = HTMLAttributes<any> & Pick<${className}, '${props.join(
         "' | '"
-      )}'> & HTMLAttributes<any>;`
+      )}'>;`
     )
   } else {
-    lines.push(`type ${name}Props = HTMLAttributes<any>;`)
+    lines.push(`export type ${name}Props = HTMLAttributes<any>;`)
   }
 
   if (methods.length > 0) {
