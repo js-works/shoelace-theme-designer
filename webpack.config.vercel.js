@@ -1,36 +1,8 @@
 const path = require('path')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const config = require('./webpack.config')
 
-module.exports = {
-  entry: ['./src/main/index'],
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
-      },
-      {
-        test: /\.svg$/i,
-        type: 'asset/inline'
-      }
-    ]
-  },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.css', '.svg']
-  },
-  output: {
-    filename: 'shoelace-theme-designer.js',
-    path: path.resolve(__dirname, 'public')
-  },
-  mode: 'production',
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].css'
-    })
-  ]
-}
+const output = config.output
+const newOutput = { ...output, path: path.resolve(__dirname, 'public') }
+const newConfig = { ...config, output: newOutput }
+
+module.exports = newConfig

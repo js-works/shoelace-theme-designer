@@ -1,17 +1,6 @@
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-const serveOptions = {
-  host: 'localhost',
-  port: 55555,
-  open: true,
-  liveReload: true,
-  static: [
-    path.resolve(__dirname, './src/dev'),
-    path.resolve(__dirname, './dist')
-  ]
-}
-
 module.exports = {
   entry: ['./src/main/index'],
   module: {
@@ -39,6 +28,8 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   mode: 'production',
+  devtool: false,
+  optimization: {},
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].css'

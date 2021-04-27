@@ -3,6 +3,10 @@
   "version": "0.0.4",
   "description": "Shoelace theme designer",
   "main": "index.js",
+  "sideEffects": [
+    "./src/main/index.tsx",
+    "*.css"
+  ],
   "scripts": {
     "start": "webpack -c ./webpack.config.dev.js",
     "build": "webpack",
