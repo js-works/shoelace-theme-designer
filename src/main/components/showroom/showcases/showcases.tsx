@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
 import { HLayout } from '../../layout/h-layout/h-layout'
 import { VLayout } from '../../layout/v-layout/v-layout'
-import * as Shoelace from '@shoelace-style/shoelace'
 import { Text } from '../../typography/text/text'
 import { H4 } from '../../typography/h4/h4'
 import { Alert, Avatar, Badge, Button, Icon } from '../../shoelace/shoelace'
@@ -10,10 +9,6 @@ import './showcases.css'
 // === exports =======================================================
 
 export { Showcases }
-
-// === load all shoelace components ==================================
-
-void [Shoelace]
 
 // === Showcases =====================================================
 
