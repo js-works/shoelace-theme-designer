@@ -1,4 +1,4 @@
-import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities'
+import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library'
 import { render } from 'react-dom'
 import { App } from './components/app/app'
 import { loadTheme } from './theming/theme-utils'

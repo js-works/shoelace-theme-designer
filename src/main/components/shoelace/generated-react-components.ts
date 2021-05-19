@@ -2,7 +2,7 @@
  *  Important: This file is auto-generated - please don't edit it  *
  * =============================================================== */
 
-// generated 2021-04-25T07:51:49.753Z
+// generated 2021-05-19T09:27:54.366Z
 
 import { HTMLAttributes, Ref } from 'react';
 import { asComponent } from './react-wrapper';
@@ -42,7 +42,7 @@ import SlRange from '@shoelace-style/shoelace/dist/components/range/range.js';
 import SlRating from '@shoelace-style/shoelace/dist/components/rating/rating.js';
 import SlRelativeTime from '@shoelace-style/shoelace/dist/components/relative-time/relative-time.js';
 import SlResizeObserver from '@shoelace-style/shoelace/dist/components/resize-observer/resize-observer.js';
-import SlResponsiveEmbed from '@shoelace-style/shoelace/dist/components/responsive-embed/responsive-embed.js';
+import SlResponsiveMedia from '@shoelace-style/shoelace/dist/components/responsive-media/responsive-media.js';
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select.js';
 import SlSkeleton from '@shoelace-style/shoelace/dist/components/skeleton/skeleton.js';
 import SlSpinner from '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
@@ -194,9 +194,9 @@ export type ResizeObserverProps = HTMLAttributes<any>;
 export type ResizeObserverElement = ResizeObserverProps;
 export const ResizeObserver = asComponent<SlResizeObserver, ResizeObserverElement, {}>('sl-resize-observer', SlResizeObserver, []);
 
-export type ResponsiveEmbedProps = HTMLAttributes<any> & Pick<SlResponsiveEmbed, 'aspectRatio'>;
-export type ResponsiveEmbedElement = ResponsiveEmbedProps;
-export const ResponsiveEmbed = asComponent<SlResponsiveEmbed, ResponsiveEmbedElement, ResponsiveEmbedProps>('sl-responsive-embed', SlResponsiveEmbed, []);
+export type ResponsiveMediaProps = HTMLAttributes<any> & Pick<SlResponsiveMedia, 'aspectRatio' | 'fit'>;
+export type ResponsiveMediaElement = ResponsiveMediaProps;
+export const ResponsiveMedia = asComponent<SlResponsiveMedia, ResponsiveMediaElement, ResponsiveMediaProps>('sl-responsive-media', SlResponsiveMedia, []);
 
 export type SelectProps = HTMLAttributes<any> & Pick<SlSelect, 'clearable' | 'disabled' | 'helpText' | 'hoist' | 'invalid' | 'label' | 'maxTagsVisible' | 'multiple' | 'name' | 'pill' | 'placeholder' | 'required' | 'size' | 'value'>;
 export type SelectElement = SelectProps & Pick<SlSelect, 'reportValidity' | 'setCustomValidity'>;
