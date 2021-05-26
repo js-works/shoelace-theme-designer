@@ -41,19 +41,7 @@ export function asComponent<T extends HTMLElement, E, P>(
     }
 
     render() {
-      // start workaround due to bug - see: https://github.com/shoelace-style/shoelace/issues/425
-      let p: any = null
-
-      if (tagName === 'sl-color-picker' && this.props.value) {
-        p = { value: this.props.value }
-      } else if (tagName === 'sl-alert' && this.props.open === true) {
-        p = { open: '' }
-      }
-      // end workaround - see also usage of variable `p` below
-
       return createElement(tagName, {
-        ...p,
-
         ref: (elem: any) => {
           this.__element = elem
 
