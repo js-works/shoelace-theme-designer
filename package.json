@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/mcjazzyfunky/shoelace-theme-designer#readme",
   "devDependencies": {
-    "@shoelace-style/shoelace": "^2.0.0-beta.40",
+    "@shoelace-style/shoelace": "^2.0.0-beta.42",
     "@types/color": "^3.0.1",
     "@types/react": "^17.0.8",
     "@types/react-dom": "^17.0.5",
@@ -42,8 +42,8 @@
     "sass-loader": "^11.1.1",
     "style-loader": "^2.0.0",
     "ts-loader": "^9.2.2",
-    "typescript": "^4.2.4",
-    "webpack": "^5.37.1",
+    "typescript": "^4.3.2",
+    "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0",
     "webpack-plugin-serve": "^1.4.1"
   },
