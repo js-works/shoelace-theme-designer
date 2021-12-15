@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/mcjazzyfunky/shoelace-theme-designer#readme",
   "devDependencies": {
-    "@shoelace-style/shoelace": "^2.0.0-beta.45",
+    "@shoelace-style/shoelace": "2.0.0-beta.45",
     "@types/color": "^3.0.1",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.8",

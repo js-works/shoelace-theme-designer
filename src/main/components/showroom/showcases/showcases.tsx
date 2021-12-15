@@ -3,7 +3,16 @@ import { HLayout } from '../../layout/h-layout/h-layout'
 import { VLayout } from '../../layout/v-layout/v-layout'
 import { Text } from '../../typography/text/text'
 import { H4 } from '../../typography/h4/h4'
-import { Alert, Avatar, Badge, Button, Icon } from '../../shoelace/shoelace'
+
+import {
+  Alert,
+  Avatar,
+  Badge,
+  Button,
+  ButtonGroup,
+  Icon
+} from '../../shoelace/shoelace'
+
 import './showcases.css'
 
 // === exports =======================================================
@@ -36,6 +45,7 @@ function Showcases() {
       <AvatarShowcase />
       <BadgeShowcase />
       <ButtonShowcase />
+      <ButtonGroupShowcase />
       <IconShowcase />
     </div>
   )
@@ -121,6 +131,21 @@ function ButtonShowcase() {
         <Button type="warning">Warning</Button>
         <Button type="danger">Danger</Button>
       </HLayout>
+    </Showcase>
+  )
+}
+
+function ButtonGroupShowcase() {
+  return (
+    <Showcase headline="Button Group">
+      <ButtonGroup>
+        <Button type="default">Default</Button>
+        <Button type="primary">Primary</Button>
+        <Button type="success">Success</Button>
+        <Button type="info">Info</Button>
+        <Button type="warning">Warning</Button>
+        <Button type="danger">Danger</Button>
+      </ButtonGroup>
     </Showcase>
   )
 }
